@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Toaster } from 'sonner';
 import { fetchLogoData } from "@/lib/actions/site/logoAction";
 import { fetchHeaderMenu } from "@/lib/actions/site/headerMenuAction";
+import { fetchFooterSettings } from "@/lib/actions/site/footerAction";
 
 export const metadata: Metadata = {
   title: "النادي الثقافي العربي - Sharjah Arab Cultural Club",
@@ -16,15 +17,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Fetch logo and menu from WordPress in parallel (checklist §2: parallelize)
+  // Fetch logo, menu, and footer from WordPress in parallel (checklist §2: parallelize)
   let logoUrl: string | undefined;
   let siteName: string | undefined;
   let navLinks: { title: string; path: string; children?: any[] }[] | undefined;
+  let footerData: Awaited<ReturnType<typeof fetchFooterSettings>> = null;
 
   try {
-    const [logoData, menuData] = await Promise.all([
+    const [logoData, menuData, footerResult] = await Promise.all([
       fetchLogoData(),
       fetchHeaderMenu(),
+      fetchFooterSettings(),
     ]);
 
     if (logoData?.siteLogoUrl) {
@@ -36,6 +39,7 @@ export default async function RootLayout({
     if (menuData && menuData.length > 0) {
       navLinks = menuData;
     }
+    footerData = footerResult;
   } catch (error) {
     console.error("Error loading layout data:", error);
   }
@@ -47,10 +51,17 @@ export default async function RootLayout({
         <main className="grow">
           {children}
         </main>
-        <Footer />
+        <Footer
+          contactInfo={footerData?.contactInfo}
+          programs={footerData?.programs}
+          joinUs={footerData?.joinUs}
+          quickLinks={footerData?.quickLinks}
+          about={footerData?.about}
+          socialLinks={footerData?.socialLinks}
+          copyright={footerData?.copyright}
+        />
         <Toaster position="top-center" richColors />
       </body>
     </html>
   );
 }
-
