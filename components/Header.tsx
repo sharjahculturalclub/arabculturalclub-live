@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { Menu, X, Globe, Search, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+import { Menu, X, Globe, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import fallbackLogo from '@/assets/logo-dark.svg';
 
@@ -20,18 +20,7 @@ interface HeaderProps {
   navLinks?: NavLink[];
 }
 
-const defaultNavLinks: NavLink[] = [
-  { title: 'الرئيسية', path: '/' },
-  { title: 'عن النادي', path: '/about' },
-  { title: 'الأخبار', path: '/news' },
-  { title: 'الفعاليات', path: '/events' },
-  { title: 'برامجنا', path: '/our-programs' },
-  { title: 'المعرض الرقمي', path: '/gallery' },
-  { title: 'انضم إلينا', path: '/join-us' },
-  { title: 'تواصل معنا', path: '/contact' },
-];
-
-export const Header = ({ logoUrl, siteName = 'النادي الثقافي العربي', navLinks = defaultNavLinks }: HeaderProps) => {
+export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -43,18 +32,12 @@ export const Header = ({ logoUrl, siteName = 'النادي الثقافي الع
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
+    handleScroll(); // Check initial scroll position on mount/refresh
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // navLinks comes from props (fetched server-side from WordPress)
-
-  const socialLinks = [
-    { icon: Facebook, href: '#', color: 'hover:text-[#1877F2]' },
-    { icon: Twitter, href: '#', color: 'hover:text-[#1DA1F2]' },
-    { icon: Instagram, href: '#', color: 'hover:text-[#E4405F]' },
-    { icon: Youtube, href: '#', color: 'hover:text-[#FF0000]' },
-  ];
+  // navLinks and social links come from props (fetched server-side from WordPress)
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +64,7 @@ export const Header = ({ logoUrl, siteName = 'النادي الثقافي الع
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center space-x-reverse space-x-1 gap-x-2 justify-center">
-            {navLinks.map((link) => (
+            {navLinks && navLinks.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}
@@ -147,9 +130,9 @@ export const Header = ({ logoUrl, siteName = 'النادي الثقافي الع
                 </button>
               </div>
 
-              <div className="flex-grow overflow-y-auto p-6">
+              <div className="grow overflow-y-auto p-6">
                 <nav className="flex flex-col gap-2">
-                  {navLinks.map((link) => (
+                  {navLinks && navLinks.map((link) => (
                     <Link
                       key={link.path}
                       href={link.path}
@@ -172,17 +155,6 @@ export const Header = ({ logoUrl, siteName = 'النادي الثقافي الع
 
               <div className="p-8 border-t border-border bg-secondary/20">
                 <p className="text-sm text-muted-foreground mb-6 font-bold text-center">تابعونا على منصات التواصل</p>
-                <div className="flex justify-center gap-6">
-                  {socialLinks.map((social, i) => (
-                    <a
-                      key={i}
-                      href={social.href}
-                      className={`text-muted-foreground transition-all transform hover:scale-125 ${social.color}`}
-                    >
-                      <social.icon size={24} />
-                    </a>
-                  ))}
-                </div>
               </div>
             </motion.div>
           </>
