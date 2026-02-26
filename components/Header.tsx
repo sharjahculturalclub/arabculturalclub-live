@@ -6,9 +6,32 @@ import { useRouter, usePathname } from 'next/navigation';
 
 import { Menu, X, Globe, Search, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import logo from '@/assets/logo-dark.svg';
+import fallbackLogo from '@/assets/logo-dark.svg';
 
-export const Header = () => {
+interface NavLink {
+  title: string;
+  path: string;
+  children?: NavLink[];
+}
+
+interface HeaderProps {
+  logoUrl?: string;
+  siteName?: string;
+  navLinks?: NavLink[];
+}
+
+const defaultNavLinks: NavLink[] = [
+  { title: 'الرئيسية', path: '/' },
+  { title: 'عن النادي', path: '/about' },
+  { title: 'الأخبار', path: '/news' },
+  { title: 'الفعاليات', path: '/events' },
+  { title: 'برامجنا', path: '/our-programs' },
+  { title: 'المعرض الرقمي', path: '/gallery' },
+  { title: 'انضم إلينا', path: '/join-us' },
+  { title: 'تواصل معنا', path: '/contact' },
+];
+
+export const Header = ({ logoUrl, siteName = 'النادي الثقافي العربي', navLinks = defaultNavLinks }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -24,17 +47,7 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { title: 'الرئيسية', path: '/' },
-    { title: 'عن النادي', path: '/about' },
-    { title: 'الأخبار', path: '/news' },
-    { title: 'الفعاليات', path: '/events' },
-    { title: 'برامجنا', path: '/our-programs' },
-    //{ title: 'ثقافة الشارقة', path: '/sharjah-culture' },
-    { title: 'المعرض الرقمي', path: '/gallery' },
-    { title: 'انضم إلينا', path: '/join-us' },
-    { title: 'تواصل معنا', path: '/contact' },
-  ];
+  // navLinks comes from props (fetched server-side from WordPress)
 
   const socialLinks = [
     { icon: Facebook, href: '#', color: 'hover:text-[#1877F2]' },
@@ -62,7 +75,7 @@ export const Header = () => {
 
           <div className="flex items-center cursor-pointer group">
             <Link href="/" className="flex items-center gap-2 group w-[110px]">
-              <img src={logo.src} alt="Logo" className="w-full h-full" />
+              <img src={logoUrl || fallbackLogo.src} alt={siteName} className="w-full h-full" />
             </Link>
           </div>
 
@@ -127,7 +140,7 @@ export const Header = () => {
               <div className="p-6 flex items-center justify-between border-b border-border">
                 <div className="flex items-center gap-2">
 
-                  <span className="text-primary font-bold">  النادي الثقافي العربي  </span>
+                  <span className="text-primary font-bold">{siteName}</span>
                 </div>
                 <button onClick={() => setIsOpen(false)} className="p-2 text-primary">
                   <X size={24} />
