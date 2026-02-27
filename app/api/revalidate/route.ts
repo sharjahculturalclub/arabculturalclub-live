@@ -1,4 +1,4 @@
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -42,6 +42,12 @@ export async function POST(req: NextRequest) {
         const { action, post_type, slug, post_id } = body;
 
         console.log('🔄 Starting revalidation process...');
+
+        // CRITICAL: Always bust the 'wordpress' tag to clear the Next.js Data Cache
+        // Apollo Client tags all GraphQL fetches with { tags: ['wordpress'] }
+        // Next.js 16: revalidateTag requires (tag, profile) — expire: 0 = immediate
+        revalidateTag('wordpress', { expire: 0 });
+        console.log('✅ Revalidated wordpress data cache tag');
 
         // Revalidate based on action type (checklist §7: surgical revalidation)
         if (action === 'menu_update') {
@@ -95,6 +101,14 @@ export async function POST(req: NextRequest) {
             revalidatePath('/', 'layout');
             revalidatePath('/');
             console.log('✅ Revalidated entire site (theme settings update)');
+        }
+        else if (action === 'taxonomy_update') {
+            // Taxonomy changes affect listing pages and navigation
+            revalidatePath('/');
+            revalidatePath('/news', 'page');
+            revalidatePath('/events', 'page');
+            revalidatePath('/tags', 'page');
+            console.log('✅ Revalidated listing pages (taxonomy update)');
         }
         else {
             // Default: revalidate homepage and layout
