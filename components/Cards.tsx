@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { Calendar, MapPin, ArrowLeft, Clock, Tag } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -6,13 +8,13 @@ import Link from 'next/link';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 export const EventCard = ({ event }: { event: any }) => (
-  <motion.div 
+  <motion.div
     whileHover={{ y: -5 }}
     className="bg-card rounded-2xl overflow-hidden border border-border group flex flex-col h-full shadow-sm hover:shadow-md transition-all"
   >
     <div className="relative h-56 overflow-hidden">
-      <ImageWithFallback 
-        src={event.image} 
+      <ImageWithFallback
+        src={event.image}
         alt={event.title}
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
       />
@@ -37,8 +39,8 @@ export const EventCard = ({ event }: { event: any }) => (
         </div>
       </div>
       <div className="mt-auto">
-        <Link 
-          href={`/events/${event.id}`} 
+        <Link
+          href={`/events/${event.id}`}
           className="inline-flex items-center gap-2 text-club-purple font-bold hover:gap-3 transition-all border-b-2 border-transparent hover:border-club-purple pb-1"
         >
           <span>سجل الآن</span>
@@ -50,13 +52,13 @@ export const EventCard = ({ event }: { event: any }) => (
 );
 
 export const NewsCard = ({ news }: { news: any }) => (
-  <motion.div 
+  <motion.div
     whileHover={{ y: -5 }}
     className="bg-card rounded-2xl overflow-hidden border border-border group flex flex-col h-full shadow-sm hover:shadow-md transition-all"
   >
     <Link href={`/news/${news.id}`} className="relative h-60 overflow-hidden block">
-      <ImageWithFallback 
-        src={news.image} 
+      <ImageWithFallback
+        src={news.image}
         alt={news.title}
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
       />
@@ -71,19 +73,19 @@ export const NewsCard = ({ news }: { news: any }) => (
           <span>{news.date}</span>
         </div>
       </div>
-      
+
       <Link href={`/news/${news.id}`} className="block">
         <h3 className="text-xl font-bold mb-3 group-hover:text-club-purple transition-colors line-clamp-2 min-h-[3.5rem] leading-tight">
           {news.title}
         </h3>
       </Link>
-      
+
       <p className="text-muted-foreground text-sm line-clamp-3 mb-6 leading-relaxed">
         {news.excerpt}
       </p>
-      
+
       <div className="mt-auto">
-        <Link 
+        <Link
           href={`/news/${news.id}`}
           className="inline-flex items-center gap-2 text-sm font-bold text-club-purple group/btn"
         >
