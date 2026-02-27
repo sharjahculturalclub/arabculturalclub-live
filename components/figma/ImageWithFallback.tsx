@@ -20,14 +20,15 @@ export function ImageWithFallback(props: ImageProps) {
 
   const { src, alt, style, className, ...rest } = props
   const imageSrc = typeof src === 'object' && src !== null && 'src' in src ? src.src : src;
+  const isImageEmpty = !imageSrc || imageSrc.trim() === '';
 
-  return didError ? (
+  return didError || isImageEmpty ? (
     <div
       className={`inline-block bg-gray-100 text-center align-middle ${className ?? ''}`}
       style={style}
     >
       <div className="flex items-center justify-center w-full h-full">
-        <img src={ERROR_IMG_SRC} alt="Error loading image" {...rest} data-original-url={imageSrc} />
+        <img src={ERROR_IMG_SRC} alt={alt || "Error loading image"} {...rest} data-original-url={imageSrc} />
       </div>
     </div>
   ) : (

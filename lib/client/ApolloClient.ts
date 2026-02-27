@@ -41,6 +41,20 @@ const client = new ApolloClient({
                     return mergeObjects(existing, incoming);
                 },
             },
+            Query: {
+                fields: {
+                    category: {
+                        merge(existing, incoming) {
+                            return incoming;
+                        },
+                    },
+                    tag: {
+                        merge(existing, incoming) {
+                            return incoming;
+                        },
+                    },
+                },
+            },
         },
     }),
     // CRITICAL: Use network-only to bypass Apollo's cache
