@@ -331,6 +331,7 @@ function NewsBlock({ data, posts }: { data: NewsSection; posts: PostNode[] }) {
               title: post.title,
               image: post.featuredImage?.node?.sourceUrl || "",
               category: post.categories?.nodes?.[0]?.name || "",
+              categorySlug: post.categories?.nodes?.[0]?.slug || "uncategorized",
               date: post.date
                 ? new Date(post.date).toLocaleDateString("ar-AE", {
                   year: "numeric",

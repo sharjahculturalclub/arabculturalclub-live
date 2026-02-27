@@ -112,13 +112,14 @@ export const GET_HOME_PAGE = gql`
         }
       }
     }
-    posts(first: 6) {
+    posts(first: 6, where: {orderby: [{field: DATE, order: DESC}]}) {
       nodes {
         postId
         title
         categories {
           nodes {
             name
+            slug
           }
         }
         date

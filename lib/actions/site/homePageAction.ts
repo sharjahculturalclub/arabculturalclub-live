@@ -90,7 +90,7 @@ export interface PostNode {
     postId: number;
     title: string;
     categories: {
-        nodes: { name: string }[];
+        nodes: { name: string; slug: string }[];
     };
     date: string;
     excerpt: string;
