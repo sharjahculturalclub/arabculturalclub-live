@@ -48,6 +48,18 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
     }
   };
 
+  const isLinkActive = (path: string) => {
+    const defaultPath = path || '/';
+    // Remove trailing slashes for robust comparison
+    const normalizedPath = defaultPath.replace(/\/$/, '') || '/';
+    const normalizedPathname = pathname?.replace(/\/$/, '') || '/';
+
+    if (normalizedPath === '/') {
+      return normalizedPathname === '/';
+    }
+    return normalizedPathname === normalizedPath || normalizedPathname.startsWith(`${normalizedPath}/`);
+  };
+
   return (
     <>
       <header
@@ -64,16 +76,19 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center space-x-reverse space-x-1 gap-x-2 justify-center">
-            {navLinks && navLinks.map((link) => (
-              <Link
-                key={link.path}
-                href={link.path}
-                className={`px-4 py-2 font-tajawal text-lg font-medium transition-all relative group overflow-hidden rounded-lg ${pathname === link.path ? 'text-accent-purple bg-accent-purple' : 'text-primary/70 hover:text-accent-purple hover:bg-white/50'
-                  }`}
-              >
-                {link.title}
-              </Link>
-            ))}
+            {navLinks && navLinks.map((link) => {
+              const active = isLinkActive(link.path);
+              return (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  className={`px-4 py-2 font-tajawal text-lg font-medium transition-all relative group overflow-hidden rounded-lg ${active ? 'text-club-purple bg-club-purple/10' : 'text-primary/70 hover:text-club-purple hover:bg-white/50'
+                    }`}
+                >
+                  {link.title}
+                </Link>
+              );
+            })}
 
           </nav>
 
@@ -132,24 +147,29 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
 
               <div className="grow overflow-y-auto p-6">
                 <nav className="flex flex-col gap-2">
-                  {navLinks && navLinks.map((link) => (
-                    <Link
-                      key={link.path}
-                      href={link.path}
-                      onClick={() => setIsOpen(false)}
-                      className={`text-lg font-bold py-3 flex items-center justify-between transition-colors ${pathname === link.path ? 'text-club-purple' : 'text-primary hover:text-club-purple'
-                        }`}
-                    >
-                      <span>{link.title}</span>
-                      <motion.div
-                        animate={{ x: [0, -5, 0] }}
-                        transition={{ repeat: Infinity, duration: 2 }}
-                        className="text-club-blue"
+                  {navLinks && navLinks.map((link) => {
+                    const active = isLinkActive(link.path);
+                    return (
+                      <Link
+                        key={link.path}
+                        href={link.path}
+                        onClick={() => setIsOpen(false)}
+                        className={`text-lg font-bold py-3 flex items-center justify-between transition-colors ${active ? 'text-club-purple' : 'text-primary hover:text-club-purple'
+                          }`}
                       >
-                        <Globe size={16} />
-                      </motion.div>
-                    </Link>
-                  ))}
+                        <span>{link.title}</span>
+                        {active && (
+                          <motion.div
+                            animate={{ x: [0, -5, 0] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            className="text-club-purple"
+                          >
+                            <Globe size={16} />
+                          </motion.div>
+                        )}
+                      </Link>
+                    );
+                  })}
                 </nav>
               </div>
 
