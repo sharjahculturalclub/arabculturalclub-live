@@ -19,6 +19,7 @@ export interface ACFImage {
 export interface HeroSection {
     fieldGroupName: "HomePageBuilderHomePageBuilderHeroSectionLayout";
     heroImage: ACFImage | null;
+    sectionBackgroundImage: ACFImage | null;
     heroImageTag: string | null;
     heroImageTitle: string | null;
     heroContentTag: string | null;

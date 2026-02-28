@@ -20,6 +20,12 @@ export const GET_HOME_PAGE = gql`
                 sourceUrl
               }
             }
+            sectionBackgroundImage {
+              node {
+                altText
+                sourceUrl
+              }
+            }
             heroImageTag
             heroImageTitle
             heroContentTag
