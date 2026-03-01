@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { draftMode } from "next/headers";
 import type { Metadata } from "next";
 
 import {
@@ -19,11 +18,9 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { ShareButtons } from "@/components/ShareButtons";
-import { PreviewBanner } from "@/components/PreviewBanner";
 import {
     fetchPostById,
     fetchRelatedPosts,
-    fetchPreviewPostById,
 } from "@/lib/actions/site/postAction";
 
 /* ─── Types ───────────────────────────────────────────────── */
@@ -76,18 +73,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function PostDetail({ params, searchParams }: PageProps) {
     const { category, id } = await params;
 
-    // Check if preview mode is active
-    const draft = await draftMode();
-    const isPreview = draft.isEnabled;
-
-    let post;
-    if (isPreview) {
-        const urlParams = await searchParams;
-        const token = urlParams?.token as string;
-        post = await fetchPreviewPostById(id, token);
-    } else {
-        post = await fetchPostById(id);
-    }
+    const post = await fetchPostById(id);
 
     if (!post) {
         notFound();
@@ -95,7 +81,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
 
     // Validate that the post belongs to this category
     const postCategorySlug = post.categories?.nodes?.[0]?.slug;
-    if (!isPreview && postCategorySlug && postCategorySlug !== category) {
+    if (postCategorySlug && postCategorySlug !== category) {
         notFound();
     }
 
@@ -151,12 +137,11 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
 
     return (
         <div className="pb-30 pt-30 z-0 relative">
-            {isPreview && <PreviewBanner />}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
             />
-            <div className={`container max-w-7xl mx-auto px-4 md:px-6 ${isPreview ? 'mt-16' : ''}`}>
+            <div className="container max-w-7xl mx-auto px-4 md:px-6">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center space-x-reverse space-x-2 text-sm text-primary/40 mb-10 font-tajawal">
                     <Link
