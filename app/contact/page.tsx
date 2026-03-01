@@ -41,13 +41,14 @@ const colorMap: Record<string, { bg: string; text: string; hoverBg: string; hove
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchContactPageData();
   const seo = data?.sEOOptions;
+  const pageTitle = data?.pageTitle || 'اتصل بنا';
 
-  const title = seo?.seoTitle || 'اتصل بنا | النادي الثقافي العربي';
-  const description = seo?.metaDescription || 'تواصل مع النادي الثقافي العربي.';
+  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
+  const description = seo?.metaDescription || data?.pageDescription || 'تواصل مع النادي الثقافي العربي.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/contact';
 
   return {
-    title: seo?.seoTitle || `اتصل بنا | النادي الثقافي العربي`,
+    title,
     description,
     keywords: seo?.focusKeyword || undefined,
     alternates: {
@@ -89,7 +90,7 @@ export default async function ContactPage() {
     );
   }
 
-  const { sections, sEOOptions } = data;
+  const { pageTitle, pageDescription, sections, sEOOptions } = data;
 
   const contactFormAndInfo = findContactSection<ContactFormAndInfoSection>(
     sections,
@@ -104,24 +105,28 @@ export default async function ContactPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={sEOOptions?.seoTitle || 'اتصل بنا | النادي الثقافي العربي'}
-        description={sEOOptions?.metaDescription || 'تواصل مع النادي الثقافي العربي.'}
+        title={sEOOptions?.seoTitle || `${pageTitle || 'اتصل بنا'} | النادي الثقافي العربي`}
+        description={sEOOptions?.metaDescription || pageDescription || 'تواصل مع النادي الثقافي العربي.'}
         url={sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/contact'}
         breadcrumbs={[
           { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: 'اتصل بنا', item: sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/contact' },
+          { name: pageTitle || 'اتصل بنا', item: sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/contact' },
         ]}
       />
 
       {/* Page Header */}
-      <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
-        <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10">
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary">تواصل معنا</h1>
-          <p className="text-xl max-w-2xl mx-auto leading-relaxed text-primary">
-            نحن هنا للإجابة على استفساراتكم واقتراحاتكم.
-          </p>
+      {(pageTitle || pageDescription) && (
+        <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
+          <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10">
+            {pageTitle && (
+              <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary">{pageTitle}</h1>
+            )}
+            {pageDescription && (
+              <p className="text-xl max-w-2xl mx-auto leading-relaxed text-primary">{pageDescription}</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
         {/* Contact Form & Info Section */}
