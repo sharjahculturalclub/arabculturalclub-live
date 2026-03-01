@@ -27,6 +27,10 @@ export type ContactPageSection = ContactFormAndInfoSection | MapSection;
 
 export interface ContactPageDataType {
     pageBy: {
+        pageOptions: {
+            pageTitle: string | null;
+            pageDescription: string | null;
+        } | null;
         template: {
             templateName: string;
             contactPageBuilder: {
@@ -55,6 +59,8 @@ export function findContactSection<T extends ContactPageSection>(
  * Called from server components only.
  */
 export async function fetchContactPageData(): Promise<{
+    pageTitle: string | null;
+    pageDescription: string | null;
     sections: ContactPageSection[];
     sEOOptions?: SEOOptions | null;
 } | null> {
@@ -69,11 +75,13 @@ export async function fetchContactPageData(): Promise<{
             return null;
         }
 
+        const pageTitle = result.data?.pageBy?.pageOptions?.pageTitle ?? null;
+        const pageDescription = result.data?.pageBy?.pageOptions?.pageDescription ?? null;
         const sections =
             result.data?.pageBy?.template?.contactPageBuilder?.contactPageBuilder ?? [];
         const sEOOptions = result.data?.pageBy?.sEOOptions;
 
-        return { sections, sEOOptions };
+        return { pageTitle, pageDescription, sections, sEOOptions };
     } catch (error) {
         console.error("Error fetching contact page data:", error);
         return null;

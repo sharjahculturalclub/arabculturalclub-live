@@ -7,6 +7,10 @@ import { gql } from "@apollo/client";
 export const GET_CONTACT_PAGE = gql`
     query ContactPageQuery {
         pageBy(pageId: 52) {
+            pageOptions {
+                pageTitle
+                pageDescription
+            }
             template {
                 ... on Template_ContactPage {
                     templateName
