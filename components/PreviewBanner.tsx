@@ -31,7 +31,7 @@ export function PreviewBanner() {
     };
 
     return (
-        <div className="fixed top-0 left-0 right-0 z-100 bg-orange-500 text-white shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 z-100 bg-orange-500 text-white shadow-lg">
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between py-3">
                     <div className="flex items-center gap-3">
