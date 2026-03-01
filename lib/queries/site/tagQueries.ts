@@ -10,11 +10,29 @@ export const GET_POSTS_BY_TAG_SLUG = gql`
       slug
       description
       count
-      seo {
-        title
-        metaDesc
-        canonical
+      sEOOptions {
+        seoTitle
+        metaDescription
+        focusKeyword
+        canonicalUrl
+        ogTitle
+        ogDescription
+        ogImage {
+          node {
+            altText
+            sourceUrl
+          }
+        }
+        twitterTitle
+        twitterDescription
+        twitterImage {
+          node {
+            altText
+            sourceUrl
+          }
+        }
       }
+
       posts(first: $first, after: $after) {
         pageInfo {
           hasNextPage

@@ -23,21 +23,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
-    const seo = categoryData.seo;
-    const canonicalUrl = `https://shjarabclub.ae/category/${categorySlug}`;
+    const seo = categoryData.sEOOptions;
+    const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/category/${categorySlug}`;
 
     return {
-        title: seo?.title || `${categoryData.name} | النادي الثقافي العربي`,
-        description: seo?.metaDesc || categoryData.description || "",
+        title: seo?.seoTitle || `${categoryData.name} | النادي الثقافي العربي`,
+        description: seo?.metaDescription || categoryData.description || "",
+        keywords: seo?.focusKeyword || undefined,
         alternates: {
-            canonical: seo?.canonical || canonicalUrl,
+            canonical: canonicalUrl,
         },
         openGraph: {
-            title: seo?.title || categoryData.name,
-            description: seo?.metaDesc || categoryData.description || "",
+            title: seo?.ogTitle || seo?.seoTitle || categoryData.name,
+            description: seo?.ogDescription || seo?.metaDescription || categoryData.description || "",
             url: canonicalUrl,
             siteName: "النادي الثقافي العربي",
             type: "website",
+            images: seo?.ogImage?.node?.sourceUrl ? [{ url: seo.ogImage.node.sourceUrl }] : undefined,
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: seo?.twitterTitle || seo?.seoTitle || categoryData.name,
+            description: seo?.twitterDescription || seo?.metaDescription || categoryData.description || "",
+            images: seo?.twitterImage?.node?.sourceUrl ? [seo.twitterImage.node.sourceUrl] : undefined,
         },
     };
 }
@@ -93,6 +101,17 @@ export default async function CategoryPage({ params }: PageProps) {
         "inLanguage": "ar",
     };
 
+    const webPageSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": categoryData.name,
+        "description": categoryData.description || "",
+        "url": canonicalUrl,
+        "publisher": {
+            "@id": "https://shjarabclub.ae/#organization"
+        }
+    };
+
     return (
         <div className="pb-30 pt-30 z-0 relative min-h-screen">
             <script
@@ -102,6 +121,10 @@ export default async function CategoryPage({ params }: PageProps) {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
             />
             <div className="container max-w-7xl mx-auto px-4 md:px-6">
 
@@ -158,7 +181,7 @@ export default async function CategoryPage({ params }: PageProps) {
                         })}
                     </div>
                 ) : (
-                    <div className="bg-secondary/20 rounded-[2rem] p-16 text-center border-2 border-dashed border-border">
+                    <div className="bg-secondary/20 rounded-4xl p-16 text-center border-2 border-dashed border-border">
                         <h2 className="text-2xl font-bold mb-4">لا توجد مقالات في هذا القسم</h2>
                         <p className="text-muted-foreground mb-8 max-w-md mx-auto">
                             لم يتم نشر أي أخبار أو مقالات مسجلة تحت هذا التصنيف حتى الآن.

@@ -7,6 +7,28 @@ export const GET_ABOUT_PAGE = gql`
                 pageTitle
                 pageDescription
             }
+            sEOOptions {
+                seoTitle
+                metaDescription
+                focusKeyword
+                canonicalUrl
+                ogTitle
+                ogDescription
+                ogImage {
+                    node {
+                        altText
+                        sourceUrl
+                    }
+                }
+                twitterTitle
+                twitterDescription
+                twitterImage {
+                    node {
+                        altText
+                        sourceUrl
+                    }
+                }
+            }
             template {
                 ... on Template_AboutPage {
                     templateName

@@ -67,11 +67,79 @@ export function EventsPageClient({
         }
     };
 
+    const collectionSchema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: pageTitle || "الفعاليات وورش العمل",
+        description: pageDescription || "استكشف الفعاليات والأنشطة الثقافية القادمة في النادي الثقافي العربي.",
+        url: "https://shjarabclub.ae/events",
+        inLanguage: "ar",
+        mainEntity: {
+            "@type": "ItemList",
+            itemListElement: filteredEvents.map((event, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                url: `https://shjarabclub.ae/events/${event.id}`,
+                name: event.title,
+            })),
+        },
+    };
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "الرئيسية",
+                "item": "https://shjarabclub.ae/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": pageTitle || "الفعاليات وورش العمل",
+                "item": "https://shjarabclub.ae/events"
+            }
+        ]
+    };
+
+    const webPageSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": pageTitle || "الفعاليات وورش العمل",
+        "description": pageDescription || "استكشف الفعاليات والأنشطة الثقافية القادمة في النادي الثقافي العربي.",
+        "url": "https://shjarabclub.ae/events",
+        "publisher": {
+            "@id": "https://shjarabclub.ae/#organization"
+        }
+    };
+
     return (
         <div className="pt-25 pb-25">
             <SEO
                 title={pageTitle || "الفعاليات وورش العمل"}
                 description={pageDescription || "استكشف الفعاليات والأنشطة الثقافية القادمة في النادي الثقافي العربي."}
+            />
+
+            {/* JSON-LD */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(collectionSchema),
+                }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(breadcrumbSchema),
+                }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(webPageSchema),
+                }}
             />
 
             <div className="container max-w-7xl mx-auto px-4 md:px-6 mb-16">

@@ -46,7 +46,16 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
 
     return (
         <div className="pt-25 pb-25">
-            <SEO title={mappedEvent.title} description={mappedEvent.description} />
+            <SEO
+                title={mappedEvent.title}
+                description={mappedEvent.description}
+                url={`https://shjarabclub.ae/events/${mappedEvent.id}`}
+                breadcrumbs={[
+                    { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+                    { name: "الفعاليات", item: "https://shjarabclub.ae/events" },
+                    { name: mappedEvent.title, item: `https://shjarabclub.ae/events/${mappedEvent.id}` }
+                ]}
+            />
 
             <div className="container max-w-5xl mx-auto px-4 md:px-6">
                 {/* Hero */}

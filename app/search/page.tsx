@@ -36,7 +36,15 @@ function SearchContent() {
 
   return (
     <div className="pt-25 pb-25">
-      <SEO title={`نتائج البحث عن: ${query}`} description={`نتائج البحث عن ${query} في موقع النادي الثقافي العربي.`} />
+      <SEO
+        title={`نتائج البحث عن: ${query}`}
+        description={`نتائج البحث عن ${query} في موقع النادي الثقافي العربي.`}
+        url="https://shjarabclub.ae/search"
+        breadcrumbs={[
+          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+          { name: "نتائج البحث", item: "https://shjarabclub.ae/search" }
+        ]}
+      />
 
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
         <div className="mb-12">

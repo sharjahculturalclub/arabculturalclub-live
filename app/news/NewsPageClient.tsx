@@ -111,6 +111,45 @@ export function NewsPageClient({
         description: "أخبار وتقارير النادي الثقافي العربي",
         url: "https://shjarabclub.ae/news",
         inLanguage: "ar",
+        mainEntity: {
+            "@type": "ItemList",
+            itemListElement: displayedPosts.map((post, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                url: `https://shjarabclub.ae/${post.categories?.nodes?.[0]?.slug || "uncategorized"}/${post.databaseId}`,
+                name: post.title,
+            })),
+        },
+    };
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "الرئيسية",
+                "item": "https://shjarabclub.ae/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "المركز الإعلامي",
+                "item": "https://shjarabclub.ae/news"
+            }
+        ]
+    };
+
+    const webPageSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "المركز الإعلامي | النادي الثقافي العربي",
+        "description": "تابع آخر الأخبار والتقارير والفعاليات في النادي الثقافي العربي بالشارقة.",
+        "url": "https://shjarabclub.ae/news",
+        "publisher": {
+            "@id": "https://shjarabclub.ae/#organization"
+        }
     };
 
     return (
@@ -120,6 +159,18 @@ export function NewsPageClient({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify(collectionSchema),
+                }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(breadcrumbSchema),
+                }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(webPageSchema),
                 }}
             />
 

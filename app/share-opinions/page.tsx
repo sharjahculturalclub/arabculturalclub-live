@@ -32,7 +32,7 @@ export default function ShareOpinions() {
     e.preventDefault();
     setSubmitted(true);
     toast.success('شكراً لك على مشاركة رأيك! نقدر ملاحظاتك واقتراحاتك.');
-    
+
     setTimeout(() => {
       setFormData({
         name: '',
@@ -49,22 +49,27 @@ export default function ShareOpinions() {
 
   return (
     <div className="pt-25 pb-25">
-      <SEO 
-        title="شارك آراءك واقتراحاتك" 
-        description="شاركنا آراءك واقتراحاتك لمساعدتنا في تحسين خدماتنا وبرامجنا الثقافية." 
+      <SEO
+        title="شارك آراءك واقتراحاتك"
+        description="شاركنا آراءك واقتراحاتك لمساعدتنا في تحسين خدماتنا وبرامجنا الثقافية."
+        url="https://shjarabclub.ae/share-opinions"
+        breadcrumbs={[
+          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+          { name: "شارك آراءك واقتراحاتك", item: "https://shjarabclub.ae/share-opinions" }
+        ]}
       />
-      
+
       {/* Hero Banner */}
       <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
         <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Lightbulb className="text-club-purple" size={40} />
-            <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight text-black">شارك آراءك واقتراحاتك</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight">شارك آراءك واقتراحاتك</h1>
           </div>
-          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-black">
+          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-primary">
             رأيك مهم لنا! ساعدنا في تطوير برامجنا وخدماتنا الثقافية
           </p>
-        </div>        
+        </div>
       </div>
 
       <div className="container max-w-4xl mx-auto px-4 md:px-6">
@@ -96,26 +101,26 @@ export default function ShareOpinions() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-primary">الاسم الكامل *</label>
-                  <input 
+                  <input
                     required
-                    type="text" 
+                    type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="أدخل اسمك" 
+                    placeholder="أدخل اسمك"
                     className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-primary">البريد الإلكتروني *</label>
-                  <input 
+                  <input
                     required
-                    type="email" 
+                    type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="example@mail.com" 
+                    placeholder="example@mail.com"
                     className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                   />
                 </div>
@@ -123,12 +128,12 @@ export default function ShareOpinions() {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary">رقم الهاتف (اختياري)</label>
-                <input 
-                  type="tel" 
+                <input
+                  type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  placeholder="+971 XX XXX XXXX" 
+                  placeholder="+971 XX XXX XXXX"
                   className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                 />
               </div>
@@ -136,7 +141,7 @@ export default function ShareOpinions() {
               {/* Category */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary">نوع المشاركة *</label>
-                <select 
+                <select
                   required
                   name="category"
                   value={formData.category}
@@ -161,14 +166,13 @@ export default function ShareOpinions() {
                       key={rating}
                       type="button"
                       onClick={() => handleRatingClick(rating)}
-                      className={`p-2 rounded-lg transition-all ${
-                        formData.rating >= rating
+                      className={`p-2 rounded-lg transition-all ${formData.rating >= rating
                           ? 'text-club-purple bg-club-purple/10'
                           : 'text-gray-300 hover:text-club-purple/50'
-                      }`}
+                        }`}
                     >
-                      <Star 
-                        size={32} 
+                      <Star
+                        size={32}
                         fill={formData.rating >= rating ? 'currentColor' : 'none'}
                       />
                     </button>
@@ -179,13 +183,13 @@ export default function ShareOpinions() {
               {/* Subject */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary">الموضوع *</label>
-                <input 
+                <input
                   required
-                  type="text" 
+                  type="text"
                   name="subject"
                   value={formData.subject}
                   onChange={handleInputChange}
-                  placeholder="موضوع رسالتك" 
+                  placeholder="موضوع رسالتك"
                   className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                 />
               </div>
@@ -193,19 +197,19 @@ export default function ShareOpinions() {
               {/* Message */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary">رسالتك *</label>
-                <textarea 
+                <textarea
                   required
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
                   rows={6}
-                  placeholder="شاركنا آراءك، اقتراحاتك، أو أي ملاحظات..." 
+                  placeholder="شاركنا آراءك، اقتراحاتك، أو أي ملاحظات..."
                   className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all resize-none"
                 />
               </div>
 
               {/* Submit Button */}
-              <button 
+              <button
                 type="submit"
                 className="w-full bg-club-purple hover:bg-opacity-90 transition-all text-white font-bold text-lg py-5 rounded-xl shadow-xl shadow-club-purple/20 flex items-center justify-center gap-3 mt-8"
               >

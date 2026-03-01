@@ -18,11 +18,39 @@ import {
   type HomePageSection,
 } from "@/lib/actions/site/homePageAction";
 
-export const metadata: Metadata = {
-  title: "الرئيسية | النادي الثقافي العربي",
-  description:
-    "الموقع الرسمي للنادي الثقافي العربي في الشارقة - منارة الثقافة والأدب والإبداع العربي.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await fetchHomePageData();
+  const seo = data?.sEOOptions;
+
+  const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/";
+
+  return {
+    title: seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
+    description: seo?.metaDescription || "الموقع الرسمي للنادي الثقافي العربي في الشارقة - منارة الثقافة والأدب والإبداع العربي.",
+    keywords: seo?.focusKeyword || undefined,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: seo?.ogTitle || seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
+      description: seo?.ogDescription || seo?.metaDescription || "",
+      url: canonicalUrl,
+      siteName: "النادي الثقافي العربي",
+      type: "website",
+      images: seo?.ogImage?.node?.sourceUrl
+        ? [{ url: seo.ogImage.node.sourceUrl }]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seo?.twitterTitle || seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
+      description: seo?.twitterDescription || seo?.metaDescription || "",
+      images: seo?.twitterImage?.node?.sourceUrl
+        ? [seo.twitterImage.node.sourceUrl]
+        : undefined,
+    },
+  };
+}
 
 /* ─── Section Renderers ───────────────────────────────────── */
 
@@ -400,9 +428,81 @@ export default async function Home() {
 
   const sections = data?.sections ?? [];
   const posts = data?.posts ?? [];
+  const seo = data?.sEOOptions;
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": seo?.seoTitle || "النادي الثقافي العربي",
+    "url": seo?.canonicalUrl || "https://shjarabclub.ae",
+    "description": seo?.metaDescription || "الموقع الرسمي للنادي الثقافي العربي في الشارقة",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://shjarabclub.ae/search?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "النادي الثقافي العربي",
+    "url": "https://shjarabclub.ae",
+    "logo": "https://shjarabclub.ae/logo.png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+971-6-567-2222",
+      "contactType": "customer service",
+      "areaServed": "AE",
+      "availableLanguage": "Arabic"
+    }
+  };
+
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
+    "description": seo?.metaDescription || "الموقع الرسمي للنادي الثقافي العربي في الشارقة",
+    "url": seo?.canonicalUrl || "https://shjarabclub.ae",
+    "publisher": {
+      "@id": "https://shjarabclub.ae/#organization"
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "الرئيسية",
+        "item": "https://shjarabclub.ae/"
+      }
+    ]
+  };
 
   return (
     <div className="flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Dynamic sections — order follows WordPress ACF Flexible Content */}
       {sections.map((section, index) => renderSection(section, index, posts))}
 

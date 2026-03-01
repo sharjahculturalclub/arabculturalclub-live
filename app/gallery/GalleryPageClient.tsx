@@ -79,14 +79,19 @@ export function GalleryPageClient({ initialGalleries, pageTitle, pageDescription
             <SEO
                 title={pageTitle || "معرض الصور | النادي الثقافي العربي"}
                 description={pageDescription || "لحظات توثق حراكنا الثقافي وجماليات الإبداع في نادينا."}
+                url="https://shjarabclub.ae/gallery"
+                breadcrumbs={[
+                    { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+                    { name: "معرض الصور", item: "https://shjarabclub.ae/gallery" }
+                ]}
             />
 
             <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
                 <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10 ">
-                    <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-black">
+                    <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary">
                         {pageTitle || "معرض الصور"}
                     </h1>
-                    <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-black">
+                    <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-primary">
                         {pageDescription || "لحظات توثق حراكنا الثقافي وجماليات الإبداع في نادينا."}
                     </p>
                 </div>

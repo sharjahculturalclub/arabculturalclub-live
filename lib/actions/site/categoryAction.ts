@@ -9,11 +9,8 @@ export interface CategoryData {
     slug: string;
     description: string | null;
     count: number | null;
-    seo: {
-        title: string | null;
-        metaDesc: string | null;
-        canonical: string | null;
-    } | null;
+    sEOOptions?: import("@/lib/types/seo").SEOOptions | null;
+
     posts: {
         pageInfo: {
             hasNextPage: boolean;

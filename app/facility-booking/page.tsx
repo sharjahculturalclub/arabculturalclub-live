@@ -74,7 +74,7 @@ export default function FacilityBooking() {
     e.preventDefault();
     setSubmitted(true);
     toast.success('تم إرسال طلب الحجز بنجاح! سنتواصل معك قريباً لتأكيد الحجز.');
-    
+
     setTimeout(() => {
       setFormData({
         fullName: '',
@@ -97,22 +97,27 @@ export default function FacilityBooking() {
 
   return (
     <div className="pt-25 pb-25">
-      <SEO 
-        title="حجز المرافق" 
-        description="احجز قاعات ومرافق النادي الثقافي العربي لفعالياتك الثقافية." 
+      <SEO
+        title="حجز المرافق"
+        description="احجز قاعات ومرافق النادي الثقافي العربي لفعالياتك الثقافية."
+        url="https://shjarabclub.ae/facility-booking"
+        breadcrumbs={[
+          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+          { name: "حجز المرافق", item: "https://shjarabclub.ae/facility-booking" }
+        ]}
       />
-      
+
       {/* Hero Banner */}
       <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
         <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Building className="text-club-purple" size={40} />
-            <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight text-black">حجز المرافق</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight">حجز المرافق</h1>
           </div>
-          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-black">
+          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-primary">
             احجز قاعات ومرافق النادي لفعالياتك الثقافية والأنشطة الخاصة
           </p>
-        </div>        
+        </div>
       </div>
 
       <div className="container max-w-4xl mx-auto px-4 md:px-6">
@@ -153,30 +158,30 @@ export default function FacilityBooking() {
               {/* Contact Information */}
               <div className="space-y-6 pb-6 border-b border-border">
                 <h3 className="text-xl font-bold text-primary">معلومات الاتصال</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-primary">الاسم الكامل *</label>
-                    <input 
+                    <input
                       required
-                      type="text" 
+                      type="text"
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      placeholder="أدخل اسمك الكامل" 
+                      placeholder="أدخل اسمك الكامل"
                       className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-primary">البريد الإلكتروني *</label>
-                    <input 
+                    <input
                       required
-                      type="email" 
+                      type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="example@mail.com" 
+                      placeholder="example@mail.com"
                       className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                     />
                   </div>
@@ -185,25 +190,25 @@ export default function FacilityBooking() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-primary">رقم الهاتف *</label>
-                    <input 
+                    <input
                       required
-                      type="tel" 
+                      type="tel"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="+971 XX XXX XXXX" 
+                      placeholder="+971 XX XXX XXXX"
                       className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-primary">رقم العضوية (إن وجد)</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="membershipNumber"
                       value={formData.membershipNumber}
                       onChange={handleInputChange}
-                      placeholder="رقم العضوية" 
+                      placeholder="رقم العضوية"
                       className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                     />
                   </div>
@@ -213,14 +218,14 @@ export default function FacilityBooking() {
               {/* Event Details */}
               <div className="space-y-6 pb-6 border-b border-border">
                 <h3 className="text-xl font-bold text-primary">تفاصيل الفعالية</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-primary flex items-center gap-2">
                       <Building size={16} />
                       المرافق المطلوبة *
                     </label>
-                    <select 
+                    <select
                       required
                       name="facility"
                       value={formData.facility}
@@ -238,7 +243,7 @@ export default function FacilityBooking() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-primary">نوع الفعالية *</label>
-                    <select 
+                    <select
                       required
                       name="eventType"
                       value={formData.eventType}
@@ -259,9 +264,9 @@ export default function FacilityBooking() {
                       <Calendar size={16} />
                       تاريخ الفعالية *
                     </label>
-                    <input 
+                    <input
                       required
-                      type="date" 
+                      type="date"
                       name="eventDate"
                       value={formData.eventDate}
                       onChange={handleInputChange}
@@ -275,9 +280,9 @@ export default function FacilityBooking() {
                       <Clock size={16} />
                       وقت البداية *
                     </label>
-                    <input 
+                    <input
                       required
-                      type="time" 
+                      type="time"
                       name="startTime"
                       value={formData.startTime}
                       onChange={handleInputChange}
@@ -290,9 +295,9 @@ export default function FacilityBooking() {
                       <Clock size={16} />
                       وقت النهاية *
                     </label>
-                    <input 
+                    <input
                       required
-                      type="time" 
+                      type="time"
                       name="endTime"
                       value={formData.endTime}
                       onChange={handleInputChange}
@@ -306,14 +311,14 @@ export default function FacilityBooking() {
                     <Users size={16} />
                     العدد المتوقع للحضور *
                   </label>
-                  <input 
+                  <input
                     required
-                    type="number" 
+                    type="number"
                     name="expectedAttendees"
                     value={formData.expectedAttendees}
                     onChange={handleInputChange}
                     min="1"
-                    placeholder="عدد الأشخاص" 
+                    placeholder="عدد الأشخاص"
                     className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                   />
                 </div>
@@ -322,16 +327,16 @@ export default function FacilityBooking() {
               {/* Equipment & Services */}
               <div className="space-y-6 pb-6 border-b border-border">
                 <h3 className="text-xl font-bold text-primary">المعدات والخدمات</h3>
-                
+
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-primary">المعدات المطلوبة</label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {equipmentOptions.map((equipment) => (
-                      <label 
+                      <label
                         key={equipment}
                         className="flex items-center gap-2 p-3 border border-border rounded-lg cursor-pointer hover:border-club-purple hover:bg-club-purple/5 transition-all"
                       >
-                        <input 
+                        <input
                           type="checkbox"
                           checked={formData.equipment.includes(equipment)}
                           onChange={() => handleEquipmentToggle(equipment)}
@@ -345,12 +350,12 @@ export default function FacilityBooking() {
 
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-primary">خدمات إضافية</label>
-                  <textarea 
+                  <textarea
                     name="additionalServices"
                     value={formData.additionalServices}
                     onChange={handleInputChange}
                     rows={3}
-                    placeholder="أي خدمات إضافية مطلوبة (مثل: كافيه، ترجمة، تصوير...)" 
+                    placeholder="أي خدمات إضافية مطلوبة (مثل: كافيه، ترجمة، تصوير...)"
                     className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all resize-none"
                   />
                 </div>
@@ -359,18 +364,18 @@ export default function FacilityBooking() {
               {/* Special Requirements */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary">متطلبات خاصة</label>
-                <textarea 
+                <textarea
                   name="specialRequirements"
                   value={formData.specialRequirements}
                   onChange={handleInputChange}
                   rows={4}
-                  placeholder="أي متطلبات خاصة أو ملاحظات إضافية..." 
+                  placeholder="أي متطلبات خاصة أو ملاحظات إضافية..."
                   className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all resize-none"
                 />
               </div>
 
               {/* Submit Button */}
-              <button 
+              <button
                 type="submit"
                 className="w-full bg-club-purple hover:bg-opacity-90 transition-all text-white font-bold text-lg py-5 rounded-xl shadow-xl shadow-club-purple/20 flex items-center justify-center gap-3 mt-8"
               >

@@ -7,16 +7,20 @@ interface SEOProps {
   description: string;
   type?: string;
   image?: string;
+  url?: string;
+  breadcrumbs?: { name: string; item: string }[];
 }
 
-export const SEO: React.FC<SEOProps> = ({ 
-  title, 
-  description, 
+export const SEO: React.FC<SEOProps> = ({
+  title,
+  description,
   type = 'website',
-  image = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200' 
+  image = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200',
+  url,
+  breadcrumbs
 }) => {
   const fullTitle = `${title} | النادي الثقافي العربي`;
-  
+
   React.useEffect(() => {
     document.title = fullTitle;
     const metaDescription = document.querySelector('meta[name="description"]');
@@ -45,9 +49,43 @@ export const SEO: React.FC<SEOProps> = ({
     }
   };
 
+  const webPageSchema = url ? {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": fullTitle,
+    "description": description,
+    "url": url,
+    "publisher": {
+      "@id": "https://shjarabclub.ae/#organization"
+    }
+  } : null;
+
+  const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": breadcrumbs.map((crumb, idx) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "name": crumb.name,
+      "item": crumb.item
+    }))
+  } : null;
+
   return (
-    <script type="application/ld+json">
-      {JSON.stringify(organizationSchema)}
-    </script>
+    <>
+      <script type="application/ld+json">
+        {JSON.stringify(organizationSchema)}
+      </script>
+      {webPageSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(webPageSchema)}
+        </script>
+      )}
+      {breadcrumbSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(breadcrumbSchema)}
+        </script>
+      )}
+    </>
   );
 };

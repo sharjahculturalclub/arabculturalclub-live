@@ -23,21 +23,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const seo = tagData.seo;
-  const canonicalUrl = `https://shjarabclub.ae/tag/${tagName}`;
+  const seo = tagData.sEOOptions;
+  const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/tag/${tagName}`;
 
   return {
-    title: seo?.title || `وسم: ${tagData.name} | النادي الثقافي العربي`,
-    description: seo?.metaDesc || tagData.description || `تصفح جميع المقالات والفعاليات المتعلقة بـ ${tagData.name}.`,
+    title: seo?.seoTitle || `وسم: ${tagData.name} | النادي الثقافي العربي`,
+    description: seo?.metaDescription || tagData.description || `تصفح جميع المقالات والفعاليات المتعلقة بـ ${tagData.name}.`,
+    keywords: seo?.focusKeyword || undefined,
     alternates: {
-      canonical: seo?.canonical || canonicalUrl,
+      canonical: canonicalUrl,
     },
     openGraph: {
-      title: seo?.title || `وسم: ${tagData.name}`,
-      description: seo?.metaDesc || tagData.description || "",
+      title: seo?.ogTitle || seo?.seoTitle || `وسم: ${tagData.name}`,
+      description: seo?.ogDescription || seo?.metaDescription || tagData.description || "",
       url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
+      images: seo?.ogImage?.node?.sourceUrl ? [{ url: seo.ogImage.node.sourceUrl }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seo?.twitterTitle || seo?.seoTitle || `وسم: ${tagData.name}`,
+      description: seo?.twitterDescription || seo?.metaDescription || tagData.description || "",
+      images: seo?.twitterImage?.node?.sourceUrl ? [seo.twitterImage.node.sourceUrl] : undefined,
     },
   };
 }
@@ -93,6 +101,17 @@ export default async function TagPage({ params }: PageProps) {
     "inLanguage": "ar",
   };
 
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": `وسم: ${tagData.name}`,
+    "description": tagData.description || `تصفح جميع المقالات والفعاليات المتعلقة بـ ${tagData.name}.`,
+    "url": canonicalUrl,
+    "publisher": {
+      "@id": "https://shjarabclub.ae/#organization"
+    }
+  };
+
   return (
     <div className="pt-25 pb-25 min-h-screen relative z-0">
       <script
@@ -102,6 +121,10 @@ export default async function TagPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
       />
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
 
@@ -163,7 +186,7 @@ export default async function TagPage({ params }: PageProps) {
             })}
           </div>
         ) : (
-          <div className="bg-secondary/20 rounded-[2rem] p-16 text-center border-2 border-dashed border-border">
+          <div className="bg-secondary/20 rounded-4xl p-16 text-center border-2 border-dashed border-border">
             <h2 className="text-2xl font-bold mb-4">لا توجد مقالات مسجلة تحت هذا الوسم</h2>
             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
               عذراً، لم نتمكن من العثور على أي مقالات أو أخبار مرتبطة بهذا الوسم حالياً.

@@ -41,21 +41,29 @@ const authors = [
 export default function Authors() {
   return (
     <div className="pt-25 pb-25">
-      <SEO title="كتابنا ومبدعونا" description="تعرف على نخبة من الكتاب والمبدعين المساهمين في إثراء المحتوى الثقافي للنادي." />
+      <SEO
+        title="كتابنا ومبدعونا"
+        description="تعرف على نخبة من الكتاب والمبدعين المساهمين في إثراء المحتوى الثقافي للنادي."
+        url="https://shjarabclub.ae/authors"
+        breadcrumbs={[
+          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+          { name: "كتابنا ومبدعونا", item: "https://shjarabclub.ae/authors" }
+        ]}
+      />
 
 
-      <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary"> 
+      <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
         <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10 ">
-          
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-black"> أقلام النادي </h1>
-          <p className="text-x2 leading-relaxed text-black">
+
+          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary"> أقلام النادي </h1>
+          <p className="text-x2 leading-relaxed text-primary">
             نخبة من المثقفين والأدباء الذين يساهمون بأفكارهم وإبداعاتهم في إثراء منصتنا الثقافية.
           </p>
         </div>
       </div>
-      
+
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
-         
+
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {authors.map((author, idx) => (
@@ -67,11 +75,11 @@ export default function Authors() {
               className="group bg-white rounded-[2.5rem] p-8 border border-border shadow-sm hover:shadow-xl hover:border-club-purple transition-all text-center relative overflow-hidden"
             >
               <div className="absolute top-0 left-0 w-full h-2 bg-club-purple transform scale-x-0 group-hover:scale-x-100 transition-transform origin-right"></div>
-              
+
               <div className="relative w-32 h-32 mx-auto mb-6">
                 <div className="absolute inset-0 bg-club-blue rounded-full rotate-6 group-hover:rotate-12 transition-transform"></div>
-                <ImageWithFallback 
-                  src={author.image} 
+                <ImageWithFallback
+                  src={author.image}
                   alt={author.name}
                   className="w-full h-full object-cover rounded-full relative z-10 border-4 border-white shadow-lg"
                 />
@@ -95,7 +103,7 @@ export default function Authors() {
                 </div>
               </div>
 
-              <Link 
+              <Link
                 href={`/authors/${author.id}`}
                 className="inline-flex items-center gap-2 text-club-purple font-bold group/link"
               >

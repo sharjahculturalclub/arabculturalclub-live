@@ -7,6 +7,28 @@ query PolicyPageQuery($pageId: Int!) {
       pageTitle
       pageDescription
     }
+    sEOOptions {
+        seoTitle
+        metaDescription
+        focusKeyword
+        canonicalUrl
+        ogTitle
+        ogDescription
+        ogImage {
+            node {
+                altText
+                sourceUrl
+            }
+        }
+        twitterTitle
+        twitterDescription
+        twitterImage {
+            node {
+                altText
+                sourceUrl
+            }
+        }
+    }
     template {
       ... on Template_PolicyPage {
         templateName

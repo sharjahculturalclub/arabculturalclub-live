@@ -51,22 +51,31 @@ export default function AuthorDetail() {
 
   return (
     <div className="pt-25 pb-25 min-h-screen">
-      <SEO title={author.name} description={author.bio} />
-      
+      <SEO
+        title={author.name}
+        description={author.bio}
+        url={`https://shjarabclub.ae/authors/${id}`}
+        breadcrumbs={[
+          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+          { name: "كتابنا ومبدعونا", item: "https://shjarabclub.ae/authors" },
+          { name: author.name, item: `https://shjarabclub.ae/authors/${id}` }
+        ]}
+      />
+
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
         {/* Profile Header */}
         <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-xl border border-border mb-16 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-32 bg-club-purple/5 -z-10"></div>
-          
+
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 relative">
             <div className="w-40 h-40 md:w-56 md:h-56 shrink-0 relative">
               <div className="absolute inset-0 bg-club-blue rounded-[3rem] rotate-6"></div>
-              <ImageWithFallback 
-                src={author.image} 
-                className="w-full h-full object-cover rounded-[3rem] relative z-10 border-8 border-white shadow-2xl" 
+              <ImageWithFallback
+                src={author.image}
+                className="w-full h-full object-cover rounded-[3rem] relative z-10 border-8 border-white shadow-2xl"
               />
             </div>
-            
+
             <div className="flex-grow text-center md:text-right">
               <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 mb-6">
                 <div>
@@ -82,11 +91,11 @@ export default function AuthorDetail() {
                   </a>
                 </div>
               </div>
-              
+
               <p className="text-lg text-muted-foreground leading-relaxed max-w-4xl mb-8">
                 {author.bio}
               </p>
-              
+
               <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm font-bold text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <MapPin size={18} className="text-club" />
