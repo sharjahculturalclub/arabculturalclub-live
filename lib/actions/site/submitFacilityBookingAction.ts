@@ -1,25 +1,29 @@
 'use server';
 
 /**
- * Server action to submit membership registration form to Contact Form 7 REST API.
+ * Server action to submit facility booking form to Contact Form 7 REST API.
  */
-export async function submitMembershipFormAction(
+export async function submitFacilityBookingAction(
     formData: FormData
 ): Promise<{ success: boolean; message: string }> {
     try {
-        const email = formData.get('email') as string;
         const fullName = formData.get('fullName') as string;
-        const dateOfBirth = formData.get('dateOfBirth') as string;
+        const email = formData.get('email') as string;
         const phone = formData.get('phone') as string;
-        const address = formData.get('address') as string;
-        const profession = formData.get('profession') as string;
-        const membershipType = formData.get('membershipType') as string;
-        const interests = formData.get('interests') as string;
-        const additionalInfo = formData.get('additionalInfo') as string;
+        const membershipNumber = formData.get('membershipNumber') as string;
+        const eventType = formData.get('eventType') as string;
+        const requiredHall = formData.get('requiredHall') as string;
+        const eventDate = formData.get('eventDate') as string;
+        const startTime = formData.get('startTime') as string;
+        const endTime = formData.get('endTime') as string;
+        const expectedAttendance = formData.get('expectedAttendance') as string;
+        const equipment = formData.get('equipment') as string;
+        const additionalServices = formData.get('additionalServices') as string;
+        const specialRequirements = formData.get('specialRequirements') as string;
         const formId = formData.get('formId') as string;
 
         // Validate required fields
-        if (!fullName || !email || !phone) {
+        if (!fullName || !email || !phone || !eventType || !requiredHall || !eventDate || !startTime || !endTime || !expectedAttendance) {
             return {
                 success: false,
                 message: 'الرجاء ملء جميع الحقول المطلوبة',
@@ -56,23 +60,27 @@ export async function submitMembershipFormAction(
         cf7FormData.append('_wpcf7_container_post', '0');
 
         // Form fields — matching CF7 field names exactly
-        cf7FormData.append('user-email', email);
         cf7FormData.append('full-name', fullName);
-        cf7FormData.append('date-of-birth', dateOfBirth || '');
+        cf7FormData.append('user-email', email);
         cf7FormData.append('phone-number', phone);
-        cf7FormData.append('address', address || '');
-        cf7FormData.append('profession', profession || '');
-        cf7FormData.append('membership-type', membershipType || 'عضوية عادية');
+        cf7FormData.append('membership-number', membershipNumber || '');
+        cf7FormData.append('event-type', eventType);
+        cf7FormData.append('required-hall', requiredHall);
+        cf7FormData.append('event-date', eventDate);
+        cf7FormData.append('start-time', startTime);
+        cf7FormData.append('end-time', endTime);
+        cf7FormData.append('expected-attendance', expectedAttendance);
 
         // CF7 checkboxes: send as array
-        if (interests) {
-            const interestsList = interests.split(',');
-            interestsList.forEach((interest) => {
-                cf7FormData.append('interests[]', interest.trim());
+        if (equipment) {
+            const equipmentList = equipment.split(',');
+            equipmentList.forEach((item) => {
+                cf7FormData.append('equipment[]', item.trim());
             });
         }
 
-        cf7FormData.append('additional-info', additionalInfo || '');
+        cf7FormData.append('additional-services', additionalServices || '');
+        cf7FormData.append('special-requirements', specialRequirements || '');
 
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -85,14 +93,14 @@ export async function submitMembershipFormAction(
         if (result.code === 'rest_no_route') {
             return {
                 success: false,
-                message: 'خطأ في إعداد نموذج التسجيل. الرجاء التواصل معنا مباشرة.',
+                message: 'خطأ في إعداد نموذج الحجز. الرجاء التواصل معنا مباشرة.',
             };
         }
 
         if (result.status === 'mail_sent') {
             return {
                 success: true,
-                message: result.message || 'تم إرسال طلب العضوية بنجاح!',
+                message: result.message || 'تم إرسال طلب الحجز بنجاح!',
             };
         } else if (result.status === 'validation_failed') {
             return {
@@ -111,7 +119,7 @@ export async function submitMembershipFormAction(
             };
         }
     } catch (error) {
-        console.error('Error submitting membership form:', error);
+        console.error('Error submitting facility booking form:', error);
         return {
             success: false,
             message: 'حدث خطأ في الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.',

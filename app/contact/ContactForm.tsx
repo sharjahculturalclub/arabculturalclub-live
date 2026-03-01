@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Send } from 'lucide-react';
 import { submitContactFormAction } from '@/lib/actions/site/submitContactFormAction';
 
@@ -16,6 +16,7 @@ interface FormErrors {
 }
 
 export default function ContactForm({ formId }: ContactFormProps) {
+    const formRef = useRef<HTMLDivElement>(null);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -95,6 +96,7 @@ export default function ContactForm({ formId }: ContactFormProps) {
             if (result.success) {
                 setSubmitStatus('success');
                 setSubmitMessage(result.message);
+                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setFormData({
                     name: '',
                     email: '',
@@ -109,6 +111,7 @@ export default function ContactForm({ formId }: ContactFormProps) {
             } else {
                 setSubmitStatus('error');
                 setSubmitMessage(result.message);
+                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
                     setSubmitStatus('idle');
                     setSubmitMessage('');
@@ -117,6 +120,7 @@ export default function ContactForm({ formId }: ContactFormProps) {
         } catch {
             setSubmitStatus('error');
             setSubmitMessage('حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى لاحقاً.');
+            formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             setTimeout(() => {
                 setSubmitStatus('idle');
                 setSubmitMessage('');
@@ -127,7 +131,7 @@ export default function ContactForm({ formId }: ContactFormProps) {
     };
 
     return (
-        <div className="bg-white p-10 md:p-12 rounded-[2.5rem] border border-border shadow-lg">
+        <div ref={formRef} className="bg-white p-10 md:p-12 rounded-[2.5rem] border border-border shadow-lg">
             {/* Success Message */}
             {submitStatus === 'success' && (
                 <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-right">
@@ -175,8 +179,8 @@ export default function ContactForm({ formId }: ContactFormProps) {
                             onChange={handleChange}
                             placeholder="أدخل اسمك"
                             className={`w-full bg-secondary/10 border rounded-xl px-5 py-4 focus:outline-none focus:ring-4 transition-all ${errors.name
-                                    ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10'
-                                    : 'border-border focus:border-club-purple focus:ring-club-purple/5'
+                                ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10'
+                                : 'border-border focus:border-club-purple focus:ring-club-purple/5'
                                 }`}
                         />
                         {errors.name && (
@@ -194,8 +198,8 @@ export default function ContactForm({ formId }: ContactFormProps) {
                             onChange={handleChange}
                             placeholder="example@mail.com"
                             className={`w-full bg-secondary/10 border rounded-xl px-5 py-4 focus:outline-none focus:ring-4 transition-all ${errors.email
-                                    ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10'
-                                    : 'border-border focus:border-club-purple focus:ring-club-purple/5'
+                                ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10'
+                                : 'border-border focus:border-club-purple focus:ring-club-purple/5'
                                 }`}
                         />
                         {errors.email && (
@@ -215,8 +219,8 @@ export default function ContactForm({ formId }: ContactFormProps) {
                         onChange={handleChange}
                         placeholder="كيف يمكننا مساعدتك؟"
                         className={`w-full bg-secondary/10 border rounded-xl px-5 py-4 focus:outline-none focus:ring-4 transition-all ${errors.subject
-                                ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10'
-                                : 'border-border focus:border-club-purple focus:ring-club-purple/5'
+                            ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10'
+                            : 'border-border focus:border-club-purple focus:ring-club-purple/5'
                             }`}
                     />
                     {errors.subject && (
@@ -235,8 +239,8 @@ export default function ContactForm({ formId }: ContactFormProps) {
                         rows={5}
                         placeholder="اكتب رسالتك هنا .."
                         className={`w-full bg-secondary/10 border rounded-xl px-5 py-4 focus:outline-none focus:ring-4 transition-all resize-none ${errors.message
-                                ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10'
-                                : 'border-border focus:border-club-purple focus:ring-club-purple/5'
+                            ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10'
+                            : 'border-border focus:border-club-purple focus:ring-club-purple/5'
                             }`}
                     />
                     {errors.message && (

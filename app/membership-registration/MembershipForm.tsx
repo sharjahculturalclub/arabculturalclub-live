@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { User, Mail, Phone, Calendar, MapPin, Briefcase, Send } from 'lucide-react';
 import { submitMembershipFormAction } from '@/lib/actions/site/submitMembershipFormAction';
 
@@ -15,22 +15,23 @@ interface FormErrors {
 }
 
 const interestsOptions = [
-    { label: 'الموسيقى', value: 'Music' },
-    { label: 'المسرح', value: 'Theater' },
-    { label: 'الفنون والخط العربي', value: 'Arabic arts and calligraphy' },
-    { label: 'الأدب والشعر', value: 'Literature and Poetry' },
-    { label: 'الترجمة', value: 'Translation' },
-    { label: 'المناظرة', value: 'The debate' },
-    { label: 'الفلسفة والفكر', value: 'Philosophy and Thought' },
-    { label: 'التراث والثقافة', value: 'Heritage and Culture' },
+    { label: 'الموسيقى', value: 'الموسيقى' },
+    { label: 'المسرح', value: 'المسرح' },
+    { label: 'الفنون والخط العربي', value: 'الفنون والخط العربي' },
+    { label: 'الأدب والشعر', value: 'الأدب والشعر' },
+    { label: 'الترجمة', value: 'الترجمة' },
+    { label: 'المناظرة', value: 'المناظرة' },
+    { label: 'الفلسفة والفكر', value: 'الفلسفة والفكر' },
+    { label: 'التراث والثقافة', value: 'التراث والثقافة' },
 ];
 
 const membershipTypes = [
-    { label: 'عضوية شرفية', value: 'Honorary membership' },
-    { label: 'عضوية عادية', value: 'Regular membership' },
+    { label: 'عضوية عادية', value: 'عضوية عادية' },
+    { label: 'عضوية شرفية', value: 'عضوية شرفية' },
 ];
 
 export default function MembershipForm({ formId }: MembershipFormProps) {
+    const formRef = useRef<HTMLDivElement>(null);
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -38,7 +39,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
         dateOfBirth: '',
         address: '',
         profession: '',
-        membershipType: 'Regular membership',
+        membershipType: 'عضوية عادية',
         interests: [] as string[],
         additionalInfo: '',
     });
@@ -118,6 +119,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
             if (result.success) {
                 setSubmitStatus('success');
                 setSubmitMessage(result.message);
+                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setFormData({
                     fullName: '',
                     email: '',
@@ -125,7 +127,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                     dateOfBirth: '',
                     address: '',
                     profession: '',
-                    membershipType: 'Regular membership',
+                    membershipType: 'عضوية عادية',
                     interests: [],
                     additionalInfo: '',
                 });
@@ -137,6 +139,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
             } else {
                 setSubmitStatus('error');
                 setSubmitMessage(result.message);
+                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(() => {
                     setSubmitStatus('idle');
                     setSubmitMessage('');
@@ -145,6 +148,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
         } catch {
             setSubmitStatus('error');
             setSubmitMessage('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى لاحقاً.');
+            formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             setTimeout(() => {
                 setSubmitStatus('idle');
                 setSubmitMessage('');
@@ -159,7 +163,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
     const inputErrorClass = `${inputBaseClass} border-red-400 focus:border-red-500 focus:ring-red-500/10`;
 
     return (
-        <div className="bg-white p-8 md:p-12 rounded-[2rem] shadow-lg border border-border">
+        <div ref={formRef} className="bg-white p-8 md:p-12 rounded-[2rem] shadow-lg border border-border">
             <h2 className="text-2xl font-bold mb-8 text-primary border-r-4 border-club-purple pr-4">
                 نموذج التسجيل
             </h2>
