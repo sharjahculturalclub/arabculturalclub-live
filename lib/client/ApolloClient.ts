@@ -44,14 +44,19 @@ const client = new ApolloClient({
             Query: {
                 fields: {
                     category: {
-                        merge(existing, incoming) {
-                            return incoming;
-                        },
+                        merge(existing, incoming) { return incoming; },
                     },
                     tag: {
-                        merge(existing, incoming) {
-                            return incoming;
-                        },
+                        merge(existing, incoming) { return incoming; },
+                    },
+                    posts: {
+                        merge(existing, incoming) { return incoming; },
+                    },
+                    events: {
+                        merge(existing, incoming) { return incoming; },
+                    },
+                    galleries: {
+                        merge(existing, incoming) { return incoming; },
                     },
                 },
             },

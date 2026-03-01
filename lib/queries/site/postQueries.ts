@@ -49,36 +49,26 @@ export const GET_POST_BY_ID = gql`
           sourceUrl
         }
       }
-      seo {
-        breadcrumbs {
-          text
-          url
+      sEOOptions {
+        seoTitle
+        metaDescription
+        focusKeyword
+        canonicalUrl
+        ogTitle
+        ogDescription
+        ogImage {
+          node {
+            altText
+            sourceUrl
+          }
         }
-        canonical
-        metaDesc
-        metaKeywords
-        metaRobotsNofollow
-        metaRobotsNoindex
-        opengraphAuthor
-        opengraphDescription
-        opengraphImage {
-          altText
-          sourceUrl
-        }
-        opengraphModifiedTime
-        opengraphPublishedTime
-        opengraphPublisher
-        opengraphSiteName
-        opengraphTitle
-        opengraphType
-        opengraphUrl
-        readingTime
-        title
-        twitterDescription
         twitterTitle
+        twitterDescription
         twitterImage {
-          altText
-          sourceUrl
+          node {
+            altText
+            sourceUrl
+          }
         }
       }
     }

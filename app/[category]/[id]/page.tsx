@@ -39,36 +39,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return { title: "الخبر غير موجود | النادي الثقافي العربي" };
     }
 
-    const seo = post.seo;
-    const ogImage = seo?.opengraphImage?.sourceUrl || post.featuredImage?.node?.sourceUrl;
-
-    // Construct the canonical URL for this post
-    const canonicalUrl = `https://shjarabclub.ae/${category}/${id}`;
+    const seo = post.sEOOptions;
+    const ogImage = seo?.ogImage?.node?.sourceUrl || post.featuredImage?.node?.sourceUrl;
+    const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
 
     return {
-        title: seo?.title || `${post.title} | النادي الثقافي العربي`,
-        description: seo?.metaDesc || "",
-        keywords: seo?.metaKeywords || undefined,
+        title: seo?.seoTitle || `${post.title} | النادي الثقافي العربي`,
+        description: seo?.metaDescription || "",
+        keywords: seo?.focusKeyword || undefined,
         openGraph: {
-            title: seo?.opengraphTitle || post.title,
-            description: seo?.opengraphDescription || seo?.metaDesc || "",
-            type: (seo?.opengraphType as "article") || "article",
+            title: seo?.ogTitle || seo?.seoTitle || post.title,
+            description: seo?.ogDescription || seo?.metaDescription || "",
+            type: "article",
             url: canonicalUrl,
-            siteName: seo?.opengraphSiteName || "النادي الثقافي العربي",
-            publishedTime: seo?.opengraphPublishedTime || undefined,
-            modifiedTime: seo?.opengraphModifiedTime || undefined,
-            authors: seo?.opengraphAuthor ? [seo.opengraphAuthor] : undefined,
+            siteName: "النادي الثقافي العربي",
             images: ogImage ? [{ url: ogImage }] : undefined,
         },
         twitter: {
             card: "summary_large_image",
-            title: seo?.twitterTitle || post.title,
-            description: seo?.twitterDescription || seo?.metaDesc || "",
-            images: seo?.twitterImage?.sourceUrl || ogImage || undefined,
-        },
-        robots: {
-            index: seo?.metaRobotsNoindex !== "noindex",
-            follow: seo?.metaRobotsNofollow !== "nofollow",
+            title: seo?.twitterTitle || seo?.seoTitle || post.title,
+            description: seo?.twitterDescription || seo?.metaDescription || "",
+            images: seo?.twitterImage?.node?.sourceUrl ? [seo.twitterImage.node.sourceUrl] : (ogImage ? [ogImage] : undefined),
         },
         alternates: {
             canonical: canonicalUrl,
@@ -104,11 +95,50 @@ export default async function PostDetail({ params }: PageProps) {
             day: "numeric",
         })
         : "";
+    const seo = post.sEOOptions;
+    const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
 
-    const readingTime = post.seo?.readingTime;
+    const breadcrumbsSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "الرئيسية",
+                "item": "https://shjarabclub.ae/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "أخبار النادي",
+                "item": "https://shjarabclub.ae/news"
+            },
+            ...(post.categories?.nodes?.[0] ? [{
+                "@type": "ListItem",
+                "position": 3,
+                "name": post.categories.nodes[0].name,
+                "item": `https://shjarabclub.ae/category/${post.categories.nodes[0].slug}`
+            }, {
+                "@type": "ListItem",
+                "position": 4,
+                "name": post.title,
+                "item": canonicalUrl
+            }] : [{
+                "@type": "ListItem",
+                "position": 3,
+                "name": post.title,
+                "item": canonicalUrl
+            }])
+        ]
+    };
 
     return (
         <div className="pb-30 pt-30 z-0 relative">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
+            />
             <div className="container max-w-7xl mx-auto px-4 md:px-6">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center space-x-reverse space-x-2 text-sm text-primary/40 mb-10 font-tajawal">
@@ -201,7 +231,7 @@ export default async function PostDetail({ params }: PageProps) {
 
                             {/* Author Section */}
                             {post.author?.node && (
-                                <div className="mt-16 p-8 bg-white rounded-[2rem] border border-border flex flex-col md:flex-row items-center gap-8">
+                                <div className="mt-16 p-8 bg-white rounded-4xl border border-border flex flex-col md:flex-row items-center gap-8">
                                     <div className="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-white shadow-md">
                                         <img
                                             src={post.author.node.userProfileImage?.profileImage?.node?.sourceUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400"}
@@ -209,7 +239,7 @@ export default async function PostDetail({ params }: PageProps) {
                                             alt={post.author.node.userProfileImage?.profileImage?.node?.altText || post.author.node.name}
                                         />
                                     </div>
-                                    <div className="flex-grow text-center md:text-right">
+                                    <div className="grow text-center md:text-right">
                                         <div className="text-xs font-bold text-club-purple mb-1 uppercase tracking-wider">
                                             كاتب المقال
                                         </div>
@@ -379,7 +409,7 @@ export default async function PostDetail({ params }: PageProps) {
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "NewsArticle",
-                        headline: post.title,
+                        headline: seo?.seoTitle || post.title,
                         datePublished: post.date,
                         dateModified: post.modified,
                         author: post.author?.node
@@ -393,11 +423,11 @@ export default async function PostDetail({ params }: PageProps) {
                             name: "النادي الثقافي العربي",
                             url: "https://shjarabclub.ae",
                         },
-                        image: post.featuredImage?.node?.sourceUrl || undefined,
-                        description: post.seo?.metaDesc || "",
+                        image: seo?.ogImage?.node?.sourceUrl || post.featuredImage?.node?.sourceUrl || undefined,
+                        description: seo?.metaDescription || "",
                         mainEntityOfPage: {
                             "@type": "WebPage",
-                            "@id": `https://shjarabclub.ae/${category}/${id}`,
+                            "@id": canonicalUrl,
                         },
                     }),
                 }}

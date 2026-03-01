@@ -41,9 +41,9 @@ export default function PrivacyPolicyClient({ data }: PrivacyPolicyClientProps) 
             {/* Hero Banner */}
             <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
                 <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10">
-                    <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4 text-black">{pageTitle}</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary">{pageTitle}</h1>
                     {pageDescription && (
-                        <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-black">
+                        <p className="text-xl max-w-2xl mx-auto leading-relaxed text-primary">
                             {pageDescription}
                         </p>
                     )}
@@ -62,7 +62,7 @@ export default function PrivacyPolicyClient({ data }: PrivacyPolicyClientProps) 
                                 transition={{ delay: cardIndex * 0.1 }}
                                 className="mb-12"
                             >
-                                <div className="bg-white p-8 md:p-12 rounded-[2rem] shadow-sm border border-border">
+                                <div className="bg-white p-8 md:p-12 rounded-4xl shadow-sm border border-border">
                                     <div className="flex items-center gap-4 mb-6">
                                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${cardIndex % 2 === 0 ? "bg-club-purple/10 text-club-purple" : "bg-club-blue/10 text-club-blue"}`}>
                                             {renderIcon(card.icon, cardIndex % 2 === 0 ? "Shield" : "FileText")}
@@ -72,7 +72,8 @@ export default function PrivacyPolicyClient({ data }: PrivacyPolicyClientProps) 
                                     {card.content && (
                                         <>
                                             <style>{`
-                                                .policy-html-content ul { list-style: none; padding-right: 1.5rem; margin-top: 1rem; }
+                                                .policy-html-content p { margin-bottom: 1rem; }
+                                                .policy-html-content ul { list-style: none; padding-right: 1.5rem; margin-top: 1rem; margin-bottom: 1rem; }
                                                 .policy-html-content li { position: relative; margin-bottom: 0.75rem; padding-right: 0.5rem; }
                                                 .policy-html-content li::before {
                                                     content: "\\2022";
@@ -105,7 +106,7 @@ export default function PrivacyPolicyClient({ data }: PrivacyPolicyClientProps) 
                                 transition={{ delay: index * 0.1 }}
                                 className="mb-12"
                             >
-                                <div className="bg-gradient-to-l from-club-purple/10 to-club-blue/10 p-8 md:p-12 rounded-[2rem] border border-club-purple/20">
+                                <div className="bg-linear-to-l from-club-purple/10 to-club-blue/10 p-8 md:p-12 rounded-4xl border border-club-purple/20">
                                     {inquiries.title && <h2 className="text-2xl font-bold mb-4 text-primary">{inquiries.title}</h2>}
                                     {inquiries.subtitle && (
                                         <p className="text-muted-foreground text-lg leading-relaxed mb-4">
@@ -141,6 +142,6 @@ export default function PrivacyPolicyClient({ data }: PrivacyPolicyClientProps) 
                     return null;
                 })}
             </div>
-        </div>
+        </div >
     );
 }

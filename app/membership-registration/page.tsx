@@ -51,7 +51,7 @@ export default function MembershipRegistration() {
     // Simulate form submission
     setSubmitted(true);
     toast.success('تم إرسال طلب العضوية بنجاح! سنتواصل معك قريباً.');
-    
+
     // Reset form after 3 seconds
     setTimeout(() => {
       setFormData({
@@ -71,19 +71,24 @@ export default function MembershipRegistration() {
 
   return (
     <div className="pt-25 pb-25">
-      <SEO 
-        title="تسجيل العضوية" 
-        description="انضم إلى النادي الثقافي العربي واستمتع بجميع المزايا والخدمات الثقافية." 
+      <SEO
+        title="تسجيل العضوية"
+        description="انضم إلى النادي الثقافي العربي واستمتع بجميع المزايا والخدمات الثقافية."
+        url="https://shjarabclub.ae/membership-registration"
+        breadcrumbs={[
+          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+          { name: "تسجيل العضوية", item: "https://shjarabclub.ae/membership-registration" }
+        ]}
       />
-      
+
       {/* Hero Banner */}
       <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
         <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4 text-black">تسجيل العضوية</h1>
-          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-black">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4">تسجيل العضوية</h1>
+          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-primary">
             انضم إلى مجتمع المثقفين والمبدعين العرب واستمتع بجميع المزايا الحصرية
           </p>
-        </div>        
+        </div>
       </div>
 
       <div className="container max-w-4xl mx-auto px-4 md:px-6">
@@ -113,20 +118,20 @@ export default function MembershipRegistration() {
               {/* Personal Information */}
               <div className="space-y-6">
                 <h3 className="text-xl font-bold text-primary mb-4">المعلومات الشخصية</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-primary flex items-center gap-2">
                       <User size={16} />
                       الاسم الكامل *
                     </label>
-                    <input 
+                    <input
                       required
-                      type="text" 
+                      type="text"
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      placeholder="أدخل اسمك الكامل" 
+                      placeholder="أدخل اسمك الكامل"
                       className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                     />
                   </div>
@@ -136,13 +141,13 @@ export default function MembershipRegistration() {
                       <Mail size={16} />
                       البريد الإلكتروني *
                     </label>
-                    <input 
+                    <input
                       required
-                      type="email" 
+                      type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="example@mail.com" 
+                      placeholder="example@mail.com"
                       className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                     />
                   </div>
@@ -154,13 +159,13 @@ export default function MembershipRegistration() {
                       <Phone size={16} />
                       رقم الهاتف *
                     </label>
-                    <input 
+                    <input
                       required
-                      type="tel" 
+                      type="tel"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="+971 XX XXX XXXX" 
+                      placeholder="+971 XX XXX XXXX"
                       className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                     />
                   </div>
@@ -170,8 +175,8 @@ export default function MembershipRegistration() {
                       <Calendar size={16} />
                       تاريخ الميلاد
                     </label>
-                    <input 
-                      type="date" 
+                    <input
+                      type="date"
                       name="dateOfBirth"
                       value={formData.dateOfBirth}
                       onChange={handleInputChange}
@@ -185,12 +190,12 @@ export default function MembershipRegistration() {
                     <MapPin size={16} />
                     العنوان
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
-                    placeholder="العنوان الكامل" 
+                    placeholder="العنوان الكامل"
                     className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                   />
                 </div>
@@ -200,12 +205,12 @@ export default function MembershipRegistration() {
                     <Briefcase size={16} />
                     المهنة
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     name="occupation"
                     value={formData.occupation}
                     onChange={handleInputChange}
-                    placeholder="المهنة أو التخصص" 
+                    placeholder="المهنة أو التخصص"
                     className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all"
                   />
                 </div>
@@ -216,8 +221,8 @@ export default function MembershipRegistration() {
                 <h3 className="text-xl font-bold text-primary mb-4">نوع العضوية</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label className="flex items-center gap-3 p-4 border border-border rounded-xl cursor-pointer hover:border-club-purple transition-all">
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       name="membershipType"
                       value="regular"
                       checked={formData.membershipType === 'regular'}
@@ -227,8 +232,8 @@ export default function MembershipRegistration() {
                     <span className="font-bold">عضوية عادية</span>
                   </label>
                   <label className="flex items-center gap-3 p-4 border border-border rounded-xl cursor-pointer hover:border-club-purple transition-all">
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       name="membershipType"
                       value="honorary"
                       checked={formData.membershipType === 'honorary'}
@@ -245,11 +250,11 @@ export default function MembershipRegistration() {
                 <h3 className="text-xl font-bold text-primary mb-4">مجالات الاهتمام</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {interestsOptions.map((interest) => (
-                    <label 
+                    <label
                       key={interest}
                       className="flex items-center gap-2 p-3 border border-border rounded-lg cursor-pointer hover:border-club-purple hover:bg-club-purple/5 transition-all"
                     >
-                      <input 
+                      <input
                         type="checkbox"
                         checked={formData.interests.includes(interest)}
                         onChange={() => handleInterestToggle(interest)}
@@ -264,18 +269,18 @@ export default function MembershipRegistration() {
               {/* Additional Info */}
               <div className="space-y-2 pt-6 border-t border-border">
                 <label className="text-sm font-bold text-primary">معلومات إضافية</label>
-                <textarea 
+                <textarea
                   name="additionalInfo"
                   value={formData.additionalInfo}
                   onChange={handleInputChange}
                   rows={4}
-                  placeholder="أي معلومات إضافية ترغب في مشاركتها..." 
+                  placeholder="أي معلومات إضافية ترغب في مشاركتها..."
                   className="w-full bg-secondary/10 border border-border rounded-xl px-5 py-4 focus:outline-none focus:border-club-purple focus:ring-4 focus:ring-club-purple/5 transition-all resize-none"
                 />
               </div>
 
               {/* Submit Button */}
-              <button 
+              <button
                 type="submit"
                 className="w-full bg-club-purple hover:bg-opacity-90 transition-all text-white font-bold text-lg py-5 rounded-xl shadow-xl shadow-club-purple/20 flex items-center justify-center gap-3 mt-8"
               >

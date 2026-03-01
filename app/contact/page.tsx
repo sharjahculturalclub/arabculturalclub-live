@@ -35,13 +35,21 @@ function ContactContent() {
 
   return (
     <div className="pt-25 pb-25">
-      <SEO title="اتصل بنا" description="تواصل مع النادي الثقافي العربي." />
+      <SEO
+        title="اتصل بنا"
+        description="تواصل مع النادي الثقافي العربي."
+        url="https://shjarabclub.ae/contact"
+        breadcrumbs={[
+          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+          { name: "اتصل بنا", item: "https://shjarabclub.ae/contact" }
+        ]}
+      />
 
       <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
         <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10 ">
 
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-black"> تواصل معنا </h1>
-          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-black">
+          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary"> تواصل معنا </h1>
+          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-primary">
             نحن هنا للإجابة على استفساراتكم واقتراحاتكم.
           </p>
         </div>

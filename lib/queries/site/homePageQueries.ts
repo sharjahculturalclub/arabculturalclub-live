@@ -117,6 +117,28 @@ export const GET_HOME_PAGE = gql`
           }
         }
       }
+      sEOOptions {
+        seoTitle
+        metaDescription
+        focusKeyword
+        canonicalUrl
+        ogTitle
+        ogDescription
+        ogImage {
+          node {
+            altText
+            sourceUrl
+          }
+        }
+        twitterTitle
+        twitterDescription
+        twitterImage {
+          node {
+            altText
+            sourceUrl
+          }
+        }
+      }
     }
     posts(first: 6, where: {orderby: [{field: DATE, order: DESC}]}) {
       nodes {

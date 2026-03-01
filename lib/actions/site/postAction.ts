@@ -33,39 +33,7 @@ export interface PostTag {
     slug: string;
 }
 
-interface SEOImage {
-    altText: string | null;
-    sourceUrl: string | null;
-}
 
-interface SEOBreadcrumb {
-    text: string;
-    url: string;
-}
-
-export interface PostSEO {
-    breadcrumbs: SEOBreadcrumb[] | null;
-    canonical: string | null;
-    metaDesc: string | null;
-    metaKeywords: string | null;
-    metaRobotsNofollow: string | null;
-    metaRobotsNoindex: string | null;
-    opengraphAuthor: string | null;
-    opengraphDescription: string | null;
-    opengraphImage: SEOImage | null;
-    opengraphModifiedTime: string | null;
-    opengraphPublishedTime: string | null;
-    opengraphPublisher: string | null;
-    opengraphSiteName: string | null;
-    opengraphTitle: string | null;
-    opengraphType: string | null;
-    opengraphUrl: string | null;
-    readingTime: number | null;
-    title: string | null;
-    twitterDescription: string | null;
-    twitterTitle: string | null;
-    twitterImage: SEOImage | null;
-}
 
 export interface PostDetail {
     databaseId: number;
@@ -88,7 +56,7 @@ export interface PostDetail {
             sourceUrl: string;
         };
     } | null;
-    seo: PostSEO | null;
+    sEOOptions?: import("@/lib/types/seo").SEOOptions | null;
 }
 
 export interface RelatedPost {

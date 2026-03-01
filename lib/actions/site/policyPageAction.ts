@@ -28,6 +28,7 @@ export interface PolicyPageData {
         pageTitle?: string | null;
         pageDescription?: string | null;
     };
+    sEOOptions?: import("@/lib/types/seo").SEOOptions | null;
     sections: PolicyPageSection[];
 }
 
@@ -47,8 +48,9 @@ export async function fetchPolicyPageData(pageId: number): Promise<PolicyPageDat
         const pageBy = result.data?.pageBy;
         const pageOptions = pageBy?.pageOptions;
         const sections = pageBy?.template?.policyPageBuilder?.policyPageBuilder || [];
+        const sEOOptions = pageBy?.sEOOptions;
 
-        return { pageOptions, sections };
+        return { pageOptions, sections, sEOOptions };
     } catch (error) {
         console.error("Error fetching policy page data:", error);
         return null;

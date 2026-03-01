@@ -91,22 +91,27 @@ const faqData = [
 export default function FAQ() {
   return (
     <div className="pt-25 pb-25">
-      <SEO 
-        title="الأسئلة الشائعة" 
-        description="إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي." 
+      <SEO
+        title="الأسئلة الشائعة"
+        description="إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي."
+        url="https://shjarabclub.ae/faq"
+        breadcrumbs={[
+          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+          { name: "الأسئلة الشائعة", item: "https://shjarabclub.ae/faq" }
+        ]}
       />
-      
+
       {/* Hero Banner */}
       <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
         <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10">
           <div className="flex items-center justify-center gap-3 mb-4">
             <HelpCircle className="text-club-purple" size={40} />
-            <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight text-black">الأسئلة الشائعة</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight">الأسئلة الشائعة</h1>
           </div>
-          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-black">
+          <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-primary">
             ابحث عن إجابات لأسئلتك حول العضوية، الفعاليات، والخدمات
           </p>
-        </div>        
+        </div>
       </div>
 
       <div className="container max-w-4xl mx-auto px-4 md:px-6">
@@ -122,11 +127,11 @@ export default function FAQ() {
               <h2 className="text-2xl md:text-3xl font-bold mb-8 text-primary border-r-4 border-club-purple pr-4">
                 {category.category}
               </h2>
-              
+
               <Accordion type="single" collapsible className="w-full">
                 {category.questions.map((faq, index) => (
-                  <AccordionItem 
-                    key={index} 
+                  <AccordionItem
+                    key={index}
                     value={`item-${categoryIndex}-${index}`}
                     className="border-b border-border last:border-b-0"
                   >
@@ -155,8 +160,8 @@ export default function FAQ() {
             <p className="text-muted-foreground text-lg leading-relaxed mb-6">
               إذا كان لديك سؤال آخر، لا تتردد في التواصل معنا. نحن هنا لمساعدتك!
             </p>
-            <a 
-              href="/contact" 
+            <a
+              href="/contact"
               className="inline-block bg-club-purple hover:bg-opacity-90 transition-all text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg"
             >
               تواصل معنا

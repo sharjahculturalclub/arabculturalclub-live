@@ -20,8 +20,8 @@ export default async function JoinUs() {
   if (!data) {
     return (
       <div className="pt-25 pb-25 container max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4 text-black">انضم إلينا</h1>
-        <p className="text-xl max-w-2xl mx-auto leading-relaxed text-black/70">
+        <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4">انضم إلينا</h1>
+        <p className="text-xl max-w-2xl mx-auto leading-relaxed text-primary/70">
           جاري التحميل...
         </p>
       </div>
@@ -33,6 +33,11 @@ export default async function JoinUs() {
       <SEO
         title={`${data.pageOptions?.pageTitle || 'انضم إلينا'} | النادي الثقافي العربي`}
         description={data.pageOptions?.pageDescription || 'انضم إلى النادي الثقافي العربي، تعرف على مزايا العضوية وحجز المرافق بسهولة.'}
+        url="https://shjarabclub.ae/join-us"
+        breadcrumbs={[
+          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
+          { name: data.pageOptions?.pageTitle || 'انضم إلينا', item: "https://shjarabclub.ae/join-us" }
+        ]}
       />
       <JoinUsClient data={data} />
     </>
