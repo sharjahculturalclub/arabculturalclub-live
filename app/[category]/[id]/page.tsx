@@ -252,7 +252,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                                             {post.author.node.userProfileImage?.authorInfo || "باحث متخصص في الشأن الثقافي العربي ومهتم بتوثيق المشهد الأدبي في الشارقة. يساهم بانتظام في مجلة الكلمة."}
                                         </p>
                                         <Link
-                                            href={`/authors/${post.author.node.databaseId}`}
+                                            href={`/author/${post.author.node.databaseId}`}
                                             className="text-club-blue text-sm font-bold flex items-center justify-center md:justify-start gap-2 hover:gap-3 transition-all"
                                         >
                                             <span>عرض المزيد من مقالات الكاتب</span>

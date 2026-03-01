@@ -79,7 +79,7 @@ export const NewsCard = ({ news }: { news: any }) => {
         </div>
 
         <Link href={postUrl} className="block">
-          <h3 className="text-xl font-bold mb-3 group-hover:text-club-purple transition-colors line-clamp-2 min-h-14 leading-tight">
+          <h3 className="text-xl font-bold mb-3 group-hover:text-club-purple transition-colors leading-tight">
             {news.title}
           </h3>
         </Link>
