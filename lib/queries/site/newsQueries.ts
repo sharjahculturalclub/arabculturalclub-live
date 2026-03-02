@@ -71,3 +71,28 @@ export const GET_ALL_CATEGORIES = gql`
     }
   }
 `;
+
+export const GET_SEARCH_RESULTS = gql`
+  query SearchPosts($searchString: String!) {
+    posts(where: {search: $searchString}) {
+      nodes {
+          databaseId
+          title
+          date
+          excerpt
+          categories {
+            nodes {
+              name
+              slug
+            }
+          }
+          featuredImage {
+            node {
+              altText
+              sourceUrl
+            }
+          }
+        }
+    }
+  }
+`;
