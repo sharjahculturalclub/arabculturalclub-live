@@ -22,6 +22,8 @@ import {
     fetchPostById,
     fetchRelatedPosts,
 } from "@/lib/actions/site/postAction";
+import { SidebarNewsletter } from "@/components/SidebarNewsletter";
+import { fetchFooterSettings } from "@/lib/actions/site/footerAction";
 
 /* ─── Types ───────────────────────────────────────────────── */
 
@@ -89,6 +91,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
     const categoryIds =
         post.categories?.nodes?.map((c) => c.databaseId) ?? [];
     const relatedPosts = await fetchRelatedPosts(categoryIds, post.databaseId);
+    const footerData = await fetchFooterSettings();
 
     const formattedDate = post.date
         ? new Date(post.date).toLocaleDateString("ar-AE", {
@@ -295,29 +298,13 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                     <aside className="lg:w-1/3">
                         <div className="sticky top-32 space-y-12">
                             {/* Newsletter / Action Card */}
-                            <div className="bg-club-purple rounded-3xl p-8 text-white relative overflow-hidden group">
-                                <div className="relative z-10">
-                                    <h3 className="text-2xl font-bold mb-4">كن أول من يعلم</h3>
-                                    <p className="text-white/80 mb-6 text-sm">
-                                        اشترك في نشرتنا البريدية لتصلك آخر أخبار وفعاليات النادي
-                                        مباشرة على بريدك.
-                                    </p>
-                                    <form className="space-y-3">
-                                        <input
-                                            type="email"
-                                            placeholder="بريدك الإلكتروني"
-                                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-club-blue"
-                                        />
-                                        <button
-                                            type="submit"
-                                            className="w-full bg-white text-club-purple font-bold py-3 rounded-xl hover:bg-club-blue hover:text-white transition-all"
-                                        >
-                                            اشترك الآن
-                                        </button>
-                                    </form>
-                                </div>
-                                <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-club-blue/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-                            </div>
+                            {footerData?.newsletter && (
+                                <SidebarNewsletter
+                                    title={footerData.newsletter.title}
+                                    description={footerData.newsletter.description}
+                                    formId={footerData.newsletter.formid}
+                                />
+                            )}
 
                             {/* Related Articles */}
                             {relatedPosts.length > 0 && (

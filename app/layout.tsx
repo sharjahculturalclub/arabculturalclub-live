@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import Newsletter from "@/components/Newsletter";
 import { Toaster } from 'sonner';
 import { fetchLogoData } from "@/lib/actions/site/logoAction";
 import { fetchHeaderMenu } from "@/lib/actions/site/headerMenuAction";
@@ -51,6 +52,9 @@ export default async function RootLayout({
         <main className="grow">
           {children}
         </main>
+        {footerData?.newsletter && (
+          <Newsletter newsletter={footerData.newsletter} />
+        )}
         <Footer
           contactInfo={footerData?.contactInfo}
           programs={footerData?.programs}

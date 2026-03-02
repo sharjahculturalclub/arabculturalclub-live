@@ -49,6 +49,11 @@ export const GET_FOOTER_SETTINGS = gql`
           target
         }
       }
+      newsletter{
+        title
+        description
+        formid
+      }
     }
   }
 `;
