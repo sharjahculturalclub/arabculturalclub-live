@@ -5,6 +5,7 @@ import {
     GET_NEWS_POSTS,
     GET_ALL_CATEGORIES,
     GET_NEWS_PAGE_OPTIONS,
+    GET_SEARCH_RESULTS,
 } from "@/lib/queries/site/newsQueries";
 
 /* ─── Types ───────────────────────────────────────────────── */
@@ -73,6 +74,29 @@ export async function fetchNewsPosts(
     } catch (error) {
         console.error("[fetchNewsPosts] Error fetching news:", error);
         return { posts: [], hasNextPage: false, endCursor: null };
+    }
+}
+
+export async function fetchSearchResults(searchString: string): Promise<NewsPost[]> {
+    try {
+        if (!searchString) return [];
+
+        const { data } = await client.query<{
+            posts: {
+                nodes: NewsPost[];
+            };
+        }>({
+            query: GET_SEARCH_RESULTS,
+            variables: {
+                searchString,
+            },
+            fetchPolicy: "network-only",
+        });
+
+        return data?.posts?.nodes ?? [];
+    } catch (error) {
+        console.error("[fetchSearchResults] Error fetching search results:", error);
+        return [];
     }
 }
 
