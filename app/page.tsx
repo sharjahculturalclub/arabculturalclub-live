@@ -505,33 +505,6 @@ export default async function Home() {
       />
       {/* Dynamic sections — order follows WordPress ACF Flexible Content */}
       {sections.map((section, index) => renderSection(section, index, posts))}
-
-      {/* ─── Newsletter Section (kept hardcoded as requested) ─── */}
-      <section className="bg-club-purple p-12 md:p-20 px-4 md:px-6 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-          <div className="absolute top-10 right-10 w-64 h-64 border-[40px] border-white rounded-full" />
-          <div className="absolute bottom-10 left-10 w-96 h-96 border-[60px] border-white rounded-full" />
-        </div>
-        <div className="container max-w-2xl mx-auto relative z-10 text-center text-white">
-          <h2 className="text-4xl font-bold font-tajawal mb-6">
-            ابقَ على اطلاع دائم
-          </h2>
-          <p className="text-white/80 mb-10 text-lg">
-            اشترك في نشرتنا البريدية لتصلك آخر أخبار الفعاليات والنشاطات
-            الثقافية مباشرة إلى بريدك الإلكتروني.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <input
-              type="email"
-              placeholder="بريدك الإلكتروني"
-              className="flex-1 bg-white/20 border border-white/30 px-6 py-4 rounded-xl text-white placeholder:text-white/60 focus:outline-none focus:bg-white/30"
-            />
-            <button className="bg-white text-club-purple px-10 py-4 rounded-xl font-bold hover:bg-white/90 transition-all">
-              اشترك الآن
-            </button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

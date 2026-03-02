@@ -78,7 +78,7 @@ export async function submitContactFormAction(
         if (result.status === 'mail_sent') {
             return {
                 success: true,
-                message: result.message || 'تم إرسال رسالتك بنجاح!',
+                message: result.message === 'Thank you for your message. It has been sent.' ? 'تم إرسال رسالتك بنجاح!' : (result.message || 'تم إرسال رسالتك بنجاح!'),
             };
         } else if (result.status === 'validation_failed') {
             return {

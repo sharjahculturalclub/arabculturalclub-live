@@ -34,6 +34,12 @@ export interface FooterCopyright {
     links: FooterLink[];
 }
 
+export interface FooterNewsletter {
+    title: string;
+    description: string;
+    formid: string;
+}
+
 export interface FooterSettingsData {
     footerSettings: {
         contactInfo: FooterContactInfo;
@@ -42,6 +48,7 @@ export interface FooterSettingsData {
         quickLinks: FooterLinkSection;
         about: FooterAboutSection;
         socialLinks: FooterSocialLink[];
+        newsletter: FooterNewsletter;
         copyright: FooterCopyright;
     };
 }

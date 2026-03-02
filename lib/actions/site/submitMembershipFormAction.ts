@@ -92,7 +92,7 @@ export async function submitMembershipFormAction(
         if (result.status === 'mail_sent') {
             return {
                 success: true,
-                message: result.message || 'تم إرسال طلب العضوية بنجاح!',
+                message: result.message === 'Thank you for your message. It has been sent.' ? 'تم إرسال طلب العضوية بنجاح!' : (result.message || 'تم إرسال طلب العضوية بنجاح!'),
             };
         } else if (result.status === 'validation_failed') {
             return {
