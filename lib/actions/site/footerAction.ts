@@ -40,6 +40,14 @@ export interface FooterNewsletter {
     formid: string;
 }
 
+export interface SiteScripts {
+    googleAnalyticsId: string;
+    googleTagManagerId: string;
+    headTagCode: string;
+    bodyTagCode: string;
+    footerTagCode: string;
+}
+
 export interface FooterSettingsData {
     footerSettings: {
         contactInfo: FooterContactInfo;
@@ -50,6 +58,7 @@ export interface FooterSettingsData {
         socialLinks: FooterSocialLink[];
         newsletter: FooterNewsletter;
         copyright: FooterCopyright;
+        siteScripts: SiteScripts;
     };
 }
 
