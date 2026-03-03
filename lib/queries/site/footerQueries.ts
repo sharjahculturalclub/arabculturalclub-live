@@ -54,6 +54,13 @@ export const GET_FOOTER_SETTINGS = gql`
         description
         formid
       }
+      siteScripts {
+        googleAnalyticsId
+        googleTagManagerId
+        headTagCode
+        bodyTagCode
+        footerTagCode
+      }
     }
   }
 `;
