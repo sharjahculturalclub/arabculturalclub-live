@@ -33,7 +33,7 @@ export async function fetchCondolenceHallBookingPageData(): Promise<CondolenceHa
                 } | null;
                 template: {
                     condolenceHallBookingPageBuilder: {
-                        lecturehallBookingPageBuilder: any[];
+                        condolenceHallBookingPageBuilder: any[];
                     } | null;
                 } | null;
                 sEOOptions: SEOOptions | null;
@@ -52,7 +52,7 @@ export async function fetchCondolenceHallBookingPageData(): Promise<CondolenceHa
         if (!page) return null;
 
         const sections =
-            page.template?.condolenceHallBookingPageBuilder?.lecturehallBookingPageBuilder ?? [];
+            page.template?.condolenceHallBookingPageBuilder?.condolenceHallBookingPageBuilder ?? [];
 
         const formSection = sections.find(
             (s: any) => 'formId' in s

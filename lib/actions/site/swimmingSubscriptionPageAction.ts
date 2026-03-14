@@ -33,7 +33,7 @@ export async function fetchSwimmingSubscriptionPageData(): Promise<SwimmingSubsc
                 } | null;
                 template: {
                     swimmingSubscriptionPageBuilder: {
-                        shareOpinionsPageBuilder: any[];
+                        swimmingSubscriptionPageBuilder: any[];
                     } | null;
                 } | null;
                 sEOOptions: SEOOptions | null;
@@ -52,7 +52,7 @@ export async function fetchSwimmingSubscriptionPageData(): Promise<SwimmingSubsc
         if (!page) return null;
 
         const sections =
-            page.template?.swimmingSubscriptionPageBuilder?.shareOpinionsPageBuilder ?? [];
+            page.template?.swimmingSubscriptionPageBuilder?.swimmingSubscriptionPageBuilder ?? [];
 
         const formSection = sections.find(
             (s: any) => 'formId' in s

@@ -5,51 +5,52 @@ import { gql } from "@apollo/client";
  */
 export const GET_LECTURE_HALL_BOOKING_PAGE = gql`
     query LectureHallBookingPageQuery {
-        pageBy(pageId: 473) {
-            pageOptions {
-                pageTitle
-                pageDescription
-            }
-            template {
-                ... on Template_LectureHallBookingPage {
-                    templateName
-                    swimmingSubscriptionPageBuilder {
-                        lecturehallBookingPageBuilder {
-                            ... on SwimmingSubscriptionPageBuilderLecturehallBookingPageBuilderLectureHallBookingFormSectionLayout {
-                                formId
-                            }
-                            ... on SwimmingSubscriptionPageBuilderLecturehallBookingPageBuilderInfoSectionLayout {
-                                sectionTitle
-                                infoPoints {
-                                    pointText
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            sEOOptions {
-                seoTitle
-                metaDescription
-                focusKeyword
-                canonicalUrl
-                ogTitle
-                ogDescription
-                ogImage {
-                    node {
-                        altText
-                        sourceUrl
-                    }
-                }
-                twitterTitle
-                twitterDescription
-                twitterImage {
-                    node {
-                        altText
-                        sourceUrl
-                    }
-                }
-            }
-        }
+  pageBy(pageId: 473) {
+    pageOptions {
+      pageTitle
+      pageDescription
     }
+    template {
+      templateName
+      ... on Template_LectureHallBookingPage {
+        templateName
+        lectureHallBookingPageBuilder {
+          lecturehallBookingPageBuilder {
+            ... on LectureHallBookingPageBuilderLecturehallBookingPageBuilderLectureHallBookingFormSectionLayout {
+              formId
+            }
+            ... on LectureHallBookingPageBuilderLecturehallBookingPageBuilderInfoSectionLayout {
+              sectionTitle
+              infoPoints {
+                pointText
+              }
+            }
+          }
+        }
+      }
+    }
+    sEOOptions {
+      seoTitle
+      metaDescription
+      focusKeyword
+      canonicalUrl
+      ogTitle
+      ogDescription
+      ogImage {
+        node {
+          altText
+          sourceUrl
+        }
+      }
+      twitterTitle
+      twitterDescription
+      twitterImage {
+        node {
+          altText
+          sourceUrl
+        }
+      }
+    }
+  }
+}
 `;

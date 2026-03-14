@@ -32,7 +32,7 @@ export async function fetchLectureHallBookingPageData(): Promise<LectureHallBook
                     pageDescription: string | null;
                 } | null;
                 template: {
-                    swimmingSubscriptionPageBuilder: {
+                    lectureHallBookingPageBuilder: {
                         lecturehallBookingPageBuilder: any[];
                     } | null;
                 } | null;
@@ -52,7 +52,7 @@ export async function fetchLectureHallBookingPageData(): Promise<LectureHallBook
         if (!page) return null;
 
         const sections =
-            page.template?.swimmingSubscriptionPageBuilder?.lecturehallBookingPageBuilder ?? [];
+            page.template?.lectureHallBookingPageBuilder?.lecturehallBookingPageBuilder ?? [];
 
         const formSection = sections.find(
             (s: any) => 'formId' in s
