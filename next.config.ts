@@ -45,6 +45,9 @@ const nextConfig: NextConfig = {
   // Optimize package imports (checklist §2)
   experimental: {
     optimizePackageImports: ['@/components', '@/lib'],
+    serverActions: {
+      bodySizeLimit: '20mb',
+    },
   },
   // Security & performance headers
   async headers() {
