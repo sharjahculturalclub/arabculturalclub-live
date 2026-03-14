@@ -79,8 +79,8 @@ function AutoTextarea({ label, name, required, maxLength, placeholder, hint, err
                 rows={1}
                 onInput={handleInput}
                 className={`w-full px-4 py-3 border rounded-xl text-gray-900 text-sm font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all resize-none overflow-hidden leading-6 min-h-12 ${error
-                        ? 'border-red-400 bg-red-50/30 focus:border-red-500 focus:ring-red-500/15'
-                        : 'bg-gray-50 border-gray-200 focus:border-purple-500 focus:bg-white focus:ring-purple-500/15'
+                    ? 'border-red-400 bg-red-50/30 focus:border-red-500 focus:ring-red-500/15'
+                    : 'bg-gray-50 border-gray-200 focus:border-purple-500 focus:bg-white focus:ring-purple-500/15'
                     }`}
                 style={{ height: '3rem' }}
             />
@@ -155,8 +155,8 @@ function SelectInput({ label, name, required, hint, children, error }: any) {
                 <select
                     name={name}
                     className={`w-full h-12 px-4 ps-4 pe-10 border rounded-xl text-gray-900 text-sm font-medium appearance-none focus:outline-none focus:ring-2 transition-all ${error
-                            ? 'border-red-400 bg-red-50/30 focus:border-red-500 focus:ring-red-500/15'
-                            : 'bg-gray-50 border-gray-200 focus:border-purple-500 focus:bg-white focus:ring-purple-500/15'
+                        ? 'border-red-400 bg-red-50/30 focus:border-red-500 focus:ring-red-500/15'
+                        : 'bg-gray-50 border-gray-200 focus:border-purple-500 focus:bg-white focus:ring-purple-500/15'
                         }`}
                 >
                     {children}
@@ -182,10 +182,10 @@ function FileUpload({ label, name, required, accept, hint, error }: any) {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                 />
                 <div className={`w-full flex items-center gap-4 px-5 py-4 border-2 border-dashed rounded-2xl transition-all ${error
-                        ? 'border-red-400 bg-red-50/30'
-                        : file
-                            ? 'border-purple-400 bg-purple-50/60'
-                            : 'border-gray-200 bg-gray-50 group-hover:border-purple-300 group-hover:bg-purple-50/30'
+                    ? 'border-red-400 bg-red-50/30'
+                    : file
+                        ? 'border-purple-400 bg-purple-50/60'
+                        : 'border-gray-200 bg-gray-50 group-hover:border-purple-300 group-hover:bg-purple-50/30'
                     }`}
                 >
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${error ? 'bg-red-100 text-red-500' : file ? 'bg-purple-100 text-purple-600' : 'bg-white text-gray-400 group-hover:text-purple-500'
@@ -224,6 +224,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
     const [message, setMessage] = useState('');
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
     const [dependents, setDependents] = useState<number[]>([]);
+    const [membershipStatus, setMembershipStatus] = useState<string | null>(null);
     const nextId = useRef(1);
 
     const addDependent = () => {
@@ -237,6 +238,11 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
 
     const handleChange = (e: React.ChangeEvent<HTMLFormElement>) => {
         const target = e.target as unknown as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+        if (target.name === 'membership_status') {
+            setMembershipStatus((target as HTMLInputElement).value);
+        }
+
         if (target.name && fieldErrors[target.name]) {
             setFieldErrors(prev => {
                 const newErrs = { ...prev };
@@ -265,10 +271,15 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
         // Main Fields
         req('full_name', 'الاسم الكامل', 2);
         req('nationality', 'الجنسية', 2);
+        req('gender', 'الجنس');
         req('passport_number', 'رقم الجواز', 4);
         req('date_of_birth', 'تاريخ الميلاد');
         req('user-email', 'البريد الإلكتروني');
         req('mobile_1', 'رقم المتحرك');
+
+        if (membershipStatus === 'تجديد') {
+            req('previous_membership_number', 'رقم العضوية السابقة');
+        }
 
         // Dependents
         dependents.forEach((_, idx) => {
@@ -317,6 +328,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
         try {
             const formData = new FormData(form);
             formData.append('formId', formId);
+            formData.append('application_date', new Date().toISOString().split('T')[0]);
             const result = await submitMembershipFormAction(formData);
 
             if (result.success) {
@@ -386,9 +398,13 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <TextInput label="الاسم الكامل" name="full_name" required minLength={2} maxLength={150} placeholder="الاسم الكامل كما في جواز السفر" error={fieldErrors['full_name']} />
                             <TextInput label="الجنسية" name="nationality" required minLength={2} maxLength={80} placeholder="الجنسية" error={fieldErrors['nationality']} />
-                            <TextInput label="رقم الجواز" name="passport_number" required minLength={4} maxLength={30} placeholder="مثال: A12345678" error={fieldErrors['passport_number']} />
+                            <SelectInput label="الجنس" name="gender" required error={fieldErrors['gender']}>
+                                <option value="">اختر الجنس...</option>
+                                <option value="ذكر">ذكر</option>
+                                <option value="أنثى">أنثى</option>
+                            </SelectInput>
                             <DateInput label="تاريخ الميلاد" name="date_of_birth" required error={fieldErrors['date_of_birth']} />
-                            <DateInput label="تاريخ الطلب" name="application_date" error={fieldErrors['application_date']} />
+                            <TextInput label="رقم الجواز" name="passport_number" required minLength={4} maxLength={30} placeholder="مثال: A12345678" error={fieldErrors['passport_number']} />
                             <TextInput label="المهنة" name="occupation" maxLength={120} placeholder="المهنة الحالية" error={fieldErrors['occupation']} />
                         </div>
                     </div>
@@ -412,11 +428,10 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                         <SectionHeader icon={Briefcase} title="نوع وحالة العضوية" color="purple" />
 
                         <Field label="نوع العضوية" required error={fieldErrors['membership_type']}>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-1">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
                                 {[
                                     { value: 'عائلية', desc: 'تشمل الزوج/ة والأبناء' },
                                     { value: 'فردية', desc: 'للفرد الواحد فقط' },
-                                    { value: 'سباحة', desc: 'عضوية نادي السباحة' },
                                 ].map(({ value, desc }) => (
                                     <label key={value} className="flex items-center gap-4 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-purple-400 hover:bg-purple-50/40 has-checked:border-purple-500 has-checked:bg-purple-50 transition-all group">
                                         <div className="relative w-5 h-5 shrink-0">
@@ -434,7 +449,20 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
 
                         <Divider />
 
-                        <Field label="حالة الطلب" required error={fieldErrors['membership_status']}>
+                        <SectionHeader icon={CheckCircle2} title="عضوية نادي السباحة" color="blue" />
+                        <label className="flex items-center gap-4 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 has-checked:border-blue-500 has-checked:bg-blue-50 transition-all group">
+                            <div className="relative w-5 h-5 shrink-0">
+                                <input type="checkbox" name="swimming_membership" value="نعم" className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded focus:outline-none checked:border-blue-600 checked:bg-blue-600 transition-all" />
+                                <CheckCircle2 size={14} strokeWidth={3} className="absolute inset-0 m-auto text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
+                            </div>
+                            <div className="flex-1">
+                                <p className="text-sm font-bold text-gray-800 group-hover:text-blue-700">الاشتراك في نادي السباحة</p>
+                            </div>
+                        </label>
+
+                        <Divider />
+
+                        <Field label="نوع الطلب" required error={fieldErrors['membership_status']}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
                                 {[
                                     { value: 'جديد', desc: 'عضوية جديدة' },
@@ -456,14 +484,18 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
 
                         <Divider />
 
-                        <TextInput
-                            label="رقم العضوية السابقة"
-                            name="previous_membership_number"
-                            maxLength={50}
-                            placeholder="A-0000"
-                            hint="مطلوب فقط في حالة تجديد العضوية"
-                            error={fieldErrors['previous_membership_number']}
-                        />
+                        {membershipStatus === 'تجديد' && (
+                            <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                                <TextInput
+                                    label="رقم العضوية السابقة"
+                                    name="previous_membership_number"
+                                    required
+                                    maxLength={50}
+                                    placeholder="A-0000"
+                                    error={fieldErrors['previous_membership_number']}
+                                />
+                            </div>
+                        )}
                     </div>
 
                     <div className="h-px bg-gray-100 mx-8" />
@@ -553,8 +585,8 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                     <div className="p-5 sm:p-8 space-y-6">
                         <div className="space-y-2">
                             <label className={`flex items-start gap-4 cursor-pointer group p-4 rounded-2xl border transition-all ${fieldErrors['consent_rules_acknowledged']
-                                    ? 'border-red-300 bg-red-50/40'
-                                    : 'border-transparent hover:bg-gray-50'
+                                ? 'border-red-300 bg-red-50/40'
+                                : 'border-transparent hover:bg-gray-50'
                                 }`}>
                                 <div className="relative w-6 h-6 shrink-0 mt-0.5">
                                     <input type="checkbox" name="consent_rules_acknowledged" value="أوافق على الشروط والأحكام الواردة في النموذج"
@@ -566,9 +598,14 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                                     <p className="text-sm font-bold text-gray-800 group-hover:text-purple-700 transition-colors">
                                         أوافق على الشروط والأحكام الواردة في النموذج <span className="text-red-500">*</span>
                                     </p>
-                                    <p className="text-xs text-gray-400 leading-relaxed mt-2">
-                                        أقر بأن جميع البيانات المدونة صحيحة، وأتعهد بالالتزام بالنظام الأساسي للنادي الثقافي العربي واللوائح الداخلية.
-                                    </p>
+                                    <div className="text-xs text-gray-500 leading-relaxed mt-4 space-y-2">
+                                        <p>أقر بأن جميع البيانات المدونة صحيحة، وأتعهد بالالتزام بالنظام الأساسي للنادي الثقافي العربي واللوائح الداخلية.</p>
+                                        <p>• يجب إتمام البيانات الموضحة أعلاه، مع تقديم صورة عن جواز السفر وصورة شخصية لكل منتسب لإصدار الهوية.</p>
+                                        <p>• أولياء الأمور مسؤولون عن سلامة أطفالهم أثناء تواجدهم في النادي، ولا تتحمل الإدارة أي مسؤولية ناتجة عن ترك الأطفال دون إشراف مباشر منهم.</p>
+                                        <p>• يُحظر على الأعضاء التعدي على العاملين أثناء تأدية عملهم، ويحق لهم التقدم بشكوى كتابية إلى الإدارة.</p>
+                                        <p>• الالتزام بالملابس المحتشمة، ويُمنع دخول مبنى النادي والكافيتيريا بملابس الرياضة أو الشورت.</p>
+                                        <p>• يحق للنادي إلغاء العضوية في حال إخلال العضو بالأنظمة واللوائح، أو إتلاف الممتلكات، أو القيام بنشاط يتعارض مع مبادئ وأهداف النادي.</p>
+                                    </div>
                                 </div>
                             </label>
                             {fieldErrors['consent_rules_acknowledged'] && (
