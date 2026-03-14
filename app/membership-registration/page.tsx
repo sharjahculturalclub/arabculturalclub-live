@@ -88,7 +88,7 @@ export default async function MembershipRegistrationPage() {
         {formId ? (
           <MembershipForm formId={formId} />
         ) : (
-          <div className="bg-white p-12 rounded-[2rem] shadow-lg border border-border text-center">
+          <div className="bg-white p-12 rounded-3xl shadow-lg border border-border text-center">
             <p className="text-muted-foreground text-lg">
               نموذج التسجيل غير متاح حالياً. يرجى المحاولة لاحقاً.
             </p>

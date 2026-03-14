@@ -2,36 +2,20 @@
 
 /**
  * Server action to submit membership registration form to Contact Form 7 REST API.
+ * Handles extensive fields including file uploads natively through FormData.
  */
 export async function submitMembershipFormAction(
     formData: FormData
-): Promise<{ success: boolean; message: string }> {
+): Promise<{ success: boolean; message: string; invalidFields?: any[] }> {
     try {
-        const email = formData.get('email') as string;
-        const fullName = formData.get('fullName') as string;
-        const dateOfBirth = formData.get('dateOfBirth') as string;
-        const phone = formData.get('phone') as string;
-        const address = formData.get('address') as string;
-        const profession = formData.get('profession') as string;
-        const membershipType = formData.get('membershipType') as string;
-        const interests = formData.get('interests') as string;
-        const additionalInfo = formData.get('additionalInfo') as string;
         const formId = formData.get('formId') as string;
-
-        // Validate required fields
-        if (!fullName || !email || !phone) {
+        
+        // Basic required validation on server
+        const email = formData.get('user-email') as string;
+        if (!email) {
             return {
                 success: false,
-                message: 'الرجاء ملء جميع الحقول المطلوبة',
-            };
-        }
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return {
-                success: false,
-                message: 'الرجاء إدخال بريد إلكتروني صحيح',
+                message: 'الرجاء إدخال البريد الإلكتروني',
             };
         }
 
@@ -45,34 +29,27 @@ export async function submitMembershipFormAction(
 
         const endpoint = `${wpApiUrl}/wp-json/contact-form-7/v1/contact-forms/${formId}/feedback`;
 
-        // CF7 requires multipart/form-data
         const cf7FormData = new FormData();
-
-        // Required CF7 fields
         cf7FormData.append('_wpcf7', formId);
         cf7FormData.append('_wpcf7_version', '5.9.8');
         cf7FormData.append('_wpcf7_locale', 'ar');
         cf7FormData.append('_wpcf7_unit_tag', `wpcf7-f${formId}-o1`);
         cf7FormData.append('_wpcf7_container_post', '0');
 
-        // Form fields — matching CF7 field names exactly
-        cf7FormData.append('user-email', email);
-        cf7FormData.append('full-name', fullName);
-        cf7FormData.append('date-of-birth', dateOfBirth || '');
-        cf7FormData.append('phone-number', phone);
-        cf7FormData.append('address', address || '');
-        cf7FormData.append('profession', profession || '');
-        cf7FormData.append('membership-type', membershipType || 'عضوية عادية');
+        // Forward all fields to CF7. 
+        // CF7 checkboxes must be appended with [] in keys.
+        const checkboxFields = ['membership_type', 'consent_rules_acknowledged'];
 
-        // CF7 checkboxes: send as array
-        if (interests) {
-            const interestsList = interests.split(',');
-            interestsList.forEach((interest) => {
-                cf7FormData.append('interests[]', interest.trim());
-            });
+        for (const [key, value] of formData.entries()) {
+            if (key !== 'formId') {
+                // If it's a known checkbox field, append [] to satisfy CF7 REST API
+                if (checkboxFields.includes(key)) {
+                    cf7FormData.append(`${key}[]`, value);
+                } else {
+                    cf7FormData.append(key, value);
+                }
+            }
         }
-
-        cf7FormData.append('additional-info', additionalInfo || '');
 
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -81,7 +58,6 @@ export async function submitMembershipFormAction(
 
         const result = await response.json();
 
-        // Handle rest_no_route error
         if (result.code === 'rest_no_route') {
             return {
                 success: false,
@@ -92,17 +68,23 @@ export async function submitMembershipFormAction(
         if (result.status === 'mail_sent') {
             return {
                 success: true,
-                message: result.message === 'Thank you for your message. It has been sent.' ? 'تم إرسال طلب العضوية بنجاح!' : (result.message || 'تم إرسال طلب العضوية بنجاح!'),
+                message: result.message === 'Thank you for your message. It has been sent.' 
+                    ? 'تم إرسال طلب العضوية بنجاح!' 
+                    : (result.message || 'تم إرسال طلب العضوية بنجاح!'),
             };
         } else if (result.status === 'validation_failed') {
+            const invalidFields: Array<{ field: string; message: string }> = result.invalid_fields || [];
+            // Build a readable message listing the failing fields
+            let message = 'يرجى مراجعة الحقول التالية وتصحيحها:';
+            if (invalidFields.length > 0) {
+                const fieldNames = invalidFields.map(f => f.field).join('، ');
+                message = `يوجد خطأ في الحقول التالية: ${fieldNames}`;
+            }
+            console.warn('CF7 validation_failed:', invalidFields);
             return {
                 success: false,
-                message: result.message || 'يرجى التحقق من البيانات المدخلة والمحاولة مرة أخرى.',
-            };
-        } else if (result.status === 'mail_failed') {
-            return {
-                success: false,
-                message: 'فشل إرسال البريد الإلكتروني. حاول مرة أخرى.',
+                message,
+                invalidFields,
             };
         } else {
             return {
@@ -111,10 +93,13 @@ export async function submitMembershipFormAction(
             };
         }
     } catch (error) {
-        console.error('Error submitting membership form:', error);
+        const errMsg = error instanceof Error ? error.message : String(error);
+        console.error('Error submitting membership form:', errMsg);
         return {
             success: false,
-            message: 'حدث خطأ في الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.',
+            message: process.env.NODE_ENV === 'development'
+                ? `خطأ في الخادم: ${errMsg}`
+                : 'حدث خطأ في الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.',
         };
     }
 }
