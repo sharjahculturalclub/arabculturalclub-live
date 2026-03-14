@@ -38,7 +38,7 @@ export async function submitMembershipFormAction(
 
         // Forward all fields to CF7. 
         // CF7 checkboxes must be appended with [] in keys.
-        const checkboxFields = ['membership_type', 'consent_rules_acknowledged'];
+        const checkboxFields = ['membership_type', 'swimming_membership', 'consent_rules_acknowledged'];
 
         for (const [key, value] of formData.entries()) {
             if (key !== 'formId') {
