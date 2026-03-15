@@ -100,7 +100,7 @@ export const Footer = ({
                 {about.description}
               </p>
               {socialLinks && socialLinks.length > 0 && (
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-3">
                   {socialLinks.map((social, i) => {
                     const IconComponent = iconMap[social.iconName.toLowerCase()];
                     if (!IconComponent) return null;
@@ -110,9 +110,9 @@ export const Footer = ({
                         href={social.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-10 h-10 rounded-full border border-secondary/20 flex items-center justify-center hover:bg-club-purple hover:border-club-purple transition-all"
+                        className="w-8 h-8 shrink-0 rounded-full border border-secondary/20 flex items-center justify-center hover:bg-club-purple hover:border-club-purple transition-all"
                       >
-                        <IconComponent size={18} />
+                        <IconComponent size={14} />
                       </a>
                     );
                   })}

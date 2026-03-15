@@ -99,14 +99,14 @@ export async function GET() {
             { path: '/contact', priority: '0.8', changefreq: 'monthly' },
             { path: '/authors', priority: '0.7', changefreq: 'weekly' },
             { path: '/faq', priority: '0.6', changefreq: 'monthly' },
-            { path: '/join-us', priority: '0.8', changefreq: 'monthly' },
+            { path: '/membership', priority: '0.8', changefreq: 'monthly' },
             { path: '/membership-benefits', priority: '0.7', changefreq: 'monthly' },
-            { path: '/membership-registration', priority: '0.8', changefreq: 'monthly' },
+            { path: '/membership/registration', priority: '0.8', changefreq: 'monthly' },
             { path: '/facility-booking', priority: '0.8', changefreq: 'monthly' },
             { path: '/sharjah-culture', priority: '0.7', changefreq: 'monthly' },
             { path: '/terms-of-use', priority: '0.5', changefreq: 'yearly' },
             { path: '/privacy-policy', priority: '0.5', changefreq: 'yearly' },
-            { path: '/share-opinions', priority: '0.7', changefreq: 'monthly' },
+            { path: '/share', priority: '0.7', changefreq: 'monthly' },
             { path: '/search', priority: '0.4', changefreq: 'daily' },
         ];
 

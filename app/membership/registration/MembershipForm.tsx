@@ -225,6 +225,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
     const [dependents, setDependents] = useState<number[]>([]);
     const [membershipStatus, setMembershipStatus] = useState<string | null>(null);
+    const [membershipType, setMembershipType] = useState<string | null>(null);
     const nextId = useRef(1);
 
     const addDependent = () => {
@@ -241,6 +242,14 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
 
         if (target.name === 'membership_status') {
             setMembershipStatus((target as HTMLInputElement).value);
+        }
+
+        if (target.name === 'membership_type') {
+            const val = (target as HTMLInputElement).value;
+            setMembershipType(val);
+            if (val !== 'عائلية') {
+                setDependents([]);
+            }
         }
 
         if (target.name && fieldErrors[target.name]) {
@@ -282,21 +291,23 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
         }
 
         // Dependents
-        dependents.forEach((_, idx) => {
-            const pos = idx + 1;
-            req(`dependent_${pos}_name`, 'اسم المنتسب', 2);
-            req(`dependent_${pos}_gender`, 'الجنس');
-            req(`dependent_${pos}_dob`, 'تاريخ الميلاد');
-        });
+        if (membershipType === 'عائلية') {
+            dependents.forEach((_, idx) => {
+                const pos = idx + 1;
+                req(`dependent_${pos}_name`, 'اسم المنتسب', 2);
+                req(`dependent_${pos}_gender`, 'الجنس');
+                req(`dependent_${pos}_dob`, 'تاريخ الميلاد');
+            });
+        }
 
         // Email format
         const emailVal = (data.get('user-email') as string || '').trim();
         if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal))
             errs['user-email'] = 'يرجى إدخال بريد إلكتروني صحيح';
 
-        // Membership type — at least one checkbox
-        if (data.getAll('membership_type').length === 0)
-            errs['membership_type'] = 'يرجى اختيار نوع العضوية واحد على الأقل';
+        // Membership type — radio
+        if (!data.get('membership_type'))
+            errs['membership_type'] = 'يرجى اختيار نوع العضوية';
 
         // Membership status — radio
         if (!data.get('membership_status'))
@@ -435,8 +446,8 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                                 ].map(({ value, desc }) => (
                                     <label key={value} className="flex items-center gap-4 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-purple-400 hover:bg-purple-50/40 has-checked:border-purple-500 has-checked:bg-purple-50 transition-all group">
                                         <div className="relative w-5 h-5 shrink-0">
-                                            <input type="checkbox" name="membership_type" value={value} className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded focus:outline-none checked:border-purple-600 checked:bg-purple-600 transition-all" />
-                                            <CheckCircle2 size={14} strokeWidth={3} className="absolute inset-0 m-auto text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
+                                            <input type="radio" name="membership_type" value={value} className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full focus:outline-none checked:border-purple-600 transition-all" />
+                                            <div className="w-2.5 h-2.5 bg-purple-600 rounded-full absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 scale-0 peer-checked:scale-100 transition-all" />
                                         </div>
                                         <div className="flex-1">
                                             <p className="text-sm font-bold text-gray-800 group-hover:text-purple-700">{value}</p>
@@ -501,60 +512,64 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                     <div className="h-px bg-gray-100 mx-8" />
 
                     {/* ══ 4. Dependents ════════════════════════════════════════ */}
-                    <div className="p-5 sm:p-8">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-2xl bg-purple-600/10 text-purple-600 flex items-center justify-center shrink-0">
-                                    <Users size={20} strokeWidth={2} />
-                                </div>
-                                <div>
-                                    <h3 className="text-base font-bold text-gray-900">أسماء الزوجة والأبناء</h3>
-                                    <p className="text-xs text-gray-400 mt-0.5">للعضوية العائلية فقط · الحد الأقصى 6 منتسبين</p>
-                                </div>
-                            </div>
-                            <button type="button" onClick={addDependent} disabled={dependents.length >= 6}
-                                className="flex items-center gap-1.5 text-xs font-bold text-purple-600 bg-purple-50 border border-purple-200 px-3 py-2 rounded-xl hover:bg-purple-600 hover:text-white transition-all disabled:opacity-40 disabled:pointer-events-none cursor-pointer self-start sm:self-auto">
-                                <Plus size={14} /> إضافة منتسب
-                            </button>
-                        </div>
-
-                        {dependents.length === 0 ? (
-                            <div className="py-10 flex flex-col items-center justify-center text-center gap-3 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100">
-                                <Users size={32} className="text-gray-300" />
-                                <p className="text-sm text-gray-400 font-medium">لا يوجد منتسبون مضافون بعد</p>
-                                <p className="text-xs text-gray-300">استخدم زر "إضافة منتسب" أعلاه لإضافة زوجة أو أبناء</p>
-                            </div>
-                        ) : (
-                            <div className="space-y-5">
-                                {dependents.map((id, idx) => (
-                                    <div key={id} className="p-5 bg-gray-50 rounded-2xl border border-gray-200 space-y-4">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <span className="w-7 h-7 rounded-full bg-purple-100 text-purple-700 text-xs font-bold flex items-center justify-center shrink-0">{idx + 1}</span>
-                                                <span className="text-sm font-bold text-gray-700">بيانات المنتسب</span>
-                                            </div>
-                                            <button type="button" onClick={() => removeDependent(id)}
-                                                className="w-8 h-8 flex items-center justify-center rounded-xl text-red-400 bg-red-50 hover:bg-red-500 hover:text-white transition-all cursor-pointer">
-                                                <Trash2 size={14} />
-                                            </button>
+                    {membershipType === 'عائلية' && (
+                        <>
+                            <div className="p-5 sm:p-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-2xl bg-purple-600/10 text-purple-600 flex items-center justify-center shrink-0">
+                                            <Users size={20} strokeWidth={2} />
                                         </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <TextInput label="الاسم الكامل" name={`dependent_${idx + 1}_name`} maxLength={150} placeholder="اسم المنتسب" error={fieldErrors[`dependent_${idx + 1}_name`]} />
-                                            <SelectInput label="الجنس" name={`dependent_${idx + 1}_gender`} error={fieldErrors[`dependent_${idx + 1}_gender`]}>
-                                                <option value="">اختر الجنس...</option>
-                                                <option value="ذكر">ذكر</option>
-                                                <option value="أنثى">أنثى</option>
-                                            </SelectInput>
-                                            <DateInput label="تاريخ الميلاد" name={`dependent_${idx + 1}_dob`} error={fieldErrors[`dependent_${idx + 1}_dob`]} />
-                                            <AutoTextarea label="ملاحظات" name={`dependent_${idx + 1}_notes`} maxLength={250} placeholder="أية ملاحظات إضافية (اختياري)" error={fieldErrors[`dependent_${idx + 1}_notes`]} />
+                                        <div>
+                                            <h3 className="text-base font-bold text-gray-900">أسماء الزوجة والأبناء</h3>
+                                            <p className="text-xs text-gray-400 mt-0.5">للعضوية العائلية فقط · الحد الأقصى 6 منتسبين</p>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                                    <button type="button" onClick={addDependent} disabled={dependents.length >= 6}
+                                        className="flex items-center gap-1.5 text-xs font-bold text-purple-600 bg-purple-50 border border-purple-200 px-3 py-2 rounded-xl hover:bg-purple-600 hover:text-white transition-all disabled:opacity-40 disabled:pointer-events-none cursor-pointer self-start sm:self-auto">
+                                        <Plus size={14} /> إضافة منتسب
+                                    </button>
+                                </div>
 
-                    <div className="h-px bg-gray-100 mx-8" />
+                                {dependents.length === 0 ? (
+                                    <div className="py-10 flex flex-col items-center justify-center text-center gap-3 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100">
+                                        <Users size={32} className="text-gray-300" />
+                                        <p className="text-sm text-gray-400 font-medium">لا يوجد منتسبون مضافون بعد</p>
+                                        <p className="text-xs text-gray-300">استخدم زر "إضافة منتسب" أعلاه لإضافة زوجة أو أبناء</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-5">
+                                        {dependents.map((id, idx) => (
+                                            <div key={id} className="p-5 bg-gray-50 rounded-2xl border border-gray-200 space-y-4">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="w-7 h-7 rounded-full bg-purple-100 text-purple-700 text-xs font-bold flex items-center justify-center shrink-0">{idx + 1}</span>
+                                                        <span className="text-sm font-bold text-gray-700">بيانات المنتسب</span>
+                                                    </div>
+                                                    <button type="button" onClick={() => removeDependent(id)}
+                                                        className="w-8 h-8 flex items-center justify-center rounded-xl text-red-400 bg-red-50 hover:bg-red-500 hover:text-white transition-all cursor-pointer">
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                </div>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    <TextInput label="الاسم الكامل" name={`dependent_${idx + 1}_name`} maxLength={150} placeholder="اسم المنتسب" error={fieldErrors[`dependent_${idx + 1}_name`]} />
+                                                    <SelectInput label="الجنس" name={`dependent_${idx + 1}_gender`} error={fieldErrors[`dependent_${idx + 1}_gender`]}>
+                                                        <option value="">اختر الجنس...</option>
+                                                        <option value="ذكر">ذكر</option>
+                                                        <option value="أنثى">أنثى</option>
+                                                    </SelectInput>
+                                                    <DateInput label="تاريخ الميلاد" name={`dependent_${idx + 1}_dob`} error={fieldErrors[`dependent_${idx + 1}_dob`]} />
+                                                    <AutoTextarea label="ملاحظات" name={`dependent_${idx + 1}_notes`} maxLength={250} placeholder="أية ملاحظات إضافية (اختياري)" error={fieldErrors[`dependent_${idx + 1}_notes`]} />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="h-px bg-gray-100 mx-8" />
+                        </>
+                    )}
 
                     {/* ══ 5. Attachments ════════════════════════════════════════ */}
                     <div className="p-5 sm:p-8">
