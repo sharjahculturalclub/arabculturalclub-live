@@ -33,10 +33,10 @@ export default async function OurPrograms() {
       <SEO
         title={`${data.pageOptions?.pageTitle || 'برامج النادي'} | النادي الثقافي العربي`}
         description={data.pageOptions?.pageDescription || 'منظومة متكاملة من البرامج التي تخدم الثقافة والمجتمع وتفتح أبواب النادي لكل الأجيال.'}
-        url="https://shjarabclub.ae/our-programs"
+        url="https://shjarabclub.ae/programs"
         breadcrumbs={[
           { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: data.pageOptions?.pageTitle || 'برامج النادي', item: "https://shjarabclub.ae/our-programs" }
+          { name: data.pageOptions?.pageTitle || 'برامج النادي', item: "https://shjarabclub.ae/programs" }
         ]}
       />
       <OurProgramsClient data={data} />
