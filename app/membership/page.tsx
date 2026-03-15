@@ -33,10 +33,10 @@ export default async function JoinUs() {
       <SEO
         title={`${data.pageOptions?.pageTitle || 'انضم إلينا'} | النادي الثقافي العربي`}
         description={data.pageOptions?.pageDescription || 'انضم إلى النادي الثقافي العربي، تعرف على مزايا العضوية وحجز المرافق بسهولة.'}
-        url="https://shjarabclub.ae/join-us"
+        url="https://shjarabclub.ae/membership"
         breadcrumbs={[
           { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: data.pageOptions?.pageTitle || 'انضم إلينا', item: "https://shjarabclub.ae/join-us" }
+          { name: data.pageOptions?.pageTitle || 'انضم إلينا', item: "https://shjarabclub.ae/membership" }
         ]}
       />
       <JoinUsClient data={data} />
