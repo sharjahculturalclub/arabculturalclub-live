@@ -89,7 +89,7 @@ export default async function ShareOpinionsPage() {
         {formId ? (
           <ShareOpinionsForm formId={formId} />
         ) : (
-          <div className="bg-white p-12 rounded-[2rem] shadow-lg border border-border text-center">
+          <div className="bg-white p-12 rounded-4xl shadow-lg border border-border text-center">
             <p className="text-muted-foreground text-lg">
               نموذج المشاركة غير متاح حالياً. يرجى المحاولة لاحقاً.
             </p>
@@ -98,7 +98,7 @@ export default async function ShareOpinionsPage() {
 
         {/* Info Section */}
         {infoSection && infoSection.infoPoints && infoSection.infoPoints.length > 0 && (
-          <div className="mt-12 bg-gradient-to-l from-club-purple/10 to-club-blue/10 p-8 rounded-[2rem] border border-club-purple/20">
+          <div className="mt-12 bg-linear-to-l from-club-purple/10 to-club-blue/10 p-8 rounded-4xl border border-club-purple/20">
             {infoSection.sectionTitle && (
               <h3 className="text-xl font-bold mb-4 text-primary">{infoSection.sectionTitle}</h3>
             )}

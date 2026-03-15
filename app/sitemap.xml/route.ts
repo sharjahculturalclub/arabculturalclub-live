@@ -95,7 +95,7 @@ export async function GET() {
             { path: '/news', priority: '0.9', changefreq: 'daily' },
             { path: '/events', priority: '0.9', changefreq: 'daily' },
             { path: '/gallery', priority: '0.7', changefreq: 'weekly' },
-            { path: '/our-programs', priority: '0.8', changefreq: 'monthly' },
+            { path: '/programs', priority: '0.8', changefreq: 'monthly' },
             { path: '/contact', priority: '0.8', changefreq: 'monthly' },
             { path: '/authors', priority: '0.7', changefreq: 'weekly' },
             { path: '/faq', priority: '0.6', changefreq: 'monthly' },
