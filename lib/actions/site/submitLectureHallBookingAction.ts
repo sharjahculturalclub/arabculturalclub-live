@@ -44,10 +44,7 @@ export async function submitLectureHallBookingAction(
             cf7FormData.append(field, (formData.get(field) as string) || '');
         }
 
-        const signature = formData.get('applicant_signature');
-        if (signature instanceof File && signature.size > 0) {
-            cf7FormData.append('applicant_signature', signature);
-        }
+        cf7FormData.append('terms_acceptance', formData.get('terms_acceptance') ? '1. الالتزام باستخدام القاعة المخصصة فقط، ولا يسمح باستخدام الساحات وممرات النادي.' : '');
 
         const response = await fetch(endpoint, {
             method: 'POST',

@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import {
     User, Send, CheckCircle2,
-    ShieldCheck, AlertCircle, Phone, Activity, FileKey, CheckCircle, FileUp
+    ShieldCheck, AlertCircle, Activity, FileKey
 } from 'lucide-react';
 import { submitSwimmingSubscriptionAction } from '@/lib/actions/site/submitSwimmingSubscriptionAction';
 
@@ -141,50 +141,6 @@ function DateInput({ label, name, required, hint, error }: any) {
     );
 }
 
-// ─── File Upload ──────────────────────────────────────────────────────────────
-function FileUpload({ label, name, required, accept, hint, error }: any) {
-    const [file, setFile] = useState<File | null>(null);
-
-    return (
-        <Field label={label} required={required} hint={hint} error={error}>
-            <div className="relative group cursor-pointer">
-                <input
-                    type="file"
-                    name={name}
-                    accept={accept}
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                />
-                <div className={`w-full flex items-center gap-4 px-5 py-4 border-2 border-dashed rounded-2xl transition-all ${error
-                    ? 'border-red-400 bg-red-50/30'
-                    : file
-                        ? 'border-purple-400 bg-purple-50/60'
-                        : 'border-gray-200 bg-gray-50 group-hover:border-purple-300 group-hover:bg-purple-50/30'
-                    }`}
-                >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${error ? 'bg-red-100 text-red-500' : file ? 'bg-purple-100 text-purple-600' : 'bg-white text-gray-400 group-hover:text-purple-500'
-                        }`}>
-                        {error ? <AlertCircle size={20} /> : file ? <CheckCircle size={20} /> : <FileUp size={20} />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        {file ? (
-                            <>
-                                <p className="text-sm font-bold text-gray-900 truncate">{file.name}</p>
-                                <p className="text-xs font-medium text-purple-600 mt-0.5">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                            </>
-                        ) : (
-                            <>
-                                <p className="text-sm font-bold text-gray-700 group-hover:text-purple-700 transition-colors">اختر ملفاً أو اسحبه هنا</p>
-                                <p className="text-xs font-medium text-gray-400 mt-0.5 truncate">{accept}</p>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </Field>
-    );
-}
-
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptionFormProps) {
     const topRef = useRef<HTMLDivElement>(null);
@@ -247,12 +203,10 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
         if (!data.get('has_health_issues'))
             errs['has_health_issues'] = 'يجب الإجابة على هذا السؤال';
 
-        // Files
-        const signatureFile = data.get('signature') as File;
-        if (!signatureFile || signatureFile.size === 0)
-            errs['signature'] = 'يرجى رفع التوقيع';
-
         // Consent
+        if (!data.get('declaration_confirm'))
+            errs['declaration_confirm'] = 'يجب الموافقة على الإقرار للمتابعة';
+
         if (!data.get('declaration_acceptance'))
             errs['declaration_acceptance'] = 'يجب الموافقة على الإقرار للمتابعة';
 
@@ -390,14 +344,36 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
                     <div className="p-5 sm:p-8 space-y-6">
                         <SectionHeader icon={FileKey} title="الإقرار والتوقيع" color="green" />
 
-                        <div className="bg-emerald-50/50 border border-emerald-100 p-5 rounded-2xl text-emerald-900 text-sm leading-relaxed text-justify">
-                            أقر أنا / ولي أمر المشترك بأنه لائق طبيا لممارسة الرياضة، وأنني مسؤول مسؤولية كاملة عن الحالة الصحية، وأن المشترك خالٍ من الأمراض العصبية، والتشنجية، والجلدية المعدية، كما أقر بعلمي وموافقتي على جميع شروط الاشتراك، وأنه في حال الإصابة أو حدوث أي حوادث عرضية، فإنني بموجب هذا الإقرار أخلي كل من النادي والعاملين به من كامل المسؤولية.
+                        <div className="space-y-2">
+                            <label className={`flex items-start gap-4 cursor-pointer group p-4 rounded-2xl border transition-all ${fieldErrors['declaration_confirm']
+                                    ? 'border-red-300 bg-red-50/40'
+                                    : 'border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50'
+                                }`}>
+                                <div className="relative w-6 h-6 shrink-0 mt-0.5">
+                                    <input
+                                        type="checkbox"
+                                        name="declaration_confirm"
+                                        className={`peer appearance-none w-6 h-6 border-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/20 ${
+                                            fieldErrors['declaration_confirm']
+                                                ? 'border-red-400 bg-red-50 checked:border-red-600 checked:bg-red-600'
+                                                : 'border-gray-300 checked:border-purple-600 checked:bg-purple-600 bg-white'
+                                        }`}
+                                    />
+                                    <CheckCircle2 size={16} strokeWidth={3} className="absolute inset-0 m-auto text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
+                                </div>
+                                <p className={`text-sm leading-relaxed text-justify select-none transition-colors ${fieldErrors['declaration_confirm'] ? 'text-red-700' : 'text-emerald-900'}`}>
+                                    أقر أنا / ولي أمر المشترك بأنه لائق طبيا لممارسة الرياضة، وأنني مسؤول مسؤولية كاملة عن الحالة الصحية، وأن المشترك خالٍ من الأمراض العصبية، والتشنجية، والجلدية المعدية، كما أقر بعلمي وموافقتي على جميع شروط الاشتراك، وأنه في حال الإصابة أو حدوث أي حوادث عرضية، فإنني بموجب هذا الإقرار أخلي كل من النادي والعاملين به من كامل المسؤولية. <span className="text-red-500">*</span>
+                                </p>
+                            </label>
+                            {fieldErrors['declaration_confirm'] && (
+                                <p className="text-xs text-red-500 font-medium flex items-center gap-1 px-1">
+                                    <AlertCircle size={11} strokeWidth={2.5} />
+                                    {fieldErrors['declaration_confirm']}
+                                </p>
+                            )}
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
-                            <TextInput label="الاسم" name="declarant_name" required minLength={2} maxLength={150} placeholder="الاسم الكامل للمقر" error={fieldErrors['declarant_name']} />
-                            <FileUpload label="التوقيع" name="signature" required accept=".png,.jpg,.jpeg,.webp,.pdf" hint="يجب ان يكون الحجم اقل من 5 ميجابايت" error={fieldErrors['signature']} />
-                        </div>
+                        <TextInput label="الاسم" name="declarant_name" required minLength={2} maxLength={150} placeholder="الاسم الكامل للمقر" error={fieldErrors['declarant_name']} />
                     </div>
 
                     {/* ══ 4. Submit Area ═══════════════════════════════════════════ */}
