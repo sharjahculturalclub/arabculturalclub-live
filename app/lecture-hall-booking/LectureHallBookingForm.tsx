@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import {
-    User, Send, ShieldCheck, AlertCircle, FileKey, Calendar, CheckCircle, FileUp
+    User, Send, ShieldCheck, AlertCircle, FileKey, Calendar, CheckCircle2
 } from 'lucide-react';
 import { submitLectureHallBookingAction } from '@/lib/actions/site/submitLectureHallBookingAction';
 
@@ -126,50 +126,6 @@ function NumberInput({ label, name, required, min, max, placeholder, hint, error
     );
 }
 
-// ─── File Upload ──────────────────────────────────────────────────────────────
-function FileUpload({ label, name, required, accept, hint, error }: any) {
-    const [file, setFile] = useState<File | null>(null);
-
-    return (
-        <Field label={label} required={required} hint={hint} error={error}>
-            <div className="relative group cursor-pointer">
-                <input
-                    type="file"
-                    name={name}
-                    accept={accept}
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                />
-                <div className={`w-full flex items-center gap-4 px-5 py-4 border-2 border-dashed rounded-2xl transition-all ${error
-                    ? 'border-red-400 bg-red-50/30'
-                    : file
-                        ? 'border-purple-400 bg-purple-50/60'
-                        : 'border-gray-200 bg-gray-50 group-hover:border-purple-300 group-hover:bg-purple-50/30'
-                    }`}
-                >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${error ? 'bg-red-100 text-red-500' : file ? 'bg-purple-100 text-purple-600' : 'bg-white text-gray-400 group-hover:text-purple-500'
-                        }`}>
-                        {error ? <AlertCircle size={20} /> : file ? <CheckCircle size={20} /> : <FileUp size={20} />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        {file ? (
-                            <>
-                                <p className="text-sm font-bold text-gray-900 truncate">{file.name}</p>
-                                <p className="text-xs font-medium text-purple-600 mt-0.5">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                            </>
-                        ) : (
-                            <>
-                                <p className="text-sm font-bold text-gray-700 group-hover:text-purple-700 transition-colors">اختر ملفاً أو اسحبه هنا</p>
-                                <p className="text-xs font-medium text-gray-400 mt-0.5 truncate">{accept}</p>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </Field>
-    );
-}
-
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function LectureHallBookingForm({ formId }: LectureHallBookingFormProps) {
     const topRef = useRef<HTMLDivElement>(null);
@@ -226,10 +182,9 @@ export default function LectureHallBookingForm({ formId }: LectureHallBookingFor
         if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal))
             errs['email'] = 'البريد الإلكتروني غير صحيح';
 
-        // Files
-        const signatureFile = data.get('applicant_signature') as File;
-        if (!signatureFile || signatureFile.size === 0)
-            errs['applicant_signature'] = 'يرجى رفع التوقيع';
+        // Consent
+        if (!data.get('terms_acceptance'))
+            errs['terms_acceptance'] = 'يجب الموافقة على شروط الحجز للمتابعة';
 
         if (Object.keys(errs).length > 0) {
             setFieldErrors(errs);
@@ -374,16 +329,47 @@ export default function LectureHallBookingForm({ formId }: LectureHallBookingFor
 
                     <div className="h-px bg-gray-100 mx-8" />
 
-                    {/* ══ 3. Terms & Signature ════════════════════════════════════ */}
+                    {/* ══ 3. Terms ════════════════════════════════════ */}
                     <div className="p-5 sm:p-8 space-y-6">
-                        <SectionHeader icon={FileKey} title="شروط الحجز والتوقيع" color="green" />
+                        <SectionHeader icon={FileKey} title="شروط الحجز" color="green" />
 
-                        <div className="bg-emerald-50/50 border border-emerald-100 p-5 rounded-2xl text-emerald-900 text-sm leading-relaxed text-justify">
-                            تشمل الشروط استخدام القاعة المخصصة فقط، خصم التلفيات من مبلغ التأمين 2000 درهم،وفرض 500 درهم عن كل ساعة تأخير.
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-5">
-                            <FileUpload label="توقيع مقدم الطلب" name="applicant_signature" required accept=".png,.jpg,.jpeg,.webp,.pdf" hint="يجب ان يكون الحجم اقل من 5 ميجابايت" error={fieldErrors['applicant_signature']} />
+                        <div className="space-y-2">
+                            <label className={`flex items-start gap-4 cursor-pointer group p-4 rounded-2xl border transition-all ${fieldErrors['terms_acceptance']
+                                    ? 'border-red-300 bg-red-50/40'
+                                    : 'border-gray-200 bg-gray-50/70 hover:border-purple-300 hover:bg-purple-50/30'
+                                }`}>
+                                <div className="relative w-6 h-6 shrink-0 mt-0.5">
+                                    <input
+                                        type="checkbox"
+                                        name="terms_acceptance"
+                                        className={`peer appearance-none w-6 h-6 border-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/20 ${
+                                            fieldErrors['terms_acceptance']
+                                                ? 'border-red-400 bg-red-50 checked:border-red-600 checked:bg-red-600'
+                                                : 'border-gray-300 checked:border-purple-600 checked:bg-purple-600 bg-white'
+                                        }`}
+                                    />
+                                    <CheckCircle2 size={16} strokeWidth={3} className="absolute inset-0 m-auto text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
+                                </div>
+                                <div className="flex-1">
+                                    <p className={`text-sm font-bold select-none transition-colors mb-3 ${fieldErrors['terms_acceptance'] ? 'text-red-700' : 'text-gray-900 group-hover:text-purple-700'}`}>
+                                        أوافق على الشروط والأحكام الواردة في النموذج <span className="text-red-500">*</span>
+                                    </p>
+                                    <ul className="space-y-2 text-sm text-gray-600 leading-relaxed">
+                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>الالتزام باستخدام القاعة المخصصة فقط، ولا يسمح باستخدام الساحات وممرات النادي.</span></li>
+                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>الدخول والخروج من أبواب (قاعة المناسبات) الخارجية فقط.</span></li>
+                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>أية أضرار تلحق بالقاعة تُحتسب من مبلغ التأمين وقيمته 2000 درهم، ويحق للنادي مطالبة المستأجر بمبالغ إضافية إذا تجاوز الضرر مبلغ التأمين.</span></li>
+                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>الالتزام بمواعيد الحجز، وفي حالة تجاوز الوقت المحدد أعلاه يضاف مبلغ 500 درهم عن كل ساعة تأخير.</span></li>
+                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>عدم إدخال الطعام إلى غرفة انتظار العروس والمحافظة عليها من التلف.</span></li>
+                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>الالتزام بنظم ولوائح النادي، واستخدام القاعة في الغرض الذي حجزت من أجله فقط.</span></li>
+                                    </ul>
+                                </div>
+                            </label>
+                            {fieldErrors['terms_acceptance'] && (
+                                <p className="text-xs text-red-500 font-medium flex items-center gap-1 px-1">
+                                    <AlertCircle size={11} strokeWidth={2.5} />
+                                    {fieldErrors['terms_acceptance']}
+                                </p>
+                            )}
                         </div>
                     </div>
 

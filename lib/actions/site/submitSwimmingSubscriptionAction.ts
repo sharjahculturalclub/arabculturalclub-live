@@ -45,9 +45,8 @@ export async function submitSwimmingSubscriptionAction(
             cf7FormData.append(field, (formData.get(field) as string) || '');
         }
 
-        const signature = formData.get('signature');
-        if (signature instanceof File && signature.size > 0) {
-            cf7FormData.append('signature', signature);
+        if (formData.get('declaration_confirm')) {
+            cf7FormData.append('declaration_confirm', 'أقر أنا / ولي أمر المشترك بأنه لائق طبيا لممارسة الرياضة، وأنني مسؤول مسؤولية كاملة عن الحالة الصحية، وأن المشترك خالٍ من الأمراض العصبية، والتشنجية، والجلدية المعدية، كما أقر بعلمي وموافقتي على جميع شروط الاشتراك، وأنه في حال الإصابة أو حدوث أي حوادث عرضية، فإنني بموجب هذا الإقرار أخلي كل من النادي والعاملين به من كامل المسؤولية.');
         }
 
         if (formData.get('declaration_acceptance')) {
