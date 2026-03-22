@@ -1,8 +1,19 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Mail, Phone, MapPin, ArrowUp, Facebook, Twitter, Instagram, Youtube, Linkedin, type LucideIcon } from 'lucide-react';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  ArrowUp,
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
+  type LucideIcon,
+} from "lucide-react";
 
 // Map icon names from WordPress to Lucide components
 const iconMap: Record<string, LucideIcon> = {
@@ -72,14 +83,14 @@ export const Footer = ({
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   };
 
@@ -87,13 +98,14 @@ export const Footer = ({
     <footer className="bg-primary text-secondary pt-16 pb-8">
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
-
           {/* About / Brand Section */}
           {about && (
             <div className="flex flex-col gap-6">
               <div className="flex items-center gap-2">
                 <div className="flex flex-col">
-                  <span className="font-bold text-xl leading-tight">{about.title}</span>
+                  <span className="font-bold text-xl leading-tight">
+                    {about.title}
+                  </span>
                 </div>
               </div>
               <p className="text-secondary/70 leading-relaxed text-sm">
@@ -102,7 +114,8 @@ export const Footer = ({
               {socialLinks && socialLinks.length > 0 && (
                 <div className="flex flex-wrap gap-3">
                   {socialLinks.map((social, i) => {
-                    const IconComponent = iconMap[social.iconName.toLowerCase()];
+                    const IconComponent =
+                      iconMap[social.iconName.toLowerCase()];
                     if (!IconComponent) return null;
                     return (
                       <a
@@ -124,7 +137,9 @@ export const Footer = ({
           {/* Quick Links */}
           {quickLinks && quickLinks.links.length > 0 && (
             <div>
-              <h3 className="text-lg font-bold mb-6 border-r-4 border-club-purple pr-4">{quickLinks.title}</h3>
+              <h3 className="text-lg font-bold mb-6 border-r-4 border-club-purple pr-4">
+                {quickLinks.title}
+              </h3>
               <ul className="flex flex-col gap-4 text-secondary/70 text-sm">
                 {quickLinks.links.map((link, i) => (
                   <li key={i}>
@@ -144,7 +159,9 @@ export const Footer = ({
           {/* Join Us */}
           {joinUs && joinUs.links.length > 0 && (
             <div>
-              <h3 className="text-lg font-bold mb-6 border-r-4 border-club-purple pr-4">{joinUs.title}</h3>
+              <h3 className="text-lg font-bold mb-6 border-r-4 border-club-purple pr-4">
+                {joinUs.title}
+              </h3>
               <ul className="flex flex-col gap-4 text-secondary/70 text-sm">
                 {joinUs.links.map((link, i) => (
                   <li key={i}>
@@ -164,7 +181,9 @@ export const Footer = ({
           {/* Programs */}
           {programs && programs.links.length > 0 && (
             <div>
-              <h3 className="text-lg font-bold mb-6 border-r-4 border-club-purple pr-4">{programs.title}</h3>
+              <h3 className="text-lg font-bold mb-6 border-r-4 border-club-purple pr-4">
+                {programs.title}
+              </h3>
               <ul className="flex flex-col gap-4 text-secondary/70 text-sm">
                 {programs.links.map((link, i) => (
                   <li key={i}>
@@ -184,7 +203,9 @@ export const Footer = ({
           {/* Contact Info */}
           {contactInfo && (
             <div>
-              <h3 className="text-lg font-bold mb-6 border-r-4 border-club-blue pr-4">{contactInfo.title}</h3>
+              <h3 className="text-lg font-bold mb-6 border-r-4 border-club-blue pr-4">
+                {contactInfo.title}
+              </h3>
               <ul className="flex flex-col gap-4 text-secondary/70 text-sm">
                 {contactInfo.address && (
                   <li className="flex items-start gap-3">
@@ -207,17 +228,19 @@ export const Footer = ({
               </ul>
             </div>
           )}
-
         </div>
 
         <div className="border-t border-secondary/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-secondary/50">
-          {copyright?.text && (
-            <p>{copyright.text}</p>
-          )}
+          {copyright?.text && <p>{copyright.text}</p>}
           {copyright?.links && copyright.links.length > 0 && (
             <div className="flex gap-6">
               {copyright.links.map((link, i) => (
-                <Link key={i} href={link.url} target={link.target} className="hover:text-secondary transition-colors">
+                <Link
+                  key={i}
+                  href={link.url}
+                  target={link.target}
+                  className="hover:text-secondary transition-colors"
+                >
                   {link.title}
                 </Link>
               ))}
@@ -233,7 +256,10 @@ export const Footer = ({
           className="fixed bottom-8 left-8 z-50 bg-club-purple hover:bg-club-purple/90 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 group"
           aria-label="العودة للأعلى"
         >
-          <ArrowUp size={20} className="group-hover:-translate-y-1 transition-transform" />
+          <ArrowUp
+            size={20}
+            className="group-hover:-translate-y-1 transition-transform"
+          />
         </button>
       )}
     </footer>
