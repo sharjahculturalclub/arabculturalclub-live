@@ -1,0 +1,7 @@
+# HTTPS  shjarabclub.ae
+
+Sitemap: https://shjarabclub.ae/sitemap.xml
+Sitemap: https://shjarabclub.ae/news-sitemap.xml
+
+User-agent: *
+Allow: /
