@@ -51,10 +51,6 @@ export async function submitCondolenceHallBookingAction(
             cf7FormData.append('id_card_copy', idCardCopy);
         }
 
-        const signature = formData.get('applicant_signature');
-        if (signature instanceof File && signature.size > 0) {
-            cf7FormData.append('applicant_signature', signature);
-        }
 
         const response = await fetch(endpoint, {
             method: 'POST',

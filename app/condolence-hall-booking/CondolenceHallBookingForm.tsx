@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import {
-    User, Send, ShieldCheck, AlertCircle, FileKey, Calendar, CheckCircle, FileUp
+    User, Send, ShieldCheck, AlertCircle, Calendar, CheckCircle, FileUp
 } from 'lucide-react';
 import { submitCondolenceHallBookingAction } from '@/lib/actions/site/submitCondolenceHallBookingAction';
 
@@ -251,9 +251,6 @@ export default function CondolenceHallBookingForm({ formId }: CondolenceHallBook
         if (!idCardCopyFile || idCardCopyFile.size === 0)
             errs['id_card_copy'] = 'يرجى رفع صورة الهوية';
 
-        const signatureFile = data.get('applicant_signature') as File;
-        if (!signatureFile || signatureFile.size === 0)
-            errs['applicant_signature'] = 'يرجى رفع التوقيع';
 
         if (Object.keys(errs).length > 0) {
             setFieldErrors(errs);
@@ -376,7 +373,9 @@ export default function CondolenceHallBookingForm({ formId }: CondolenceHallBook
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <TextInput label="اسم المتوفي" name="deceased_name" required minLength={2} maxLength={150} placeholder="اسم المتوفي" error={fieldErrors['deceased_name']} />
                             <TextInput label="الجنسية" name="deceased_nationality" required minLength={2} maxLength={80} placeholder="الجنسية" error={fieldErrors['deceased_nationality']} />
-                            
+                        </div>
+
+                        <div className="space-y-5">
                             <Field label="داخل / خارج الدولة" required error={fieldErrors['deceased_location']}>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
                                     {['داخل الدولة', 'خارج الدولة'].map((value) => (
@@ -397,16 +396,7 @@ export default function CondolenceHallBookingForm({ formId }: CondolenceHallBook
                         </div>
                     </div>
 
-                    <div className="h-px bg-gray-100 mx-8" />
 
-                    {/* ══ 4. Terms & Signature ════════════════════════════════════ */}
-                    <div className="p-5 sm:p-8 space-y-6">
-                        <SectionHeader icon={FileKey} title="التوقيع" color="green" />
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
-                            <FileUpload label="توقيع مقدم الطلب" name="applicant_signature" required accept=".png,.jpg,.jpeg,.webp,.pdf" hint="يجب ان يكون الحجم اقل من 5 ميجابايت" error={fieldErrors['applicant_signature']} />
-                        </div>
-                    </div>
 
                     {/* ══ 5. Submit Area ═══════════════════════════════════════════ */}
                     <div className="p-5 sm:p-8 bg-gray-50/80 border-t border-gray-100 rounded-b-3xl">
