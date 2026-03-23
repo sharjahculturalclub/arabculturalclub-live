@@ -106,7 +106,7 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
                   onClick={() => setIsSearchOpen(true)}
                   className="p-2 cursor-pointer text-black"
                 >
-                  <Search size={20} />
+                  <Search size={26} />
                 </button>
                 <button
                   className="p-2 cursor-pointer text-black"
