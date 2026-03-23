@@ -1,8 +1,37 @@
 import React from 'react';
+import { Metadata } from 'next';
 import { SEO } from '@/components/SEO';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { Book, Award, Globe, Music } from 'lucide-react';
 import cultureBanner from '@/assets/acc-banner-3.jpg';
+import { getMetadataImages } from '@/lib/utils/seo';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const images = await getMetadataImages();
+
+  return {
+    title: 'ثقافة الشارقة | النادي الثقافي العربي',
+    description: 'اكتشف الهوية الثقافية لشارقة العلم والمعرفة وعلاقتها الوثيقة بالنادي الثقافي العربي.',
+    alternates: {
+      canonical: 'https://shjarabclub.ae/sharjah-culture',
+    },
+    openGraph: {
+      title: 'ثقافة الشارقة | النادي الثقافي العربي',
+      description: 'اكتشف الهوية الثقافية لشارقة العلم والمعرفة وعلاقتها الوثيقة بالنادي الثقافي العربي.',
+      url: 'https://shjarabclub.ae/sharjah-culture',
+      siteName: 'النادي الثقافي العربي',
+      type: 'website',
+      images,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'ثقافة الشارقة | النادي الثقافي العربي',
+      description: 'اكتشف الهوية الثقافية لشارقة العلم والمعرفة وعلاقتها الوثيقة بالنادي الثقافي العربي.',
+      images: images.map(img => img.url),
+    },
+  };
+}
+
 
 
 
@@ -62,11 +91,11 @@ export default function SharjahCulture() {
 
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 my-12">
-                <div className="bg-accent-purple p-10 rounded-[2rem] border-r-4 border-accent-purple">
+                <div className="bg-accent-purple p-10 rounded-4xl border-r-4 border-accent-purple">
                   <h4 className="text-xl font-bold mb-4 text-accent-purple">الهوية الثقافية</h4>
                   <p className="text-base">تتميز الشارقة بتوازنها الفريد بين الأصالة والمعاصرة، حيث تجد الصروح الثقافية الحديثة جنباً إلى جنب مع المناطق التاريخية المرممة.</p>
                 </div>
-                <div className="bg-accent-blue p-10 rounded-[2rem] border-r-4 border-accent-blue">
+                <div className="bg-accent-blue p-10 rounded-4xl border-r-4 border-accent-blue">
                   <h4 className="text-xl font-bold mb-4 text-accent-blue">المبادرات العالمية</h4>
                   <p className="text-base">من معرض الكتاب إلى بينالي الفنون، تطلق الشارقة مبادرات تتجاوز الحدود الجغرافية لتصل إلى عمق الوجدان الإنساني العالمي.</p>
                 </div>

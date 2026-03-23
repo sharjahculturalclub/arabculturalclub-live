@@ -9,6 +9,8 @@ import {
 import { SEO } from '@/components/SEO';
 import ContactForm from './ContactForm';
 
+import { getMetadataImages } from '@/lib/utils/seo';
+
 // ── Icon map for dynamic rendering ────────────────────────────────
 const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
   'map-pin': MapPin,
@@ -46,6 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
   const description = seo?.metaDescription || data?.pageDescription || 'تواصل مع النادي الثقافي العربي.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/contact';
+  const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 
   return {
     title,
@@ -60,20 +63,17 @@ export async function generateMetadata(): Promise<Metadata> {
       url: canonicalUrl,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
-      images: seo?.ogImage?.node?.sourceUrl
-        ? [{ url: seo.ogImage.node.sourceUrl }]
-        : undefined,
+      images,
     },
     twitter: {
       card: 'summary_large_image',
       title: seo?.twitterTitle || title,
       description: seo?.twitterDescription || description,
-      images: seo?.twitterImage?.node?.sourceUrl
-        ? [seo.twitterImage.node.sourceUrl]
-        : undefined,
+      images: images.map(img => img.url),
     },
   };
 }
+
 
 // ── Page Component ────────────────────────────────────────────────
 export default async function ContactPage() {
@@ -197,7 +197,7 @@ export default async function ContactPage() {
             )}
             {mapSection.mapEmbedCode && (
               <div
-                className="bg-white rounded-[2rem] border border-border shadow-lg overflow-hidden h-[320px] md:h-[420px] [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
+                className="bg-linear-to-l from-club-purple/10 to-club-blue/10 p-8 md:p-12 rounded-4xl border border-club-purple/20 shadow-lg overflow-hidden h-[320px] md:h-[420px] [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
                 dangerouslySetInnerHTML={{ __html: mapSection.mapEmbedCode }}
               />
             )}

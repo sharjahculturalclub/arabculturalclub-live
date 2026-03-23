@@ -5,6 +5,8 @@ import { SEO } from '@/components/SEO';
 import { BookOpen, ArrowLeft, Facebook, Twitter, Instagram, Youtube, Linkedin, Link2, type LucideIcon } from 'lucide-react';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 
+import { getMetadataImages } from '@/lib/utils/seo';
+
 // Map icon names from WordPress ACF to Lucide components
 const socialIconMap: Record<string, LucideIcon> = {
   facebook: Facebook,
@@ -16,6 +18,8 @@ const socialIconMap: Record<string, LucideIcon> = {
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
+  const images = await getMetadataImages();
+
   return {
     title: 'أقلام النادي | النادي الثقافي العربي',
     description: 'تعرف على نخبة من الكتاب والمبدعين المساهمين في إثراء المحتوى الثقافي للنادي.',
@@ -28,9 +32,17 @@ export async function generateMetadata(): Promise<Metadata> {
       url: 'https://shjarabclub.ae/authors',
       siteName: 'النادي الثقافي العربي',
       type: 'website',
+      images,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'أقلام النادي | النادي الثقافي العربي',
+      description: 'تعرف على نخبة من الكتاب والمبدعين المساهمين في إثراء المحتوى الثقافي للنادي.',
+      images: images.map(img => img.url),
     },
   };
 }
+
 
 // ── Page Component ────────────────────────────────────────────────
 export default async function AuthorsPage() {

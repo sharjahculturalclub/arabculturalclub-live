@@ -2,17 +2,34 @@ import { Metadata } from 'next';
 import { fetchJoinUsPageData } from '@/lib/actions/site/joinUsPageAction';
 import JoinUsClient from './JoinUsClient';
 import { SEO } from '@/components/SEO';
+import { getMetadataImages } from '@/lib/utils/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchJoinUsPageData();
   const pageTitle = data?.pageOptions?.pageTitle || 'انضم إلينا';
   const pageDescription = data?.pageOptions?.pageDescription || 'انضم إلى النادي الثقافي العربي، تعرف على مزايا العضوية وحجز المرافق بسهولة.';
+  const images = await getMetadataImages();
 
   return {
     title: `${pageTitle} | النادي الثقافي العربي`,
     description: pageDescription,
+    openGraph: {
+      title: `${pageTitle} | النادي الثقافي العربي`,
+      description: pageDescription,
+      url: 'https://shjarabclub.ae/membership',
+      siteName: 'النادي الثقافي العربي',
+      type: 'website',
+      images,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${pageTitle} | النادي الثقافي العربي`,
+      description: pageDescription,
+      images: images.map(img => img.url),
+    },
   };
 }
+
 
 export default async function JoinUs() {
   const data = await fetchJoinUsPageData();

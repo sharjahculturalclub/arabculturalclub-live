@@ -6,6 +6,8 @@ import { ChevronLeft, ArrowRight } from "lucide-react";
 import { fetchCategoryWithPosts } from "@/lib/actions/site/categoryAction";
 import { NewsCard } from "@/components/Cards";
 
+import { getMetadataImages } from "@/lib/utils/seo";
+
 interface PageProps {
     params: Promise<{
         categorySlug: string;
@@ -24,6 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     const seo = categoryData.seoOptions;
+    const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
     const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/category/${categorySlug}`;
 
     return {
@@ -39,16 +42,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             url: canonicalUrl,
             siteName: "النادي الثقافي العربي",
             type: "website",
-            images: seo?.ogImage?.node?.sourceUrl ? [{ url: seo.ogImage.node.sourceUrl }] : undefined,
+            images,
         },
         twitter: {
             card: "summary_large_image",
             title: seo?.twitterTitle || seo?.seoTitle || categoryData.name,
             description: seo?.twitterDescription || seo?.metaDescription || categoryData.description || "",
-            images: seo?.twitterImage?.node?.sourceUrl ? [seo.twitterImage.node.sourceUrl] : undefined,
+            images: images.map(img => img.url),
         },
     };
 }
+
 
 export default async function CategoryPage({ params }: PageProps) {
     const { categorySlug } = await params;

@@ -2,17 +2,34 @@ import { Metadata } from 'next';
 import { fetchOurProgramsPageData } from '@/lib/actions/site/ourProgramsPageAction';
 import OurProgramsClient from './OurProgramsClient';
 import { SEO } from '@/components/SEO';
+import { getMetadataImages } from '@/lib/utils/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchOurProgramsPageData();
   const pageTitle = data?.pageOptions?.pageTitle || 'برامج النادي';
   const pageDescription = data?.pageOptions?.pageDescription || 'منظومة متكاملة من البرامج التي تخدم الثقافة والمجتمع وتفتح أبواب النادي لكل الأجيال.';
+  const images = await getMetadataImages();
 
   return {
     title: `${pageTitle} | النادي الثقافي العربي`,
     description: pageDescription,
+    openGraph: {
+      title: `${pageTitle} | النادي الثقافي العربي`,
+      description: pageDescription,
+      url: 'https://shjarabclub.ae/programs',
+      siteName: 'النادي الثقافي العربي',
+      type: 'website',
+      images,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${pageTitle} | النادي الثقافي العربي`,
+      description: pageDescription,
+      images: images.map(img => img.url),
+    },
   };
 }
+
 
 export default async function OurPrograms() {
   const data = await fetchOurProgramsPageData();

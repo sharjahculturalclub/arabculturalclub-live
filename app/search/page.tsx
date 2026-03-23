@@ -7,6 +7,10 @@ import { Loader2 } from 'lucide-react';
 
 /* ─── Types ───────────────────────────────────────────────── */
 
+import { getMetadataImages } from '@/lib/utils/seo';
+
+/* ─── Types ───────────────────────────────────────────────── */
+
 type PageProps = {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
@@ -17,12 +21,28 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const params = await searchParams;
   const q = params?.q;
   const query = typeof q === 'string' ? q : '';
+  const images = await getMetadataImages();
 
   return {
     title: query ? `نتائج البحث عن: ${query} | النادي الثقافي العربي` : 'البحث | النادي الثقافي العربي',
     description: `نتائج البحث عن ${query} في موقع النادي الثقافي العربي.`,
+    openGraph: {
+      title: query ? `نتائج البحث عن: ${query} | النادي الثقافي العربي` : 'البحث | النادي الثقافي العربي',
+      description: `نتائج البحث عن ${query} في موقع النادي الثقافي العربي.`,
+      url: `https://shjarabclub.ae/search?q=${encodeURIComponent(query)}`,
+      siteName: 'النادي الثقافي العربي',
+      type: 'website',
+      images,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: query ? `نتائج البحث عن: ${query} | النادي الثقافي العربي` : 'البحث | النادي الثقافي العربي',
+      description: `نتائج البحث عن ${query} في موقع النادي الثقافي العربي.`,
+      images: images.map(img => img.url),
+    },
   };
 }
+
 
 /* ─── Page Component ──────────────────────────────────────── */
 

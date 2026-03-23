@@ -16,6 +16,8 @@ const socialIconMap: Record<string, LucideIcon> = {
     linkedin: Linkedin,
 };
 
+import { getMetadataImages } from '@/lib/utils/seo';
+
 interface AuthorDetailPageProps {
     params: Promise<{ id: string }>;
 }
@@ -29,6 +31,8 @@ export async function generateMetadata({ params }: AuthorDetailPageProps): Promi
         return { title: 'الكاتب غير موجود | النادي الثقافي العربي' };
     }
 
+    const images = await getMetadataImages(author.avatar?.url || author.userProfileImage?.profileImage?.node?.sourceUrl);
+
     return {
         title: `${author.name} | النادي الثقافي العربي`,
         description: author.description || `مساهمات ${author.name} في النادي الثقافي العربي`,
@@ -41,10 +45,17 @@ export async function generateMetadata({ params }: AuthorDetailPageProps): Promi
             url: `https://shjarabclub.ae/author/${id}`,
             siteName: 'النادي الثقافي العربي',
             type: 'profile',
-            images: author.avatar?.url ? [{ url: author.avatar.url }] : undefined,
+            images,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${author.name} | النادي الثقافي العربي`,
+            description: author.description || `مساهمات ${author.name} في النادي الثقافي العربي`,
+            images: images.map(img => img.url),
         },
     };
 }
+
 
 // ── Helper: format date ───────────────────────────────────────────
 function formatDate(dateStr: string | null): string {
@@ -197,7 +208,7 @@ export default async function AuthorDetailPage({ params }: AuthorDetailPageProps
                             ))}
                         </div>
                     ) : (
-                        <div className="bg-secondary/20 rounded-[2rem] p-16 text-center border-2 border-dashed border-border">
+                        <div className="bg-secondary/20 rounded-4xl p-16 text-center border-2 border-dashed border-border">
                             <p className="text-xl text-muted-foreground">لا توجد مقالات منشورة حالياً لهذا الكاتب.</p>
                         </div>
                     )}

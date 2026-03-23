@@ -4,6 +4,7 @@ import {
 } from '@/lib/actions/site/facilityBookingPageAction';
 import { SEO } from '@/components/SEO';
 import FacilityBookingForm from './FacilityBookingForm';
+import { getMetadataImages } from '@/lib/utils/seo';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -14,6 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
   const description = seo?.metaDescription || data?.pageDescription || 'احجز قاعات ومرافق النادي الثقافي العربي لفعالياتك الثقافية.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/facility-booking';
+  const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 
   return {
     title,
@@ -28,20 +30,17 @@ export async function generateMetadata(): Promise<Metadata> {
       url: canonicalUrl,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
-      images: seo?.ogImage?.node?.sourceUrl
-        ? [{ url: seo.ogImage.node.sourceUrl }]
-        : undefined,
+      images,
     },
     twitter: {
       card: 'summary_large_image',
       title: seo?.twitterTitle || title,
       description: seo?.twitterDescription || description,
-      images: seo?.twitterImage?.node?.sourceUrl
-        ? [seo.twitterImage.node.sourceUrl]
-        : undefined,
+      images: images.map(img => img.url),
     },
   };
 }
+
 
 // ── Page Component ────────────────────────────────────────────────
 export default async function FacilityBookingPage() {
@@ -91,7 +90,7 @@ export default async function FacilityBookingPage() {
         {formId ? (
           <FacilityBookingForm formId={formId} />
         ) : (
-          <div className="bg-white p-12 rounded-[2rem] shadow-lg border border-border text-center">
+          <div className="bg-white p-12 rounded-4xl shadow-lg border border-border text-center">
             <p className="text-muted-foreground text-lg">
               نموذج الحجز غير متاح حالياً. يرجى المحاولة لاحقاً.
             </p>
@@ -100,7 +99,7 @@ export default async function FacilityBookingPage() {
 
         {/* Important Notes Section */}
         {notesSection && notesSection.notes && notesSection.notes.length > 0 && (
-          <div className="mt-12 bg-gradient-to-l from-club-purple/10 to-club-blue/10 p-8 rounded-[2rem] border border-club-purple/20">
+          <div className="mt-12 bg-linear-to-l from-club-purple/10 to-club-blue/10 p-8 rounded-4xl border border-club-purple/20">
             {notesSection.sectionTitle && (
               <h3 className="text-xl font-bold mb-4 text-primary">{notesSection.sectionTitle}</h3>
             )}
