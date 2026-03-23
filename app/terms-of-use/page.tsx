@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { fetchPolicyPageData } from '@/lib/actions/site/policyPageAction';
 import PrivacyPolicyClient from '../privacy-policy/PrivacyPolicyClient';
 import { SEO } from '@/components/SEO';
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchPolicyPageData(321);
@@ -13,16 +13,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/terms-of-use";
   const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 
+  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
+  const description = stripHtml(seo?.metaDescription) || pageDescription;
+
   return {
-    title: seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`,
-    description: seo?.metaDescription || pageDescription,
+    title,
+    description,
     keywords: seo?.focusKeyword || undefined,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: seo?.ogTitle || seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`,
-      description: seo?.ogDescription || seo?.metaDescription || pageDescription,
+      title: seo?.ogTitle || title,
+      description: stripHtml(seo?.ogDescription) || description,
       url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
@@ -30,8 +33,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: seo?.twitterTitle || seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`,
-      description: seo?.twitterDescription || seo?.metaDescription || pageDescription,
+      title: seo?.twitterTitle || title,
+      description: stripHtml(seo?.twitterDescription) || description,
       images: images.map(img => img.url),
     },
   };

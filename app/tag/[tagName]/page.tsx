@@ -6,7 +6,7 @@ import { Tag, ArrowRight, ChevronLeft } from "lucide-react";
 import { fetchTagWithPosts } from "@/lib/actions/site/tagAction";
 import { NewsCard } from "@/components/Cards";
 
-import { getMetadataImages } from "@/lib/utils/seo";
+import { getMetadataImages, stripHtml } from "@/lib/utils/seo";
 
 interface PageProps {
   params: Promise<{
@@ -29,16 +29,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
   const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/tag/${tagName}`;
 
+  const title = seo?.seoTitle || `وسم: ${tagData.name} | النادي الثقافي العربي`;
+  const description = stripHtml(seo?.metaDescription) || stripHtml(tagData.description) || `تصفح جميع المقالات والفعاليات المتعلقة بـ ${tagData.name}.`;
+
   return {
-    title: seo?.seoTitle || `وسم: ${tagData.name} | النادي الثقافي العربي`,
-    description: seo?.metaDescription || tagData.description || `تصفح جميع المقالات والفعاليات المتعلقة بـ ${tagData.name}.`,
+    title,
+    description,
     keywords: seo?.focusKeyword || undefined,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: seo?.ogTitle || seo?.seoTitle || `وسم: ${tagData.name}`,
-      description: seo?.ogDescription || seo?.metaDescription || tagData.description || "",
+      title: seo?.ogTitle || title,
+      description: stripHtml(seo?.ogDescription) || description,
       url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
@@ -46,8 +49,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: seo?.twitterTitle || seo?.seoTitle || `وسم: ${tagData.name}`,
-      description: seo?.twitterDescription || seo?.metaDescription || tagData.description || "",
+      title: seo?.twitterTitle || title,
+      description: stripHtml(seo?.twitterDescription) || description,
       images: images.map(img => img.url),
     },
   };

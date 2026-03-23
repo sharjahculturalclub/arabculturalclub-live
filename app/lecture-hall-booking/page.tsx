@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { fetchLectureHallBookingPageData } from '@/lib/actions/site/lectureHallBookingPageAction';
 import { SEO } from '@/components/SEO';
 import LectureHallBookingForm from './LectureHallBookingForm';
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const pageTitle = data?.pageTitle || 'حجز قاعة المحاضرات';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = seo?.metaDescription || data?.pageDescription || 'احجز قاعة المحاضرات الآن.';
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'احجز قاعة المحاضرات الآن.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/lecture-hall-booking';
   const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 

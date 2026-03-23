@@ -4,7 +4,7 @@ import {
 } from '@/lib/actions/site/facilityBookingPageAction';
 import { SEO } from '@/components/SEO';
 import FacilityBookingForm from './FacilityBookingForm';
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const pageTitle = data?.pageTitle || 'حجز المرافق';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = seo?.metaDescription || data?.pageDescription || 'احجز قاعات ومرافق النادي الثقافي العربي لفعالياتك الثقافية.';
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'احجز قاعات ومرافق النادي الثقافي العربي لفعالياتك الثقافية.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/facility-booking';
   const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 

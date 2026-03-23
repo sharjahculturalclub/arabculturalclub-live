@@ -1,5 +1,19 @@
 import { fetchLogoData } from "@/lib/actions/site/logoAction";
 
+/** Remove HTML tags and decode common entities from a string. */
+export function stripHtml(value: string | null | undefined): string {
+    if (!value) return "";
+    return value
+        .replace(/<[^>]*>/g, "")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&amp;/g, "&")
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'")
+        .replace(/&nbsp;/g, " ")
+        .trim();
+}
+
 /**
  * Standard OG image builder for the project
  * Fallback priority:

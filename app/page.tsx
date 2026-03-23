@@ -7,8 +7,7 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { EventCard, NewsCard } from "@/components/Cards";
 import { VideoModal } from "@/components/HomeClient";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { getMetadataImages } from "@/lib/utils/seo";
-import { fetchLogoData } from "@/lib/actions/site/logoAction";
+import { getMetadataImages, stripHtml } from "@/lib/utils/seo";
 import {
   fetchHomePageData,
   type HeroSection,
@@ -24,29 +23,41 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchHomePageData();
   const seo = data?.seoOptions;
 
+  // Use the hero image as the featured image fallback for OG/Twitter
+  const heroSection = data?.sections?.find(
+    (s) => s.fieldGroupName === "HomePageBuilderHomePageBuilderHeroSectionLayout"
+  ) as HeroSection | undefined;
+  const featuredImageUrl = heroSection?.heroImage?.node?.sourceUrl;
+
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/";
-  const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
+  const ogImages = await getMetadataImages(seo?.ogImage?.node?.sourceUrl, featuredImageUrl);
+  const twitterImages = await getMetadataImages(seo?.twitterImage?.node?.sourceUrl, featuredImageUrl);
+
+  const defaultTitle = "الرئيسية | النادي الثقافي العربي";
+  const defaultDescription = "الموقع الرسمي للنادي الثقافي العربي في الشارقة - منارة الثقافة والأدب والإبداع العربي.";
+  const title = seo?.seoTitle || defaultTitle;
+  const description = stripHtml(seo?.metaDescription) || defaultDescription;
 
   return {
-    title: seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
-    description: seo?.metaDescription || "الموقع الرسمي للنادي الثقافي العربي في الشارقة - منارة الثقافة والأدب والإبداع العربي.",
+    title,
+    description,
     keywords: seo?.focusKeyword || undefined,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: seo?.ogTitle || seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
-      description: seo?.ogDescription || seo?.metaDescription || "",
+      title: seo?.ogTitle || title,
+      description: seo?.ogDescription || description,
       url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
-      images,
+      images: ogImages,
     },
     twitter: {
       card: "summary_large_image",
-      title: seo?.twitterTitle || seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
-      description: seo?.twitterDescription || seo?.metaDescription || "",
-      images: images.map(img => img.url),
+      title: seo?.twitterTitle || title,
+      description: seo?.twitterDescription || description,
+      images: twitterImages.map((img) => img.url),
     },
   };
 }

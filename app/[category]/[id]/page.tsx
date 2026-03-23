@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { ShareButtons } from "@/components/ShareButtons";
-import { getMetadataImages } from "@/lib/utils/seo";
+import { getMetadataImages, stripHtml } from "@/lib/utils/seo";
 import {
     fetchPostById,
     fetchRelatedPosts,
@@ -45,32 +45,34 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     const seo = post.seoOptions;
-    const images = await getMetadataImages(
-        seo?.ogImage?.node?.sourceUrl,
-        post.featuredImage?.node?.sourceUrl
-    );
+    const featuredImageUrl = post.featuredImage?.node?.sourceUrl;
     const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
+    const ogImages = await getMetadataImages(seo?.ogImage?.node?.sourceUrl, featuredImageUrl);
+    const twitterImages = await getMetadataImages(seo?.twitterImage?.node?.sourceUrl, featuredImageUrl);
+
+    const title = seo?.seoTitle || `${post.title} | النادي الثقافي العربي`;
+    const description = stripHtml(seo?.metaDescription) || "";
 
     return {
-        title: seo?.seoTitle || `${post.title} | النادي الثقافي العربي`,
-        description: seo?.metaDescription || "",
+        title,
+        description,
         keywords: seo?.focusKeyword || undefined,
+        alternates: {
+            canonical: canonicalUrl,
+        },
         openGraph: {
-            title: seo?.ogTitle || seo?.seoTitle || post.title,
-            description: seo?.ogDescription || seo?.metaDescription || "",
+            title: seo?.ogTitle || title,
+            description: seo?.ogDescription || description,
             type: "article",
             url: canonicalUrl,
             siteName: "النادي الثقافي العربي",
-            images,
+            images: ogImages,
         },
         twitter: {
             card: "summary_large_image",
-            title: seo?.twitterTitle || seo?.seoTitle || post.title,
-            description: seo?.twitterDescription || seo?.metaDescription || "",
-            images: images.map(img => img.url),
-        },
-        alternates: {
-            canonical: canonicalUrl,
+            title: seo?.twitterTitle || title,
+            description: seo?.twitterDescription || description,
+            images: twitterImages.map((img) => img.url),
         },
     };
 }

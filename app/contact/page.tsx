@@ -9,7 +9,7 @@ import {
 import { SEO } from '@/components/SEO';
 import ContactForm from './ContactForm';
 
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
 
 // ── Icon map for dynamic rendering ────────────────────────────────
 const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const pageTitle = data?.pageTitle || 'اتصل بنا';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = seo?.metaDescription || data?.pageDescription || 'تواصل مع النادي الثقافي العربي.';
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'تواصل مع النادي الثقافي العربي.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/contact';
   const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 

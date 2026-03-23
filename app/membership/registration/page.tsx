@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { fetchMembershipRegistrationPageData } from '@/lib/actions/site/membershipRegistrationPageAction';
 import { SEO } from '@/components/SEO';
 import MembershipForm from './MembershipForm';
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const pageTitle = data?.pageTitle || 'تسجيل العضوية';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = seo?.metaDescription || data?.pageDescription || 'انضم إلى النادي الثقافي العربي واستمتع بجميع المزايا والخدمات الثقافية.';
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'انضم إلى النادي الثقافي العربي واستمتع بجميع المزايا والخدمات الثقافية.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/membership/registration';
   const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { fetchFaqPageData } from '@/lib/actions/site/faqPageAction';
 import { SEO } from '@/components/SEO';
 import FaqCategoriesList from './FaqCategoriesList';
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const pageTitle = data?.pageTitle || 'الأسئلة الشائعة';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = seo?.metaDescription || data?.pageDescription || 'إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي.';
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/faq';
   const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 
