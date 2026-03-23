@@ -56,7 +56,7 @@ export interface PostDetail {
             sourceUrl: string;
         };
     } | null;
-    sEOOptions?: import("@/lib/types/seo").SEOOptions | null;
+    seoOptions?: import("@/lib/types/seo").SEOOptions | null;
 }
 
 export interface RelatedPost {

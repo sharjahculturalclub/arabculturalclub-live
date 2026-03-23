@@ -49,7 +49,7 @@ export const GET_POST_BY_ID = gql`
           sourceUrl
         }
       }
-      sEOOptions {
+      seoOptions {
         seoTitle
         metaDescription
         focusKeyword

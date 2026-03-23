@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const pageTitle = data?.pageOptions?.pageTitle || 'من نحن';
   const pageDescription = data?.pageOptions?.pageDescription || 'النادي الثقافي العربي هو بيت المبدعين ومنارة الفكر، تأسس ليكون جسراً يربط بين عراقة الماضي وإبداع المستقبل.';
 
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/about";
 
   return {
@@ -58,10 +58,10 @@ export default async function About() {
       <SEO
         title={`${data.pageOptions?.pageTitle || 'من نحن'} | النادي الثقافي العربي`}
         description={data.pageOptions?.pageDescription || 'النادي الثقافي العربي هو بيت المبدعين ومنارة الفكر، تأسس ليكون جسراً يربط بين عراقة الماضي وإبداع المستقبل.'}
-        url={data?.sEOOptions?.canonicalUrl || "https://shjarabclub.ae/about"}
+        url={data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/about"}
         breadcrumbs={[
           { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: data.pageOptions?.pageTitle || 'من نحن', item: data?.sEOOptions?.canonicalUrl || "https://shjarabclub.ae/about" }
+          { name: data.pageOptions?.pageTitle || 'من نحن', item: data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/about" }
         ]}
       />
       <AboutClient data={data} />

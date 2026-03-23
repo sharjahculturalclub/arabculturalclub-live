@@ -29,7 +29,7 @@ export const GET_FACILITY_BOOKING_PAGE = gql`
                     }
                 }
             }
-            sEOOptions {
+            seoOptions {
                 seoTitle
                 metaDescription
                 focusKeyword

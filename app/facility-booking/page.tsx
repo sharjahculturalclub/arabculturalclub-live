@@ -8,7 +8,7 @@ import FacilityBookingForm from './FacilityBookingForm';
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchFacilityBookingPageData();
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const pageTitle = data?.pageTitle || 'حجز المرافق';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
@@ -58,17 +58,17 @@ export default async function FacilityBookingPage() {
     );
   }
 
-  const { pageTitle, pageDescription, formId, notesSection, sEOOptions } = data;
+  const { pageTitle, pageDescription, formId, notesSection, seoOptions } = data;
 
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={sEOOptions?.seoTitle || `${pageTitle || 'حجز المرافق'} | النادي الثقافي العربي`}
-        description={sEOOptions?.metaDescription || pageDescription || 'احجز قاعات ومرافق النادي الثقافي العربي لفعالياتك الثقافية.'}
-        url={sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/facility-booking'}
+        title={seoOptions?.seoTitle || `${pageTitle || 'حجز المرافق'} | النادي الثقافي العربي`}
+        description={seoOptions?.metaDescription || pageDescription || 'احجز قاعات ومرافق النادي الثقافي العربي لفعالياتك الثقافية.'}
+        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/facility-booking'}
         breadcrumbs={[
           { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'حجز المرافق', item: sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/facility-booking' },
+          { name: pageTitle || 'حجز المرافق', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/facility-booking' },
         ]}
       />
 

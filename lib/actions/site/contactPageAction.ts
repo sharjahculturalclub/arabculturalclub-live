@@ -37,7 +37,7 @@ export interface ContactPageDataType {
                 contactPageBuilder: ContactPageSection[];
             };
         } | null;
-        sEOOptions: SEOOptions | null;
+        seoOptions: SEOOptions | null;
     } | null;
 }
 
@@ -62,7 +62,7 @@ export async function fetchContactPageData(): Promise<{
     pageTitle: string | null;
     pageDescription: string | null;
     sections: ContactPageSection[];
-    sEOOptions?: SEOOptions | null;
+    seoOptions?: SEOOptions | null;
 } | null> {
     try {
         const result = await client.query<ContactPageDataType>({
@@ -79,9 +79,9 @@ export async function fetchContactPageData(): Promise<{
         const pageDescription = result.data?.pageBy?.pageOptions?.pageDescription ?? null;
         const sections =
             result.data?.pageBy?.template?.contactPageBuilder?.contactPageBuilder ?? [];
-        const sEOOptions = result.data?.pageBy?.sEOOptions;
+        const seoOptions = result.data?.pageBy?.seoOptions;
 
-        return { pageTitle, pageDescription, sections, sEOOptions };
+        return { pageTitle, pageDescription, sections, seoOptions };
     } catch (error) {
         console.error("Error fetching contact page data:", error);
         return null;

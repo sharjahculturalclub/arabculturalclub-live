@@ -20,7 +20,7 @@ import {
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchHomePageData();
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
 
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/";
 
@@ -428,7 +428,7 @@ export default async function Home() {
 
   const sections = data?.sections ?? [];
   const posts = data?.posts ?? [];
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
 
   const websiteSchema = {
     "@context": "https://schema.org",

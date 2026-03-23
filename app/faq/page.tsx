@@ -7,7 +7,7 @@ import FaqCategoriesList from './FaqCategoriesList';
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchFaqPageData();
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const pageTitle = data?.pageTitle || 'الأسئلة الشائعة';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
@@ -57,17 +57,17 @@ export default async function FaqPage() {
     );
   }
 
-  const { pageTitle, pageDescription, faqCategories, ctaSection, sEOOptions } = data;
+  const { pageTitle, pageDescription, faqCategories, ctaSection, seoOptions } = data;
 
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={sEOOptions?.seoTitle || `${pageTitle || 'الأسئلة الشائعة'} | النادي الثقافي العربي`}
-        description={sEOOptions?.metaDescription || pageDescription || 'إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي.'}
-        url={sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/faq'}
+        title={seoOptions?.seoTitle || `${pageTitle || 'الأسئلة الشائعة'} | النادي الثقافي العربي`}
+        description={seoOptions?.metaDescription || pageDescription || 'إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي.'}
+        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/faq'}
         breadcrumbs={[
           { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'الأسئلة الشائعة', item: sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/faq' },
+          { name: pageTitle || 'الأسئلة الشائعة', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/faq' },
         ]}
       />
 

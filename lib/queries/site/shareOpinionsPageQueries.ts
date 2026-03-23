@@ -29,7 +29,7 @@ export const GET_SHARE_OPINIONS_PAGE = gql`
                     }
                 }
             }
-            sEOOptions {
+            seoOptions {
                 seoTitle
                 metaDescription
                 focusKeyword

@@ -9,7 +9,7 @@ export interface CategoryData {
     slug: string;
     description: string | null;
     count: number | null;
-    sEOOptions?: import("@/lib/types/seo").SEOOptions | null;
+    seoOptions?: import("@/lib/types/seo").SEOOptions | null;
 
     posts: {
         pageInfo: {

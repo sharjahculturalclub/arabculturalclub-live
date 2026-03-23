@@ -6,7 +6,7 @@ import LectureHallBookingForm from './LectureHallBookingForm';
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchLectureHallBookingPageData();
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const pageTitle = data?.pageTitle || 'حجز قاعة المحاضرات';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
@@ -56,17 +56,17 @@ export default async function LectureHallBookingPage() {
     );
   }
 
-  const { pageTitle, pageDescription, formId, infoSection, sEOOptions } = data;
+  const { pageTitle, pageDescription, formId, infoSection, seoOptions } = data;
 
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={sEOOptions?.seoTitle || `${pageTitle || 'حجز قاعة المحاضرات'} | النادي الثقافي العربي`}
-        description={sEOOptions?.metaDescription || pageDescription || 'احجز قاعة المحاضرات الآن.'}
-        url={sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/lecture-hall-booking'}
+        title={seoOptions?.seoTitle || `${pageTitle || 'حجز قاعة المحاضرات'} | النادي الثقافي العربي`}
+        description={seoOptions?.metaDescription || pageDescription || 'احجز قاعة المحاضرات الآن.'}
+        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/lecture-hall-booking'}
         breadcrumbs={[
           { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'حجز قاعة المحاضرات', item: sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/lecture-hall-booking' },
+          { name: pageTitle || 'حجز قاعة المحاضرات', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/lecture-hall-booking' },
         ]}
       />
 

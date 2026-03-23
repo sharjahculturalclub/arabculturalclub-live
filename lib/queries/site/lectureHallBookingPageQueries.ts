@@ -29,7 +29,7 @@ export const GET_LECTURE_HALL_BOOKING_PAGE = gql`
         }
       }
     }
-    sEOOptions {
+    seoOptions {
       seoTitle
       metaDescription
       focusKeyword

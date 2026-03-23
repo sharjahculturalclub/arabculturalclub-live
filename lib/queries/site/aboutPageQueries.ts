@@ -7,7 +7,7 @@ export const GET_ABOUT_PAGE = gql`
                 pageTitle
                 pageDescription
             }
-            sEOOptions {
+            seoOptions {
                 seoTitle
                 metaDescription
                 focusKeyword

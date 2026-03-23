@@ -117,7 +117,7 @@ export const GET_HOME_PAGE = gql`
           }
         }
       }
-      sEOOptions {
+      seoOptions {
         seoTitle
         metaDescription
         focusKeyword

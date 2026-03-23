@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const seo = tagData.sEOOptions;
+  const seo = tagData.seoOptions;
   const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/tag/${tagName}`;
 
   return {

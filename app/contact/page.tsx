@@ -40,7 +40,7 @@ const colorMap: Record<string, { bg: string; text: string; hoverBg: string; hove
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchContactPageData();
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const pageTitle = data?.pageTitle || 'اتصل بنا';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
@@ -90,7 +90,7 @@ export default async function ContactPage() {
     );
   }
 
-  const { pageTitle, pageDescription, sections, sEOOptions } = data;
+  const { pageTitle, pageDescription, sections, seoOptions } = data;
 
   const contactFormAndInfo = findContactSection<ContactFormAndInfoSection>(
     sections,
@@ -105,12 +105,12 @@ export default async function ContactPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={sEOOptions?.seoTitle || `${pageTitle || 'اتصل بنا'} | النادي الثقافي العربي`}
-        description={sEOOptions?.metaDescription || pageDescription || 'تواصل مع النادي الثقافي العربي.'}
-        url={sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/contact'}
+        title={seoOptions?.seoTitle || `${pageTitle || 'اتصل بنا'} | النادي الثقافي العربي`}
+        description={seoOptions?.metaDescription || pageDescription || 'تواصل مع النادي الثقافي العربي.'}
+        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/contact'}
         breadcrumbs={[
           { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'اتصل بنا', item: sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/contact' },
+          { name: pageTitle || 'اتصل بنا', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/contact' },
         ]}
       />
 
