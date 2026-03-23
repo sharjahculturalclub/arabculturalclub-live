@@ -6,6 +6,8 @@ import { Tag, ArrowRight, ChevronLeft } from "lucide-react";
 import { fetchTagWithPosts } from "@/lib/actions/site/tagAction";
 import { NewsCard } from "@/components/Cards";
 
+import { getMetadataImages } from "@/lib/utils/seo";
+
 interface PageProps {
   params: Promise<{
     tagName: string;
@@ -24,6 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const seo = tagData.seoOptions;
+  const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
   const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/tag/${tagName}`;
 
   return {
@@ -39,16 +42,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
-      images: seo?.ogImage?.node?.sourceUrl ? [{ url: seo.ogImage.node.sourceUrl }] : undefined,
+      images,
     },
     twitter: {
       card: "summary_large_image",
       title: seo?.twitterTitle || seo?.seoTitle || `وسم: ${tagData.name}`,
       description: seo?.twitterDescription || seo?.metaDescription || tagData.description || "",
-      images: seo?.twitterImage?.node?.sourceUrl ? [seo.twitterImage.node.sourceUrl] : undefined,
+      images: images.map(img => img.url),
     },
   };
 }
+
 
 export default async function TagPage({ params }: PageProps) {
   const { tagName } = await params;

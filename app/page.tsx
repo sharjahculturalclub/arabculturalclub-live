@@ -7,6 +7,8 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { EventCard, NewsCard } from "@/components/Cards";
 import { VideoModal } from "@/components/HomeClient";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { getMetadataImages } from "@/lib/utils/seo";
+import { fetchLogoData } from "@/lib/actions/site/logoAction";
 import {
   fetchHomePageData,
   type HeroSection,
@@ -23,6 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const seo = data?.seoOptions;
 
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/";
+  const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 
   return {
     title: seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
@@ -37,20 +40,17 @@ export async function generateMetadata(): Promise<Metadata> {
       url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
-      images: seo?.ogImage?.node?.sourceUrl
-        ? [{ url: seo.ogImage.node.sourceUrl }]
-        : undefined,
+      images,
     },
     twitter: {
       card: "summary_large_image",
       title: seo?.twitterTitle || seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
       description: seo?.twitterDescription || seo?.metaDescription || "",
-      images: seo?.twitterImage?.node?.sourceUrl
-        ? [seo.twitterImage.node.sourceUrl]
-        : undefined,
+      images: images.map(img => img.url),
     },
   };
 }
+
 
 /* ─── Section Renderers ───────────────────────────────────── */
 

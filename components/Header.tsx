@@ -65,59 +65,65 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500  ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg py-4' : 'bg-transparent py-4'}`}
       >
-        <div className="container max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between">
-
-
+        <div className="container max-w-7xl mx-auto px-4 md:px-6 flex flex-row-reverse lg:flex-row items-center justify-between gap-1">
+          {/* Logo - Visually Left on Mobile (due to flex-row-reverse flipping RTL) */}
           <div className="flex items-center cursor-pointer group">
             <Link href="/" className="flex items-center gap-2 group w-[110px]">
               <img src={logoUrl || fallbackLogo.src} alt={siteName} className="w-full h-full" />
             </Link>
           </div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center space-x-reverse space-x-1 gap-x-2 justify-center">
-            {navLinks && navLinks.map((link) => {
-              const active = isLinkActive(link.path);
-              return (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  className={`px-4 py-2 font-tajawal text-lg font-medium transition-all relative group overflow-hidden rounded-lg ${active ? 'text-club-purple bg-club-purple/10' : 'text-primary/70 hover:text-club-purple hover:bg-white/50'
-                    }`}
+          {/* Menu & Actions Group - Visually Right on Mobile */}
+          <div className="flex items-center gap-4 md:gap-8">
+            {/* Desktop Nav */}
+            <nav className="hidden lg:flex items-center space-x-reverse space-x-1 gap-x-2">
+              {navLinks && navLinks.map((link) => {
+                const active = isLinkActive(link.path);
+                return (
+                  <Link
+                    key={link.path}
+                    href={link.path}
+                    className={`px-4 py-2 font-tajawal text-lg font-medium transition-all relative group overflow-hidden rounded-lg ${active ? 'text-club-purple bg-club-purple/10' : 'text-primary/70 hover:text-club-purple hover:bg-white/50'
+                      }`}
+                  >
+                    {link.title}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 transition-colors cursor-pointer text-black hover:text-club-purple hidden lg:block"
+              >
+                <Search size={20} />
+              </button>
+
+              {/* Mobile Menu Button */}
+              <div className="lg:hidden flex items-center gap-4">
+                <button
+                  onClick={() => setIsSearchOpen(true)}
+                  className="p-2 cursor-pointer text-black"
                 >
-                  {link.title}
-                </Link>
-              );
-            })}
-
-          </nav>
-
-          <button
-            onClick={() => setIsSearchOpen(true)}
-            className="p-2 transition-colors cursor-pointer text-black hover:text-club-purple hidden lg:block"
-          >
-            <Search size={20} />
-          </button>
-
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center gap-4">
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              className="p-2 cursor-pointer text-black"
-            >
-              <Search size={20} />
-            </button>
-            <button
-              className="p-2 cursor-pointer text-black"
-              onClick={() => setIsOpen(true)}
-            >
-              <Menu size={28} />
-            </button>
+                  <Search size={20} />
+                </button>
+                <button
+                  className="p-2 cursor-pointer text-black"
+                  onClick={() => setIsOpen(true)}
+                >
+                  <Menu size={28} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+
+
+
       </header>
 
-      {/* Mobile Nav Drawer (Left to Right) */}
+      {/* Mobile Nav Drawer (Right to Left) */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -129,11 +135,11 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
               className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
             />
             <motion.div
-              initial={{ x: '-100%' }}
+              initial={{ x: '100%' }}
               animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
+              exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 bottom-0 w-[80%] max-w-sm bg-background z-[70] shadow-2xl flex flex-col"
+              className="fixed top-0 right-0 bottom-0 w-[80%] max-w-sm bg-background z-[70] shadow-2xl flex flex-col"
             >
               <div className="p-6 flex items-center justify-between border-b border-border">
                 <div className="flex items-center gap-2">
@@ -160,7 +166,7 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
                         <span>{link.title}</span>
                         {active && (
                           <motion.div
-                            animate={{ x: [0, -5, 0] }}
+                            animate={{ x: [0, 5, 0] }}
                             transition={{ repeat: Infinity, duration: 2 }}
                             className="text-club-purple"
                           >
@@ -180,6 +186,7 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
           </>
         )}
       </AnimatePresence>
+
 
       {/* Search Popup */}
       <AnimatePresence>

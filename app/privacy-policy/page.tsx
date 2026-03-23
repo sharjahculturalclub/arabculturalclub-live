@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { fetchPolicyPageData } from '@/lib/actions/site/policyPageAction';
 import PrivacyPolicyClient from './PrivacyPolicyClient';
 import { SEO } from '@/components/SEO';
+import { getMetadataImages } from '@/lib/utils/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchPolicyPageData(3);
@@ -10,6 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const seo = data?.seoOptions;
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/privacy-policy";
+  const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 
   return {
     title: seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`,
@@ -24,20 +26,17 @@ export async function generateMetadata(): Promise<Metadata> {
       url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
-      images: seo?.ogImage?.node?.sourceUrl
-        ? [{ url: seo.ogImage.node.sourceUrl }]
-        : undefined,
+      images,
     },
     twitter: {
       card: "summary_large_image",
       title: seo?.twitterTitle || seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`,
       description: seo?.twitterDescription || seo?.metaDescription || pageDescription,
-      images: seo?.twitterImage?.node?.sourceUrl
-        ? [seo.twitterImage.node.sourceUrl]
-        : undefined,
+      images: images.map(img => img.url),
     },
   };
 }
+
 
 export default async function PrivacyPolicy() {
   const data = await fetchPolicyPageData(3);

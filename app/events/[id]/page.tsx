@@ -4,6 +4,8 @@ import { EventDetailPageClient } from "./EventDetailPageClient";
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
+import { getMetadataImages } from "@/lib/utils/seo";
+
 interface EventPageProps {
   params: Promise<{ id: string }>;
 }
@@ -18,16 +20,25 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
     };
   }
 
+  const images = await getMetadataImages(event.featuredImage?.node?.sourceUrl);
+
   return {
     title: `${event.title} | النادي الثقافي العربي`,
     description: event.content.replace(/<[^>]*>/g, '').substring(0, 160),
     openGraph: {
       title: event.title,
       description: event.content.replace(/<[^>]*>/g, '').substring(0, 160),
-      images: event.featuredImage?.node.sourceUrl ? [event.featuredImage.node.sourceUrl] : [],
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: event.title,
+      description: event.content.replace(/<[^>]*>/g, '').substring(0, 160),
+      images: images.map(img => img.url),
     },
   };
 }
+
 
 export default async function EventPage({ params }: EventPageProps) {
   const { id } = await params;

@@ -18,12 +18,14 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { ShareButtons } from "@/components/ShareButtons";
+import { getMetadataImages } from "@/lib/utils/seo";
 import {
     fetchPostById,
     fetchRelatedPosts,
 } from "@/lib/actions/site/postAction";
 import { SidebarNewsletter } from "@/components/SidebarNewsletter";
 import { fetchFooterSettings } from "@/lib/actions/site/footerAction";
+
 
 /* ─── Types ───────────────────────────────────────────────── */
 
@@ -43,7 +45,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     const seo = post.seoOptions;
-    const ogImage = seo?.ogImage?.node?.sourceUrl || post.featuredImage?.node?.sourceUrl;
+    const images = await getMetadataImages(
+        seo?.ogImage?.node?.sourceUrl,
+        post.featuredImage?.node?.sourceUrl
+    );
     const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
 
     return {
@@ -56,19 +61,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             type: "article",
             url: canonicalUrl,
             siteName: "النادي الثقافي العربي",
-            images: ogImage ? [{ url: ogImage }] : undefined,
+            images,
         },
         twitter: {
             card: "summary_large_image",
             title: seo?.twitterTitle || seo?.seoTitle || post.title,
             description: seo?.twitterDescription || seo?.metaDescription || "",
-            images: seo?.twitterImage?.node?.sourceUrl ? [seo.twitterImage.node.sourceUrl] : (ogImage ? [ogImage] : undefined),
+            images: images.map(img => img.url),
         },
         alternates: {
             canonical: canonicalUrl,
         },
     };
 }
+
 
 /* ─── Page Component ──────────────────────────────────────── */
 

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { fetchFaqPageData } from '@/lib/actions/site/faqPageAction';
 import { SEO } from '@/components/SEO';
 import FaqCategoriesList from './FaqCategoriesList';
+import { getMetadataImages } from '@/lib/utils/seo';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
   const description = seo?.metaDescription || data?.pageDescription || 'إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/faq';
+  const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
 
   return {
     title,
@@ -27,20 +29,17 @@ export async function generateMetadata(): Promise<Metadata> {
       url: canonicalUrl,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
-      images: seo?.ogImage?.node?.sourceUrl
-        ? [{ url: seo.ogImage.node.sourceUrl }]
-        : undefined,
+      images,
     },
     twitter: {
       card: 'summary_large_image',
       title: seo?.twitterTitle || title,
       description: seo?.twitterDescription || description,
-      images: seo?.twitterImage?.node?.sourceUrl
-        ? [seo.twitterImage.node.sourceUrl]
-        : undefined,
+      images: images.map(img => img.url),
     },
   };
 }
+
 
 // ── Page Component ────────────────────────────────────────────────
 export default async function FaqPage() {
@@ -94,7 +93,7 @@ export default async function FaqPage() {
         {/* CTA Section */}
         {ctaSection && (ctaSection.ctaTitle || ctaSection.ctaDescription) && (
           <section className="mb-12">
-            <div className="bg-gradient-to-l from-club-purple/10 to-club-blue/10 p-8 md:p-12 rounded-[2rem] border border-club-purple/20 text-center">
+            <div className="bg-linear-to-l from-club-purple/10 to-club-blue/10 p-8 md:p-12 rounded-4xl border border-club-purple/20 text-center">
               {ctaSection.ctaTitle && (
                 <h2 className="text-2xl font-bold mb-4 text-primary">{ctaSection.ctaTitle}</h2>
               )}
