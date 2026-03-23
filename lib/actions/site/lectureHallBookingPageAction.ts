@@ -20,7 +20,7 @@ export interface LectureHallBookingPageData {
     pageDescription: string | null;
     formId: string | null;
     infoSection: InfoSection | null;
-    sEOOptions: SEOOptions | null;
+    seoOptions: SEOOptions | null;
 }
 
 export async function fetchLectureHallBookingPageData(): Promise<LectureHallBookingPageData | null> {
@@ -36,7 +36,7 @@ export async function fetchLectureHallBookingPageData(): Promise<LectureHallBook
                         lecturehallBookingPageBuilder: any[];
                     } | null;
                 } | null;
-                sEOOptions: SEOOptions | null;
+                seoOptions: SEOOptions | null;
             } | null;
         }>({
             query: GET_LECTURE_HALL_BOOKING_PAGE,
@@ -67,7 +67,7 @@ export async function fetchLectureHallBookingPageData(): Promise<LectureHallBook
             pageDescription: page.pageOptions?.pageDescription ?? null,
             formId: formSection?.formId ?? null,
             infoSection: infoSection ?? null,
-            sEOOptions: page.sEOOptions ?? null,
+            seoOptions: page.seoOptions ?? null,
         };
     } catch (error) {
         console.error("Error fetching lecture hall booking page data:", error);

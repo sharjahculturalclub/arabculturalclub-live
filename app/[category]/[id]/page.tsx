@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return { title: "الخبر غير موجود | النادي الثقافي العربي" };
     }
 
-    const seo = post.sEOOptions;
+    const seo = post.seoOptions;
     const ogImage = seo?.ogImage?.node?.sourceUrl || post.featuredImage?.node?.sourceUrl;
     const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
 
@@ -100,7 +100,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
             day: "numeric",
         })
         : "";
-    const seo = post.sEOOptions;
+    const seo = post.seoOptions;
     const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
 
     const breadcrumbsSchema = {

@@ -6,7 +6,7 @@ import SwimmingSubscriptionForm from './SwimmingSubscriptionForm';
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchSwimmingSubscriptionPageData();
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const pageTitle = data?.pageTitle || 'اشتراك لنشاط السباحة';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
@@ -56,17 +56,17 @@ export default async function SwimmingSubscriptionPage() {
     );
   }
 
-  const { pageTitle, pageDescription, formId, infoSection, sEOOptions } = data;
+  const { pageTitle, pageDescription, formId, infoSection, seoOptions } = data;
 
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={sEOOptions?.seoTitle || `${pageTitle || 'اشتراك لنشاط السباحة'} | النادي الثقافي العربي`}
-        description={sEOOptions?.metaDescription || pageDescription || 'سجل الآن في نشاط السباحة واستمتع بأفضل البرامج الرياضية لدى النادي الثقافي العربي.'}
-        url={sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/swimming-subscription'}
+        title={seoOptions?.seoTitle || `${pageTitle || 'اشتراك لنشاط السباحة'} | النادي الثقافي العربي`}
+        description={seoOptions?.metaDescription || pageDescription || 'سجل الآن في نشاط السباحة واستمتع بأفضل البرامج الرياضية لدى النادي الثقافي العربي.'}
+        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/swimming-subscription'}
         breadcrumbs={[
           { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'اشتراك لنشاط السباحة', item: sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/swimming-subscription' },
+          { name: pageTitle || 'اشتراك لنشاط السباحة', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/swimming-subscription' },
         ]}
       />
 

@@ -31,7 +31,7 @@ export interface ShareOpinionsPageDataType {
                 shareOpinionsPageBuilder: ShareOpinionsSection[];
             } | null;
         } | null;
-        sEOOptions: SEOOptions | null;
+        seoOptions: SEOOptions | null;
     } | null;
 }
 
@@ -40,7 +40,7 @@ export interface ShareOpinionsPageData {
     pageDescription: string | null;
     formId: string | null;
     infoSection: InfoSection | null;
-    sEOOptions: SEOOptions | null;
+    seoOptions: SEOOptions | null;
 }
 
 // ── Server-side fetch ─────────────────────────────────────────────
@@ -76,7 +76,7 @@ export async function fetchShareOpinionsPageData(): Promise<ShareOpinionsPageDat
             pageDescription: page.pageOptions?.pageDescription ?? null,
             formId: formSection?.formId ?? null,
             infoSection: infoSection ?? null,
-            sEOOptions: page.sEOOptions ?? null,
+            seoOptions: page.seoOptions ?? null,
         };
     } catch (error) {
         console.error("Error fetching share opinions page data:", error);

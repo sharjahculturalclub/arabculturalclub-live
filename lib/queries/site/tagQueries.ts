@@ -10,7 +10,7 @@ export const GET_POSTS_BY_TAG_SLUG = gql`
       slug
       description
       count
-      sEOOptions {
+      seoOptions {
         seoTitle
         metaDescription
         focusKeyword

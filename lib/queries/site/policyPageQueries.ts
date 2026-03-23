@@ -7,7 +7,7 @@ query PolicyPageQuery($pageId: Int!) {
       pageTitle
       pageDescription
     }
-    sEOOptions {
+    seoOptions {
         seoTitle
         metaDescription
         focusKeyword

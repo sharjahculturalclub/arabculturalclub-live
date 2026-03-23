@@ -19,7 +19,7 @@ export const GET_MEMBERSHIP_REGISTRATION_PAGE = gql`
                     }
                 }
             }
-            sEOOptions {
+            seoOptions {
                 seoTitle
                 metaDescription
                 focusKeyword

@@ -6,7 +6,7 @@ import MembershipForm from './MembershipForm';
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchMembershipRegistrationPageData();
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const pageTitle = data?.pageTitle || 'تسجيل العضوية';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
@@ -56,17 +56,17 @@ export default async function MembershipRegistrationPage() {
     );
   }
 
-  const { pageTitle, pageDescription, formId, sEOOptions } = data;
+  const { pageTitle, pageDescription, formId, seoOptions } = data;
 
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={sEOOptions?.seoTitle || `${pageTitle || 'تسجيل العضوية'} | النادي الثقافي العربي`}
-        description={sEOOptions?.metaDescription || pageDescription || 'انضم إلى النادي الثقافي العربي واستمتع بجميع المزايا والخدمات الثقافية.'}
-        url={sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/membership/registration'}
+        title={seoOptions?.seoTitle || `${pageTitle || 'تسجيل العضوية'} | النادي الثقافي العربي`}
+        description={seoOptions?.metaDescription || pageDescription || 'انضم إلى النادي الثقافي العربي واستمتع بجميع المزايا والخدمات الثقافية.'}
+        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/membership/registration'}
         breadcrumbs={[
           { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'تسجيل العضوية', item: sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/membership/registration' },
+          { name: pageTitle || 'تسجيل العضوية', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/membership/registration' },
         ]}
       />
 

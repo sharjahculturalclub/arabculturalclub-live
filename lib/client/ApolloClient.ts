@@ -1,4 +1,5 @@
-import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, from } from "@apollo/client";
+import { RetryLink } from "@apollo/client/link/retry";
 
 /**
  * Apollo Client configured for Next.js App Router with proper cache invalidation
@@ -7,6 +8,7 @@ import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
  * - Use cache tags for all GraphQL requests
  * - revalidatePath() will clear Next.js fetch cache
  * - Apollo cache set to network-only to always fetch fresh data after revalidation
+ * - Retry strategy for flaky backend (503 Service Unavailable)
  * 
  * Follows PROJECT_CHECKLIST:
  * - §1: No hardcoded secrets (uses process.env)
@@ -15,19 +17,37 @@ import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
  * - §7: Cache tags for surgical revalidation
  */
 
-const client = new ApolloClient({
-    link: new HttpLink({
-        uri: `${process.env.NEXT_PUBLIC_DB_URI}/graphql`,
-        fetch: (uri, options) => {
-            return fetch(uri, {
-                ...options,
-                next: {
-                    revalidate: false, // Static by default — use on-demand revalidation
-                    tags: ['wordpress'], // Tag all WordPress requests for selective invalidation
-                },
-            });
+const retryLink = new RetryLink({
+    delay: {
+        initial: 1000,
+        max: 5000,
+        jitter: true,
+    },
+    attempts: {
+        max: 5,
+        retryIf: (error, _operation) => {
+            // Retry on network errors or 503 Service Unavailable
+            const statusCode = (error as any)?.statusCode || (error as any).response?.status;
+            return !!error || statusCode === 503 || statusCode === 502 || statusCode === 504;
         },
-    }),
+    },
+});
+
+const httpLink = new HttpLink({
+    uri: `${process.env.NEXT_PUBLIC_DB_URI}/graphql`,
+    fetch: (uri, options) => {
+        return fetch(uri, {
+            ...options,
+            next: {
+                revalidate: false, // Static by default — use on-demand revalidation
+                tags: ['wordpress'], // Tag all WordPress requests for selective invalidation
+            },
+        });
+    },
+});
+
+const client = new ApolloClient({
+    link: from([retryLink, httpLink]),
     cache: new InMemoryCache({
         typePolicies: {
             ThemeOptions: {
@@ -73,3 +93,4 @@ const client = new ApolloClient({
 });
 
 export default client;
+

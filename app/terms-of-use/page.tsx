@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const pageTitle = data?.pageOptions?.pageTitle || 'شروط الاستخدام';
   const pageDescription = data?.pageOptions?.pageDescription || 'شروط وأحكام استخدام موقع النادي الثقافي العربي.';
 
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/terms-of-use";
 
   return {
@@ -58,10 +58,10 @@ export default async function TermsOfUse() {
       <SEO
         title={`${data.pageOptions?.pageTitle || 'شروط الاستخدام'} | النادي الثقافي العربي`}
         description={data.pageOptions?.pageDescription || 'شروط وأحكام استخدام موقع النادي الثقافي العربي.'}
-        url={data?.sEOOptions?.canonicalUrl || "https://shjarabclub.ae/terms-of-use"}
+        url={data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/terms-of-use"}
         breadcrumbs={[
           { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: data.pageOptions?.pageTitle || 'شروط الاستخدام', item: data?.sEOOptions?.canonicalUrl || "https://shjarabclub.ae/terms-of-use" }
+          { name: data.pageOptions?.pageTitle || 'شروط الاستخدام', item: data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/terms-of-use" }
         ]}
       />
       <PrivacyPolicyClient data={data} />

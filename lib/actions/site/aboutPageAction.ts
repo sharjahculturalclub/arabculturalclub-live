@@ -70,7 +70,7 @@ export interface AboutPageData {
         pageTitle?: string | null;
         pageDescription?: string | null;
     };
-    sEOOptions?: import("@/lib/types/seo").SEOOptions | null;
+    seoOptions?: import("@/lib/types/seo").SEOOptions | null;
     sections: AboutPageSection[];
 }
 
@@ -89,9 +89,9 @@ export async function fetchAboutPageData(): Promise<AboutPageData | null> {
         const pageBy = result.data?.pageBy;
         const pageOptions = pageBy?.pageOptions;
         const sections = pageBy?.template?.aboutPageBuilder?.aboutPageBuilder || [];
-        const sEOOptions = pageBy?.sEOOptions;
+        const seoOptions = pageBy?.seoOptions;
 
-        return { pageOptions, sections, sEOOptions };
+        return { pageOptions, sections, seoOptions };
     } catch (error) {
         console.error("Error fetching about page data:", error);
         return null;

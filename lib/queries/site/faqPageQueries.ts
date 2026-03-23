@@ -36,7 +36,7 @@ export const GET_FAQ_PAGE = gql`
                     }
                 }
             }
-            sEOOptions {
+            seoOptions {
                 seoTitle
                 metaDescription
                 focusKeyword

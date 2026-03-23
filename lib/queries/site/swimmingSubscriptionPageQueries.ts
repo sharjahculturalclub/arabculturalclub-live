@@ -29,7 +29,7 @@ export const GET_SWIMMING_SUBSCRIPTION_PAGE = gql`
             }
         }
         }
-        sEOOptions {
+        seoOptions {
         seoTitle
         metaDescription
         focusKeyword

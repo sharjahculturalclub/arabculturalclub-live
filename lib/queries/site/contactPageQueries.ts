@@ -35,7 +35,7 @@ export const GET_CONTACT_PAGE = gql`
                     }
                 }
             }
-            sEOOptions {
+            seoOptions {
                 seoTitle
                 metaDescription
                 focusKeyword

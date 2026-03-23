@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const pageTitle = data?.pageOptions?.pageTitle || 'سياسة الخصوصية';
   const pageDescription = data?.pageOptions?.pageDescription || 'نحن ملتزمون بحماية خصوصيتك وضمان أمان معلوماتك الشخصية';
 
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/privacy-policy";
 
   return {
@@ -58,10 +58,10 @@ export default async function PrivacyPolicy() {
       <SEO
         title={`${data.pageOptions?.pageTitle || 'سياسة الخصوصية'} | النادي الثقافي العربي`}
         description={data.pageOptions?.pageDescription || 'نحن ملتزمون بحماية خصوصيتك وضمان أمان معلوماتك الشخصية'}
-        url={data?.sEOOptions?.canonicalUrl || "https://shjarabclub.ae/privacy-policy"}
+        url={data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/privacy-policy"}
         breadcrumbs={[
           { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: data.pageOptions?.pageTitle || 'سياسة الخصوصية', item: data?.sEOOptions?.canonicalUrl || "https://shjarabclub.ae/privacy-policy" }
+          { name: data.pageOptions?.pageTitle || 'سياسة الخصوصية', item: data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/privacy-policy" }
         ]}
       />
       <PrivacyPolicyClient data={data} />

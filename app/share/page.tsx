@@ -6,7 +6,7 @@ import ShareOpinionsForm from './ShareOpinionsForm';
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchShareOpinionsPageData();
-  const seo = data?.sEOOptions;
+  const seo = data?.seoOptions;
   const pageTitle = data?.pageTitle || 'شارك آراءك واقتراحاتك';
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
@@ -56,17 +56,17 @@ export default async function ShareOpinionsPage() {
     );
   }
 
-  const { pageTitle, pageDescription, formId, infoSection, sEOOptions } = data;
+  const { pageTitle, pageDescription, formId, infoSection, seoOptions } = data;
 
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={sEOOptions?.seoTitle || `${pageTitle || 'شارك آراءك واقتراحاتك'} | النادي الثقافي العربي`}
-        description={sEOOptions?.metaDescription || pageDescription || 'شاركنا آراءك واقتراحاتك لمساعدتنا في تحسين خدماتنا وبرامجنا الثقافية.'}
-        url={sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/share'}
+        title={seoOptions?.seoTitle || `${pageTitle || 'شارك آراءك واقتراحاتك'} | النادي الثقافي العربي`}
+        description={seoOptions?.metaDescription || pageDescription || 'شاركنا آراءك واقتراحاتك لمساعدتنا في تحسين خدماتنا وبرامجنا الثقافية.'}
+        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/share'}
         breadcrumbs={[
           { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'شارك آراءك واقتراحاتك', item: sEOOptions?.canonicalUrl || 'https://shjarabclub.ae/share' },
+          { name: pageTitle || 'شارك آراءك واقتراحاتك', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/share' },
         ]}
       />
 

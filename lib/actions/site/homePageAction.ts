@@ -117,7 +117,7 @@ export interface HomePageDataType {
             fieldGroupName: string;
             homePageBuilder: HomePageSection[];
         };
-        sEOOptions: SEOOptions | null;
+        seoOptions: SEOOptions | null;
     };
     posts: {
         nodes: PostNode[];
@@ -150,7 +150,7 @@ export function findSection<T extends HomePageSection>(
 export async function fetchHomePageData(): Promise<{
     sections: HomePageSection[];
     posts: PostNode[];
-    sEOOptions?: SEOOptions | null;
+    seoOptions?: SEOOptions | null;
 } | null> {
     try {
         const result = await client.query<HomePageDataType>({
@@ -166,9 +166,9 @@ export async function fetchHomePageData(): Promise<{
         const sections =
             result.data?.pageBy?.homePageBuilder?.homePageBuilder ?? [];
         const posts = result.data?.posts?.nodes ?? [];
-        const sEOOptions = result.data?.pageBy?.sEOOptions;
+        const seoOptions = result.data?.pageBy?.seoOptions;
 
-        return { sections, posts, sEOOptions };
+        return { sections, posts, seoOptions };
     } catch (error) {
         console.error("Error fetching homepage data:", error);
         return null;
