@@ -7,7 +7,7 @@ export async function submitSwimmingSubscriptionAction(
     formData: FormData
 ): Promise<{ success: boolean; message: string; invalidFields?: any[] }> {
     try {
-        const wpApiUrl = process.env.NEXT_PUBLIC_DB_URI;
+        const wpApiUrl = process.env.WP_BACKEND_URL;
         if (!wpApiUrl) {
             return {
                 success: false,

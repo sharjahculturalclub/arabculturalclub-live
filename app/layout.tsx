@@ -8,6 +8,7 @@ import { Toaster } from 'sonner';
 import { GoogleTagManager } from "@next/third-parties/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { fetchLogoData } from "@/lib/actions/site/logoAction";
+import { normalizeImageUrl } from "@/lib/utils/url";
 import { fetchHeaderMenu } from "@/lib/actions/site/headerMenuAction";
 import { fetchFooterSettings } from "@/lib/actions/site/footerAction";
 
@@ -35,7 +36,7 @@ export default async function RootLayout({
     ]);
 
     if (logoData?.siteLogoUrl) {
-      logoUrl = encodeURI(logoData.siteLogoUrl);
+      logoUrl = normalizeImageUrl(logoData.siteLogoUrl);
     }
     if (logoData?.siteInfo?.siteName) {
       siteName = logoData.siteInfo.siteName;

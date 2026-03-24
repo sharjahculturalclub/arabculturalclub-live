@@ -33,7 +33,7 @@ export async function submitShareOpinionsAction(
             };
         }
 
-        const wpApiUrl = process.env.NEXT_PUBLIC_DB_URI;
+        const wpApiUrl = process.env.WP_BACKEND_URL;
         if (!wpApiUrl) {
             return {
                 success: false,

@@ -36,9 +36,9 @@ export async function submitJoinEventAction(
             };
         }
 
-        const wpApiUrl = process.env.NEXT_PUBLIC_DB_URI;
+        const wpApiUrl = process.env.WP_BACKEND_URL;
         if (!wpApiUrl) {
-            console.error('NEXT_PUBLIC_DB_URI is not set');
+            console.error('WP_BACKEND_URL is not set');
             return {
                 success: false,
                 message: 'حدث خطأ في إعداد الخادم. يرجى المحاولة لاحقاً.',
