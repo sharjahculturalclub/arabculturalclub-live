@@ -8,6 +8,7 @@ import { SEO } from '@/components/SEO';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { Calendar, MapPin, Tag, ArrowLeft, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { EventNode } from '@/lib/actions/site/eventsAction';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 interface EventDetailPageClientProps {
     event: EventNode;
@@ -24,7 +25,7 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
         time: event.eventOptions.eventTime,
         location: event.eventOptions.eventLocation,
         category: event.categories?.nodes[0]?.name || 'عام',
-        image: event.featuredImage?.node.sourceUrl || '',
+        image: normalizeImageUrl(event.featuredImage?.node.sourceUrl || ''),
         description: event.content,
         registrationHeading: event.eventOptions.eventRegistrationBlockHeading,
         registrationDescription: event.eventOptions.eventRegistrationBlockDescription,

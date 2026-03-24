@@ -19,6 +19,7 @@ import {
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { ShareButtons } from "@/components/ShareButtons";
 import { getMetadataImages, stripHtml } from "@/lib/utils/seo";
+import { normalizeImageUrl } from "@/lib/utils/url";
 import {
     fetchPostById,
     fetchRelatedPosts,
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     const seo = post.seoOptions;
-    const featuredImageUrl = post.featuredImage?.node?.sourceUrl;
+    const featuredImageUrl = normalizeImageUrl(post.featuredImage?.node?.sourceUrl ?? "");
     const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
     const images = await getMetadataImages(undefined, featuredImageUrl);
 
@@ -219,7 +220,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                             {post.featuredImage?.node?.sourceUrl && (
                                 <div className="relative rounded-3xl overflow-hidden mb-12 shadow-2xl">
                                     <ImageWithFallback
-                                        src={post.featuredImage.node.sourceUrl}
+                                        src={normalizeImageUrl(post.featuredImage.node.sourceUrl)}
                                         alt={post.featuredImage.node.altText || post.title}
                                         className="w-full aspect-video object-cover"
                                     />
@@ -246,7 +247,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                                 <div className="mt-16 p-8 bg-white rounded-4xl border border-border flex flex-col md:flex-row items-center gap-8">
                                     <div className="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-white shadow-md">
                                         <img
-                                            src={post.author.node.userProfileImage?.profileImage?.node?.sourceUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400"}
+                                            src={normalizeImageUrl(post.author.node.userProfileImage?.profileImage?.node?.sourceUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400")}
                                             className="w-full h-full object-cover"
                                             alt={post.author.node.userProfileImage?.profileImage?.node?.altText || post.author.node.name}
                                         />
@@ -341,7 +342,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                                                     {related.featuredImage?.node?.sourceUrl && (
                                                         <div className="w-24 h-24 rounded-2xl overflow-hidden shrink-0">
                                                             <ImageWithFallback
-                                                                src={related.featuredImage.node.sourceUrl}
+                                                                src={normalizeImageUrl(related.featuredImage.node.sourceUrl)}
                                                                 alt={
                                                                     related.featuredImage.node.altText ||
                                                                     related.title
@@ -419,7 +420,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                             name: "النادي الثقافي العربي",
                             url: "https://shjarabclub.ae",
                         },
-                        image: post.featuredImage?.node?.sourceUrl || undefined,
+                        image: normalizeImageUrl(post.featuredImage?.node?.sourceUrl || "") || undefined,
                         description: seo?.metaDescription || "",
                         mainEntityOfPage: {
                             "@type": "WebPage",

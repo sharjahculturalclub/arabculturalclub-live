@@ -3,6 +3,7 @@ import { fetchCondolenceHallBookingPageData } from '@/lib/actions/site/condolenc
 import { SEO } from '@/components/SEO';
 import CondolenceHallBookingForm from './CondolenceHallBookingForm';
 import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
   const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'احجز قاعة التعازي الآن.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/condolence-hall-booking';
-  const featuredImageUrl = data?.featuredImage?.node?.sourceUrl;
+  const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
   return {

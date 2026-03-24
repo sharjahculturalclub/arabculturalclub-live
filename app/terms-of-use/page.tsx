@@ -3,6 +3,7 @@ import { fetchPolicyPageData } from '@/lib/actions/site/policyPageAction';
 import PrivacyPolicyClient from '../privacy-policy/PrivacyPolicyClient';
 import { SEO } from '@/components/SEO';
 import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchPolicyPageData(321);
@@ -11,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const seo = data?.seoOptions;
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/terms-of-use";
-  const featuredImageUrl = data?.featuredImage?.node?.sourceUrl;
+  const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;

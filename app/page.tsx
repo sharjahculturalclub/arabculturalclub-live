@@ -8,6 +8,7 @@ import { EventCard, NewsCard } from "@/components/Cards";
 import { VideoModal } from "@/components/HomeClient";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { getMetadataImages, stripHtml } from "@/lib/utils/seo";
+import { normalizeImageUrl } from "@/lib/utils/url";
 import {
   fetchHomePageData,
   type HeroSection,
@@ -71,7 +72,7 @@ function HeroSectionBlock({ hero }: { hero: HeroSection }) {
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
         style={hero.sectionBackgroundImage?.node?.sourceUrl ? {
-          backgroundImage: `url(${hero.sectionBackgroundImage.node.sourceUrl})`,
+          backgroundImage: `url(${normalizeImageUrl(hero.sectionBackgroundImage.node.sourceUrl)})`,
           backgroundSize: 'contain',
           backgroundPosition: 'center',
         } : undefined}
@@ -139,7 +140,7 @@ function HeroSectionBlock({ hero }: { hero: HeroSection }) {
               <div className="relative z-20">
                 <div className="relative aspect-[4/5] md:aspect-[5/6] rounded-[3rem] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border-4 border-white">
                   <ImageWithFallback
-                    src={hero.heroImage.node.sourceUrl}
+                    src={normalizeImageUrl(hero.heroImage.node.sourceUrl)}
                     alt={hero.heroImage.node.altText || "ثقافة الشارقة"}
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                   />
@@ -184,7 +185,7 @@ function MissionVisionBlock({ data }: { data: MissionVisionSection }) {
             <div className="lg:w-1/2 relative">
               <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl">
                 <ImageWithFallback
-                  src={data.imageMissionVision.node.sourceUrl}
+                  src={normalizeImageUrl(data.imageMissionVision.node.sourceUrl)}
                   alt={
                     data.imageMissionVision.node.altText || "رسالة النادي"
                   }
@@ -266,7 +267,7 @@ function EventsBlock({ data }: { data: EventsSection }) {
                   event={{
                     id: event.eventId,
                     title: event.title,
-                    image: event.featuredImage?.node?.sourceUrl || "",
+                    image: normalizeImageUrl(event.featuredImage?.node?.sourceUrl || ""),
                     date: event.eventOptions?.eventDate || "",
                     location: event.eventOptions?.eventLocation || "",
                     category: event.categories?.nodes?.[0]?.name || "",
@@ -298,7 +299,7 @@ function AboutBlock({ data }: { data: AboutSection }) {
       {data.sectionBackgroundImage?.node?.sourceUrl && (
         <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
           <ImageWithFallback
-            src={data.sectionBackgroundImage.node.sourceUrl}
+            src={normalizeImageUrl(data.sectionBackgroundImage.node.sourceUrl)}
             alt={data.sectionBackgroundImage.node.altText || "Pattern"}
             className="w-[800px]"
           />
@@ -374,7 +375,7 @@ function NewsBlock({ data, posts }: { data: NewsSection; posts: PostNode[] }) {
             news={{
               id: post.postId,
               title: post.title,
-              image: post.featuredImage?.node?.sourceUrl || "",
+              image: normalizeImageUrl(post.featuredImage?.node?.sourceUrl || ""),
               category: post.categories?.nodes?.[0]?.name || "",
               categorySlug: post.categories?.nodes?.[0]?.slug || "uncategorized",
               date: post.date

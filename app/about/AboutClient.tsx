@@ -13,6 +13,7 @@ import {
     AboutPageClubHistorySection
 } from '@/lib/actions/site/aboutPageAction';
 import * as LucideIcons from 'lucide-react';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 export default function AboutClient({ data }: { data: AboutPageData }) {
     const sections = data.sections || [];
@@ -56,7 +57,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
                             <div className="md:w-1/2 relative min-h-[260px] md:min-h-full">
                                 {heroSection.image?.node?.sourceUrl && (
                                     <ImageWithFallback
-                                        src={heroSection.image.node.sourceUrl}
+                                        src={normalizeImageUrl(heroSection.image.node.sourceUrl)}
                                         alt={heroSection.image.node.altText || "رئيس النادي"}
                                         className="absolute inset-0 w-full h-full object-cover"
                                     />
@@ -205,7 +206,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
                                     <div className="relative mb-6 mx-auto w-48 h-48">
                                         <div className="absolute inset-0 bg-club-purple rounded-full rotate-6 transition-transform group-hover:rotate-12"></div>
                                         <ImageWithFallback
-                                            src={member.image?.node?.sourceUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400"}
+                                            src={normalizeImageUrl(member.image?.node?.sourceUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400")}
                                             alt={member.image?.node?.altText || member.name || "عضو مجلس الإدارة"}
                                             className="absolute inset-0 w-full h-full object-cover rounded-full border-4 border-white shadow-lg relative z-10"
                                         />
@@ -288,7 +289,7 @@ const HistorySlider = ({ historyItems, footerText }: { historyItems: any[], foot
                         >
                             <div className="relative h-40">
                                 <ImageWithFallback
-                                    src={milestone.image?.node?.sourceUrl || ""}
+                                    src={normalizeImageUrl(milestone.image?.node?.sourceUrl || "")}
                                     alt={milestone.image?.node?.altText || milestone.title || ""}
                                     className="w-full h-full object-cover"
                                 />

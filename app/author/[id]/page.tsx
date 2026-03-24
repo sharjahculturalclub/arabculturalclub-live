@@ -17,6 +17,7 @@ const socialIconMap: Record<string, LucideIcon> = {
 };
 
 import { getMetadataImages } from '@/lib/utils/seo';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 interface AuthorDetailPageProps {
     params: Promise<{ id: string }>;
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: AuthorDetailPageProps): Promi
         return { title: 'الكاتب غير موجود | النادي الثقافي العربي' };
     }
 
-    const images = await getMetadataImages(author.avatar?.url || author.userProfileImage?.profileImage?.node?.sourceUrl);
+    const images = await getMetadataImages(author.avatar?.url || normalizeImageUrl(author.userProfileImage?.profileImage?.node?.sourceUrl ?? ""));
 
     return {
         title: `${author.name} | النادي الثقافي العربي`,
@@ -105,7 +106,7 @@ export default async function AuthorDetailPage({ params }: AuthorDetailPageProps
             date: formatDate(post.date),
             category: firstCategory?.name || 'عام',
             categorySlug: firstCategory?.slug || 'uncategorized',
-            image: post.featuredImage?.node?.sourceUrl || '',
+            image: normalizeImageUrl(post.featuredImage?.node?.sourceUrl || ''),
             excerpt: stripHtml(post.excerpt),
         };
     });

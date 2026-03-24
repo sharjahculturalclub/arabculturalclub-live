@@ -3,6 +3,7 @@ import { fetchShareOpinionsPageData } from '@/lib/actions/site/shareOpinionsPage
 import { SEO } from '@/components/SEO';
 import ShareOpinionsForm from './ShareOpinionsForm';
 import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
   const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'شاركنا آراءك واقتراحاتك لمساعدتنا في تحسين خدماتنا وبرامجنا الثقافية.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/share';
-  const featuredImageUrl = data?.featuredImage?.node?.sourceUrl;
+  const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
   return {

@@ -11,6 +11,7 @@ import {
     type NewsPost,
     type NewsCategory,
 } from "@/lib/actions/site/newsAction";
+import { normalizeImageUrl } from "@/lib/utils/url";
 
 /* ─── Props ───────────────────────────────────────────────── */
 
@@ -29,7 +30,7 @@ function mapPost(post: NewsPost) {
     return {
         id: post.databaseId,
         title: post.title,
-        image: post.featuredImage?.node?.sourceUrl || "",
+        image: normalizeImageUrl(post.featuredImage?.node?.sourceUrl || ""),
         category: post.categories?.nodes?.[0]?.name || "",
         categorySlug: post.categories?.nodes?.[0]?.slug || "uncategorized",
         date: post.date

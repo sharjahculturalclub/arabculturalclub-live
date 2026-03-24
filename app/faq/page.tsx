@@ -4,6 +4,7 @@ import { fetchFaqPageData } from '@/lib/actions/site/faqPageAction';
 import { SEO } from '@/components/SEO';
 import FaqCategoriesList from './FaqCategoriesList';
 import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -14,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
   const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/faq';
-  const featuredImageUrl = data?.featuredImage?.node?.sourceUrl;
+  const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
   return {

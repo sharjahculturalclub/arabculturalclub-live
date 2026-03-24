@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Search, ArrowRight } from 'lucide-react';
 import { NewsCard } from '@/components/Cards';
 import type { NewsPost } from '@/lib/actions/site/newsAction';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 interface SearchResultsClientProps {
     query: string;
@@ -16,7 +17,7 @@ function mapPost(post: NewsPost) {
     return {
         id: post.databaseId,
         title: post.title,
-        image: post.featuredImage?.node?.sourceUrl || "",
+        image: normalizeImageUrl(post.featuredImage?.node?.sourceUrl || ""),
         category: post.categories?.nodes?.[0]?.name || "أخبار النادي",
         categorySlug: post.categories?.nodes?.[0]?.slug || "uncategorized",
         date: post.date
