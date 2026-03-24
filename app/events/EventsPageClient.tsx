@@ -6,6 +6,7 @@ import { SEO } from '@/components/SEO';
 import { EventCard } from '@/components/Cards';
 import { Search, Filter } from 'lucide-react';
 import { fetchEvents, EventNode } from '@/lib/actions/site/eventsAction';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 interface EventsPageClientProps {
     initialNodes: EventNode[];
@@ -41,7 +42,7 @@ export function EventsPageClient({
         time: event.eventOptions.eventTime,
         location: event.eventOptions.eventLocation,
         category: event.categories?.nodes[0]?.name || 'عام',
-        image: event.featuredImage?.node.sourceUrl || '',
+        image: normalizeImageUrl(event.featuredImage?.node.sourceUrl || ''),
         description: event.content,
     }));
 

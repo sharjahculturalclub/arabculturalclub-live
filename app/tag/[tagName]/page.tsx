@@ -7,6 +7,7 @@ import { fetchTagWithPosts } from "@/lib/actions/site/tagAction";
 import { NewsCard } from "@/components/Cards";
 
 import { getMetadataImages, stripHtml } from "@/lib/utils/seo";
+import { normalizeImageUrl } from "@/lib/utils/url";
 
 interface PageProps {
   params: Promise<{
@@ -180,7 +181,7 @@ export default async function TagPage({ params }: PageProps) {
                 date: item.date ? new Date(item.date).toLocaleDateString("ar-AE", { year: "numeric", month: "long", day: "numeric" }) : "",
                 excerpt: item.excerpt ? item.excerpt.replace(/<[^>]+>/g, '').slice(0, 120) + '...' : '',
                 category: item.categories?.nodes?.[0]?.name || "أخبار النادي",
-                image: item.featuredImage?.node?.sourceUrl || '',
+                image: normalizeImageUrl(item.featuredImage?.node?.sourceUrl || ''),
                 // Ensure slug is correctly fed so NewsCard constructs proper URL
                 categorySlug: item.categories?.nodes?.[0]?.slug || "uncategorized",
               };

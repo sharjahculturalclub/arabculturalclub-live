@@ -5,6 +5,7 @@ import {
 import { SEO } from '@/components/SEO';
 import FacilityBookingForm from './FacilityBookingForm';
 import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -15,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
   const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'احجز قاعات ومرافق النادي الثقافي العربي لفعالياتك الثقافية.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/facility-booking';
-  const featuredImageUrl = data?.featuredImage?.node?.sourceUrl;
+  const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
   return {

@@ -1,98 +1,127 @@
 import type { NextConfig } from "next";
 
+/*
+|--------------------------------------------------------------------------
+| Backend URL (Production)
+|--------------------------------------------------------------------------
+*/
+const BACKEND_URL = "https://backend.shjarabclub.ae";
+
+/*
+|--------------------------------------------------------------------------
+| Extract hostname
+|--------------------------------------------------------------------------
+*/
+const BACKEND_HOSTNAME = "backend.shjarabclub.ae";
+
 const nextConfig: NextConfig = {
+  /*
+  |--------------------------------------------------------------------------
+  | Image Configuration
+  |--------------------------------------------------------------------------
+  */
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'backendshjarabclub.local',
-        port: '',
-        pathname: '/wp-content/uploads/**',
-      },
-      {
-        protocol: 'http',
-        hostname: process.env.NEXT_PUBLIC_DB_URI?.replace('http://', '').replace('https://', '') || 'backendshjarabclub.local',
-        port: '',
-        pathname: '/wp-content/uploads/**',
-      },
-      {
-        protocol: 'https',
-        hostname: process.env.NEXT_PUBLIC_DB_URI?.replace('http://', '').replace('https://', '') || 'backendshjarabclub.local',
-        port: '',
-        pathname: '/wp-content/uploads/**',
+        protocol: "https",
+        hostname: BACKEND_HOSTNAME,
+        pathname: "/wp-content/uploads/**",
       },
     ],
+
     dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    // Image optimization: AVIF + WebP (checklist §2)
-    formats: ['image/avif', 'image/webp'],
+    contentDispositionType: "attachment",
+    contentSecurityPolicy:
+      "default-src 'self'; script-src 'none'; sandbox;",
+
+    formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 31536000, // 1 year cache
+    minimumCacheTTL: 31536000,
     unoptimized: false,
     qualities: [75, 90],
   },
-  // Enable React Compiler for better performance
+
+  /*
+  |--------------------------------------------------------------------------
+  | React + Compiler
+  |--------------------------------------------------------------------------
+  */
   reactCompiler: true,
   reactStrictMode: true,
-  // Remove console.log in production (keep error/warn)
+
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production' ? {
-      exclude: ['error', 'warn'],
-    } : false,
+    removeConsole:
+      process.env.NODE_ENV === "production"
+        ? { exclude: ["error", "warn"] }
+        : false,
   },
-  // Optimize package imports (checklist §2)
+
+  /*
+  |--------------------------------------------------------------------------
+  | Experimental Optimizations
+  |--------------------------------------------------------------------------
+  */
   experimental: {
-    optimizePackageImports: ['@/components', '@/lib'],
+    optimizePackageImports: ["@/components", "@/lib"],
     serverActions: {
-      bodySizeLimit: '20mb',
+      bodySizeLimit: "20mb",
     },
   },
-  // Security & performance headers
+
+  /*
+  |--------------------------------------------------------------------------
+  | Headers (Performance + Security)
+  |--------------------------------------------------------------------------
+  */
   async headers() {
     return [
       {
-        // Static assets: immutable, 1 year cache
-        source: '/_next/static/:path*',
+        source: "/_next/static/:path*",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
       {
-        // Optimized images: 1 year cache
-        source: '/_next/image(.*)',
+        source: "/_next/image(.*)",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
       {
-        // API routes: no cache
-        source: '/api/:path*',
+        source: "/api/image",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
       {
-        // All pages: security headers (no aggressive caching on HTML per checklist §2)
-        source: '/:path*',
+        source: "/api/((?!image).*)",
         headers: [
           {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on',
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+        ],
+      },
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "X-DNS-Prefetch-Control",
+            value: "on",
           },
           {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
           },
         ],
       },

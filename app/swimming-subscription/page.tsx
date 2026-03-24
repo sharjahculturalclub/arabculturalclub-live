@@ -3,6 +3,7 @@ import { fetchSwimmingSubscriptionPageData } from '@/lib/actions/site/swimmingSu
 import { SEO } from '@/components/SEO';
 import SwimmingSubscriptionForm from './SwimmingSubscriptionForm';
 import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
   const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'سجل الآن في نشاط السباحة لدى النادي الثقافي العربي.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/swimming-subscription';
-  const featuredImageUrl = data?.featuredImage?.node?.sourceUrl;
+  const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
   return {

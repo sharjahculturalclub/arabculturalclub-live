@@ -7,6 +7,7 @@ import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GalleryNode } from '@/lib/actions/site/galleryAction';
+import { normalizeImageUrl } from '@/lib/utils/url';
 
 interface GalleryPageClientProps {
     initialGalleries: GalleryNode[];
@@ -31,12 +32,12 @@ export function GalleryPageClient({ initialGalleries, pageTitle, pageDescription
 
     const mappedGalleries = initialGalleries.map((gallery, index) => ({
         id: index + 1,
-        src: gallery.featuredImage?.node.sourceUrl || '',
+        src: normalizeImageUrl(gallery.featuredImage?.node.sourceUrl || ''),
         alt: gallery.featuredImage?.node.altText || gallery.title,
         category: gallery.categories?.nodes[0]?.name || 'عام',
         title: gallery.title,
         images: gallery.galleryOptions?.gallery?.nodes?.map(node => ({
-            src: node.sourceUrl,
+            src: normalizeImageUrl(node.sourceUrl),
             alt: node.altText || gallery.title
         })) || []
     }));

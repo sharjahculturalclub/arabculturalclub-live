@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 import { getMetadataImages } from "@/lib/utils/seo";
+import { normalizeImageUrl } from "@/lib/utils/url";
 
 interface EventPageProps {
   params: Promise<{ id: string }>;
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
     };
   }
 
-  const images = await getMetadataImages(event.featuredImage?.node?.sourceUrl);
+  const images = await getMetadataImages(normalizeImageUrl(event.featuredImage?.node?.sourceUrl ?? ""));
 
   return {
     title: `${event.title} | النادي الثقافي العربي`,
