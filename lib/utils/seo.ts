@@ -1,4 +1,13 @@
 import { fetchLogoData } from "@/lib/actions/site/logoAction";
+import { normalizeImageUrl } from "@/lib/utils/url";
+
+const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shjarabclub.ae";
+
+function toAbsoluteUrl(url: string): string {
+    const normalized = normalizeImageUrl(url);
+    if (normalized.startsWith("/")) return `${SITE_ORIGIN}${normalized}`;
+    return normalized;
+}
 
 /** Remove HTML tags and decode common entities from a string. */
 export function stripHtml(value: string | null | undefined): string {
@@ -26,13 +35,13 @@ export async function getMetadataImages(seoImageUrl?: string | null, featuredIma
     const mainImage = seoImageUrl || featuredImageUrl;
 
     if (mainImage) {
-        return [{ url: mainImage }];
+        return [{ url: toAbsoluteUrl(mainImage) }];
     }
 
     // Attempt to fetch global site logo as final fallback
     const logoData = await fetchLogoData();
     if (logoData?.siteLogoUrl) {
-        return [{ url: logoData.siteLogoUrl }];
+        return [{ url: toAbsoluteUrl(logoData.siteLogoUrl) }];
     }
 
     // Last resort fallback

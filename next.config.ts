@@ -1,18 +1,5 @@
 import type { NextConfig } from "next";
 
-/*
-|--------------------------------------------------------------------------
-| Backend URL (Production)
-|--------------------------------------------------------------------------
-*/
-const BACKEND_URL = "https://backend.shjarabclub.ae";
-
-/*
-|--------------------------------------------------------------------------
-| Extract hostname
-|--------------------------------------------------------------------------
-*/
-const BACKEND_HOSTNAME = "backend.shjarabclub.ae";
 
 const nextConfig: NextConfig = {
   /*
@@ -22,11 +9,8 @@ const nextConfig: NextConfig = {
   */
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: BACKEND_HOSTNAME,
-        pathname: "/wp-content/uploads/**",
-      },
+      // Backend hostname intentionally removed — all media is proxied
+      // through /cms-media/[...path] and served from this domain only.
     ],
 
     dangerouslyAllowSVG: true,
@@ -87,6 +71,15 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/_next/image(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/cms-media/:path*",
         headers: [
           {
             key: "Cache-Control",

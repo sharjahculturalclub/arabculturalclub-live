@@ -6,7 +6,13 @@ import { useRouter, usePathname } from 'next/navigation';
 
 import { Menu, X, Globe, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import fallbackLogo from '@/assets/logo-dark.svg';
+import fallbackLogoAsset from '@/assets/logo-dark.svg';
+
+// Next.js returns SVG static imports as a plain URL string — access it directly.
+const fallbackLogo: string =
+  typeof fallbackLogoAsset === "string"
+    ? fallbackLogoAsset
+    : (fallbackLogoAsset as any)?.src ?? "/logo.png";
 
 interface NavLink {
   title: string;
@@ -68,8 +74,8 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
         <div className="container max-w-7xl mx-auto px-4 md:px-6 flex flex-row-reverse lg:flex-row items-center justify-between gap-1">
           {/* Logo - Visually Left on Mobile (due to flex-row-reverse flipping RTL) */}
           <div className="flex items-center cursor-pointer group">
-            <Link href="/" className="flex items-center gap-2 group w-[110px]">
-              <img src={logoUrl || fallbackLogo.src} alt={siteName} className="w-full h-full" />
+            <Link href="/" className="flex items-center gap-2 group w-[140px]">
+              <img src={logoUrl || fallbackLogo} alt={siteName} className="w-full h-full" />
             </Link>
           </div>
 
