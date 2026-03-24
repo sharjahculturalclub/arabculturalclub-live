@@ -21,6 +21,7 @@ export interface SwimmingSubscriptionPageData {
     formId: string | null;
     infoSection: InfoSection | null;
     seoOptions: SEOOptions | null;
+    featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
 }
 
 export async function fetchSwimmingSubscriptionPageData(): Promise<SwimmingSubscriptionPageData | null> {
@@ -37,6 +38,7 @@ export async function fetchSwimmingSubscriptionPageData(): Promise<SwimmingSubsc
                     } | null;
                 } | null;
                 seoOptions: SEOOptions | null;
+                featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
             } | null;
         }>({
             query: GET_SWIMMING_SUBSCRIPTION_PAGE,
@@ -68,6 +70,7 @@ export async function fetchSwimmingSubscriptionPageData(): Promise<SwimmingSubsc
             formId: formSection?.formId ?? null,
             infoSection: infoSection ?? null,
             seoOptions: page.seoOptions ?? null,
+            featuredImage: page.featuredImage ?? null,
         };
     } catch (error) {
         console.error("Error fetching swimming subscription page data:", error);

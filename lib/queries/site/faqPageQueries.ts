@@ -41,21 +41,11 @@ export const GET_FAQ_PAGE = gql`
                 metaDescription
                 focusKeyword
                 canonicalUrl
-                ogTitle
-                ogDescription
-                ogImage {
-                    node {
-                        altText
-                        sourceUrl
-                    }
-                }
-                twitterTitle
-                twitterDescription
-                twitterImage {
-                    node {
-                        altText
-                        sourceUrl
-                    }
+            }
+            featuredImage {
+                node {
+                    altText
+                    sourceUrl
                 }
             }
         }

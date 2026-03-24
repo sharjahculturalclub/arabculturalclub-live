@@ -30,8 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const featuredImageUrl = heroSection?.heroImage?.node?.sourceUrl;
 
   const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/";
-  const ogImages = await getMetadataImages(seo?.ogImage?.node?.sourceUrl, featuredImageUrl);
-  const twitterImages = await getMetadataImages(seo?.twitterImage?.node?.sourceUrl, featuredImageUrl);
+  const images = await getMetadataImages(undefined, featuredImageUrl);
 
   const defaultTitle = "الرئيسية | النادي الثقافي العربي";
   const defaultDescription = "الموقع الرسمي للنادي الثقافي العربي في الشارقة - منارة الثقافة والأدب والإبداع العربي.";
@@ -46,18 +45,18 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: seo?.ogTitle || title,
-      description: seo?.ogDescription || description,
+      title,
+      description,
       url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
-      images: ogImages,
+      images,
     },
     twitter: {
       card: "summary_large_image",
-      title: seo?.twitterTitle || title,
-      description: seo?.twitterDescription || description,
-      images: twitterImages.map((img) => img.url),
+      title,
+      description,
+      images: images.map((img) => img.url),
     },
   };
 }

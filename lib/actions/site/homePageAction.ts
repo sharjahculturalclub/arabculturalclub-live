@@ -21,12 +21,6 @@ export interface SEOOptions {
     metaDescription: string | null;
     focusKeyword: string | null;
     canonicalUrl: string | null;
-    ogTitle: string | null;
-    ogDescription: string | null;
-    ogImage: ACFImage | null;
-    twitterTitle: string | null;
-    twitterDescription: string | null;
-    twitterImage: ACFImage | null;
 }
 
 export interface HeroSection {

@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     const seo = categoryData.seoOptions;
-    const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
+    const images = await getMetadataImages();
     const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/category/${categorySlug}`;
 
     const title = seo?.seoTitle || `${categoryData.name} | النادي الثقافي العربي`;
@@ -40,8 +40,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             canonical: canonicalUrl,
         },
         openGraph: {
-            title: seo?.ogTitle || title,
-            description: stripHtml(seo?.ogDescription) || description,
+            title,
+            description,
             url: canonicalUrl,
             siteName: "النادي الثقافي العربي",
             type: "website",
@@ -49,8 +49,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         },
         twitter: {
             card: "summary_large_image",
-            title: seo?.twitterTitle || title,
-            description: stripHtml(seo?.twitterDescription) || description,
+            title,
+            description,
             images: images.map(img => img.url),
         },
     };

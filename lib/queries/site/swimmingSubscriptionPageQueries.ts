@@ -34,21 +34,11 @@ export const GET_SWIMMING_SUBSCRIPTION_PAGE = gql`
         metaDescription
         focusKeyword
         canonicalUrl
-        ogTitle
-        ogDescription
-        ogImage {
-            node {
-            altText
-            sourceUrl
-            }
         }
-        twitterTitle
-        twitterDescription
-        twitterImage {
-            node {
+        featuredImage {
+        node {
             altText
             sourceUrl
-            }
         }
         }
     }

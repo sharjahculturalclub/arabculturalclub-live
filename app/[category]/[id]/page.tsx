@@ -47,8 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const seo = post.seoOptions;
     const featuredImageUrl = post.featuredImage?.node?.sourceUrl;
     const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
-    const ogImages = await getMetadataImages(seo?.ogImage?.node?.sourceUrl, featuredImageUrl);
-    const twitterImages = await getMetadataImages(seo?.twitterImage?.node?.sourceUrl, featuredImageUrl);
+    const images = await getMetadataImages(undefined, featuredImageUrl);
 
     const title = seo?.seoTitle || `${post.title} | النادي الثقافي العربي`;
     const description = stripHtml(seo?.metaDescription) || "";
@@ -61,18 +60,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             canonical: canonicalUrl,
         },
         openGraph: {
-            title: seo?.ogTitle || title,
-            description: seo?.ogDescription || description,
+            title,
+            description,
             type: "article",
             url: canonicalUrl,
             siteName: "النادي الثقافي العربي",
-            images: ogImages,
+            images,
         },
         twitter: {
             card: "summary_large_image",
-            title: seo?.twitterTitle || title,
-            description: seo?.twitterDescription || description,
-            images: twitterImages.map((img) => img.url),
+            title,
+            description,
+            images: images.map((img) => img.url),
         },
     };
 }
@@ -420,7 +419,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                             name: "النادي الثقافي العربي",
                             url: "https://shjarabclub.ae",
                         },
-                        image: seo?.ogImage?.node?.sourceUrl || post.featuredImage?.node?.sourceUrl || undefined,
+                        image: post.featuredImage?.node?.sourceUrl || undefined,
                         description: seo?.metaDescription || "",
                         mainEntityOfPage: {
                             "@type": "WebPage",

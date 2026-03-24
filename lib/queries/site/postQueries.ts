@@ -54,22 +54,6 @@ export const GET_POST_BY_ID = gql`
         metaDescription
         focusKeyword
         canonicalUrl
-        ogTitle
-        ogDescription
-        ogImage {
-          node {
-            altText
-            sourceUrl
-          }
-        }
-        twitterTitle
-        twitterDescription
-        twitterImage {
-          node {
-            altText
-            sourceUrl
-          }
-        }
       }
     }
   }
