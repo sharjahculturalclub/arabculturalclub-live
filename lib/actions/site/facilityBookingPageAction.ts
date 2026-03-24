@@ -32,6 +32,7 @@ export interface FacilityBookingPageDataType {
             } | null;
         } | null;
         seoOptions: SEOOptions | null;
+        featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
     } | null;
 }
 
@@ -41,6 +42,7 @@ export interface FacilityBookingPageData {
     formId: string | null;
     notesSection: NotesSection | null;
     seoOptions: SEOOptions | null;
+    featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
 }
 
 // ── Server-side fetch ─────────────────────────────────────────────
@@ -83,6 +85,7 @@ export async function fetchFacilityBookingPageData(): Promise<FacilityBookingPag
             formId: formSection?.formId ?? null,
             notesSection: notesSection ?? null,
             seoOptions: page.seoOptions ?? null,
+            featuredImage: page.featuredImage ?? null,
         };
     } catch (error) {
         console.error("Error fetching facility booking page data:", error);

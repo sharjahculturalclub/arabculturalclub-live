@@ -48,7 +48,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
   const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'تواصل مع النادي الثقافي العربي.';
   const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/contact';
-  const images = await getMetadataImages(seo?.ogImage?.node?.sourceUrl);
+  const featuredImageUrl = data?.featuredImage?.node?.sourceUrl;
+  const images = await getMetadataImages(undefined, featuredImageUrl);
 
   return {
     title,
@@ -58,8 +59,8 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: seo?.ogTitle || title,
-      description: seo?.ogDescription || description,
+      title,
+      description,
       url: canonicalUrl,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
@@ -67,8 +68,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: seo?.twitterTitle || title,
-      description: seo?.twitterDescription || description,
+      title,
+      description,
       images: images.map(img => img.url),
     },
   };

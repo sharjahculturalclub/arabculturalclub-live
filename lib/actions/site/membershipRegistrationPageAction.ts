@@ -17,6 +17,7 @@ export interface MembershipRegistrationPageDataType {
             } | null;
         } | null;
         seoOptions: SEOOptions | null;
+        featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
     } | null;
 }
 
@@ -25,6 +26,7 @@ export interface MembershipRegistrationPageData {
     pageDescription: string | null;
     formId: string | null;
     seoOptions: SEOOptions | null;
+    featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
 }
 
 // ── Server-side fetch ─────────────────────────────────────────────
@@ -53,6 +55,7 @@ export async function fetchMembershipRegistrationPageData(): Promise<MembershipR
             pageDescription: page.pageOptions?.pageDescription ?? null,
             formId: page.template?.membershipRegisteration?.formId ?? null,
             seoOptions: page.seoOptions ?? null,
+            featuredImage: page.featuredImage ?? null,
         };
     } catch (error) {
         console.error("Error fetching membership registration page data:", error);

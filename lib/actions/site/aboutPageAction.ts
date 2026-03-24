@@ -71,6 +71,7 @@ export interface AboutPageData {
         pageDescription?: string | null;
     };
     seoOptions?: import("@/lib/types/seo").SEOOptions | null;
+    featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
     sections: AboutPageSection[];
 }
 
@@ -90,8 +91,9 @@ export async function fetchAboutPageData(): Promise<AboutPageData | null> {
         const pageOptions = pageBy?.pageOptions;
         const sections = pageBy?.template?.aboutPageBuilder?.aboutPageBuilder || [];
         const seoOptions = pageBy?.seoOptions;
+        const featuredImage = pageBy?.featuredImage;
 
-        return { pageOptions, sections, seoOptions };
+        return { pageOptions, sections, seoOptions, featuredImage };
     } catch (error) {
         console.error("Error fetching about page data:", error);
         return null;

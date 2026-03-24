@@ -29,6 +29,7 @@ export interface PolicyPageData {
         pageDescription?: string | null;
     };
     seoOptions?: import("@/lib/types/seo").SEOOptions | null;
+    featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
     sections: PolicyPageSection[];
 }
 
@@ -49,8 +50,9 @@ export async function fetchPolicyPageData(pageId: number): Promise<PolicyPageDat
         const pageOptions = pageBy?.pageOptions;
         const sections = pageBy?.template?.policyPageBuilder?.policyPageBuilder || [];
         const seoOptions = pageBy?.seoOptions;
+        const featuredImage = pageBy?.featuredImage;
 
-        return { pageOptions, sections, seoOptions };
+        return { pageOptions, sections, seoOptions, featuredImage };
     } catch (error) {
         console.error("Error fetching policy page data:", error);
         return null;

@@ -41,6 +41,7 @@ export interface FaqPageDataType {
             } | null;
         } | null;
         seoOptions: SEOOptions | null;
+        featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
     } | null;
 }
 
@@ -50,6 +51,7 @@ export interface FaqPageData {
     faqCategories: FaqCategory[] | null;
     ctaSection: CtaSection | null;
     seoOptions: SEOOptions | null;
+    featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
 }
 
 // ── Server-side fetch ─────────────────────────────────────────────
@@ -88,6 +90,7 @@ export async function fetchFaqPageData(): Promise<FaqPageData | null> {
             faqCategories: categoriesSection?.faqCategories ?? null,
             ctaSection: ctaSection ?? null,
             seoOptions: page.seoOptions ?? null,
+            featuredImage: (page as any).featuredImage ?? null,
         };
     } catch (error) {
         console.error("Error fetching FAQ page data:", error);

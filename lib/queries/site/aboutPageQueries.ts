@@ -12,21 +12,11 @@ export const GET_ABOUT_PAGE = gql`
                 metaDescription
                 focusKeyword
                 canonicalUrl
-                ogTitle
-                ogDescription
-                ogImage {
-                    node {
-                        altText
-                        sourceUrl
-                    }
-                }
-                twitterTitle
-                twitterDescription
-                twitterImage {
-                    node {
-                        altText
-                        sourceUrl
-                    }
+            }
+            featuredImage {
+                node {
+                    altText
+                    sourceUrl
                 }
             }
             template {

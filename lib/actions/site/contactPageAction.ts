@@ -38,6 +38,7 @@ export interface ContactPageDataType {
             };
         } | null;
         seoOptions: SEOOptions | null;
+        featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
     } | null;
 }
 
@@ -63,6 +64,7 @@ export async function fetchContactPageData(): Promise<{
     pageDescription: string | null;
     sections: ContactPageSection[];
     seoOptions?: SEOOptions | null;
+    featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
 } | null> {
     try {
         const result = await client.query<ContactPageDataType>({
@@ -80,8 +82,9 @@ export async function fetchContactPageData(): Promise<{
         const sections =
             result.data?.pageBy?.template?.contactPageBuilder?.contactPageBuilder ?? [];
         const seoOptions = result.data?.pageBy?.seoOptions;
+        const featuredImage = result.data?.pageBy?.featuredImage;
 
-        return { pageTitle, pageDescription, sections, seoOptions };
+        return { pageTitle, pageDescription, sections, seoOptions, featuredImage };
     } catch (error) {
         console.error("Error fetching contact page data:", error);
         return null;

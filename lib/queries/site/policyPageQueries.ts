@@ -12,21 +12,11 @@ query PolicyPageQuery($pageId: Int!) {
         metaDescription
         focusKeyword
         canonicalUrl
-        ogTitle
-        ogDescription
-        ogImage {
-            node {
-                altText
-                sourceUrl
-            }
-        }
-        twitterTitle
-        twitterDescription
-        twitterImage {
-            node {
-                altText
-                sourceUrl
-            }
+    }
+    featuredImage {
+        node {
+            altText
+            sourceUrl
         }
     }
     template {
