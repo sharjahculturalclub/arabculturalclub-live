@@ -25,16 +25,16 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
 
   return {
     title: `${event.title} | النادي الثقافي العربي`,
-    description: event.content.replace(/<[^>]*>/g, '').substring(0, 160),
+    description: (event.content ?? '').replace(/<[^>]*>/g, '').substring(0, 160),
     openGraph: {
       title: event.title,
-      description: event.content.replace(/<[^>]*>/g, '').substring(0, 160),
+      description: (event.content ?? '').replace(/<[^>]*>/g, '').substring(0, 160),
       images,
     },
     twitter: {
       card: "summary_large_image",
       title: event.title,
-      description: event.content.replace(/<[^>]*>/g, '').substring(0, 160),
+      description: (event.content ?? '').replace(/<[^>]*>/g, '').substring(0, 160),
       images: images.map(img => img.url),
     },
   };
