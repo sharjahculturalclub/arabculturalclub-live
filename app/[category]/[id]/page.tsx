@@ -244,7 +244,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
 
                             {/* Author Section */}
                             {post.author?.node && (
-                                <div className="mt-16 p-8 bg-white rounded-4xl border border-border flex flex-col md:flex-row items-center gap-8">
+                                <div className="mt-16 p-8 bg-white rounded-4xl border border-border flex flex-col md:flex-row items-center gap-8 hidden">
                                     <div className="w-24 h-24 rounded-full overflow-hidden shrink-0 border-4 border-white shadow-md">
                                         <img
                                             src={normalizeImageUrl(post.author.node.userProfileImage?.profileImage?.node?.sourceUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400")}

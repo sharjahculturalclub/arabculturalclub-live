@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Facebook, Twitter, Linkedin, Share2, Link as LinkIcon, Check } from "lucide-react";
+import { Facebook, Linkedin, Share2, Link as LinkIcon, Check } from "lucide-react";
 
 interface ShareButtonsProps {
     url: string;
@@ -20,8 +20,7 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ url, title }) => {
     if (!mounted) {
         return (
             <div className="flex gap-2">
-                <div className="w-10 h-10 rounded-full bg-blue-600 text-white opacity-50 flex items-center justify-center"><Facebook size={18} /></div>
-                <div className="w-10 h-10 rounded-full bg-sky-500 text-white opacity-50 flex items-center justify-center"><Twitter size={18} /></div>
+                <div className="w-10 h-10 rounded-full bg-blue-600 text-white opacity-50 flex items-center justify-center"><Facebook size={18} /></div>                 
                 <div className="w-10 h-10 rounded-full bg-blue-700 text-white opacity-50 flex items-center justify-center"><Linkedin size={18} /></div>
                 <div className="w-10 h-10 rounded-full bg-club-purple text-white opacity-50 flex items-center justify-center"><Share2 size={18} /></div>
             </div>
@@ -69,16 +68,7 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ url, title }) => {
             >
                 <Facebook size={18} />
             </a>
-            <a
-                href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center hover:opacity-80 transition-all"
-                aria-label="مشاركة عبر تويتر"
-                title="تويتر"
-            >
-                <Twitter size={18} />
-            </a>
+            
             <a
                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
                 target="_blank"
