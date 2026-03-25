@@ -256,7 +256,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
               </div>
 
               {/* Row 1: first 2 directors */}
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-16 mt-16">
+              <div className="flex flex-col sm:flex-row justify-center mb-16 items-center gap-16 mt-16">
                 {firstTwoDirectors.map((member, i) => (
                   <div
                     key={`director-${i}`}
@@ -292,13 +292,13 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
               {/* Row 2: remaining directors (column on mobile) */}
               {remainingDirectors.length > 0 && (
                 <div className="flex justify-center mt-12 pb-2">
-                  <div className="flex flex-col lg:flex-row lg:flex-nowrap items-center gap-12">
+                  <div className="flex flex-col lg:flex-row lg:flex-nowrap items-start gap-16 p-4">
                     {remainingDirectors.map((member, idx) => {
                       const i = idx + 2;
                       return (
                         <div
                           key={`director-${i}`}
-                          className="text-center group flex-shrink-0"
+                          className="text-center group flex-shrink-0 w-full max-w-[16rem]"
                         >
                           <div className="relative mb-6 mx-auto w-48 h-48">
                             <div className="absolute inset-0 bg-club-purple rounded-full rotate-6 transition-transform group-hover:rotate-12"></div>
@@ -316,7 +316,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
                             />
                           </div>
                           {member.name && (
-                            <h3 className="text-xl font-bold mb-1">
+                            <h3 className="text-xl font-bold mb-1 min-h-12">
                               {member.name}
                             </h3>
                           )}
