@@ -112,7 +112,7 @@ export default async function AuthorDetailPage({ params }: AuthorDetailPageProps
     });
 
     return (
-        <div className="pt-25 pb-25 min-h-screen">
+        <div className="pt-30 pb-25 min-h-screen ">
             <SEO
                 title={author.name || 'الكاتب'}
                 description={author.description || `مساهمات ${author.name}`}
@@ -126,74 +126,7 @@ export default async function AuthorDetailPage({ params }: AuthorDetailPageProps
 
             <div className="container max-w-7xl mx-auto px-4 md:px-6">
                 {/* Profile Header */}
-                <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-xl border border-border mb-16 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-32 bg-club-purple/5 -z-10"></div>
-
-                    <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 relative">
-                        <div className="w-40 h-40 md:w-56 md:h-56 shrink-0 relative">
-                            <div className="absolute inset-0 bg-club-blue rounded-[3rem] rotate-6"></div>
-                            <ImageWithFallback
-                                src={avatarUrl}
-                                className="w-full h-full object-cover rounded-[3rem] relative z-10 border-8 border-white shadow-2xl"
-                            />
-                        </div>
-
-                        <div className="grow text-center md:text-right">
-                            <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 mb-6">
-                                <div>
-                                    <h1 className="text-4xl md:text-5xl font-bold mb-2">{author.name}</h1>
-                                    {designation && (
-                                        <p className="text-xl text-club-purple font-medium mb-4">{designation}</p>
-                                    )}
-                                </div>
-                                {socialProfiles.length > 0 && (
-                                    <div className="flex gap-4">
-                                        {socialProfiles.map((social, idx) => {
-                                            const IconComponent = socialIconMap[social.iconName?.toLowerCase() || ''] || Link2;
-                                            return (
-                                                <a
-                                                    key={idx}
-                                                    href={social.link!}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="w-12 h-12 bg-secondary rounded-2xl flex items-center justify-center text-primary hover:bg-club-purple hover:text-white transition-all"
-                                                    title={social.iconName || ''}
-                                                >
-                                                    <IconComponent size={20} />
-                                                </a>
-                                            );
-                                        })}
-                                    </div>
-                                )}
-                            </div>
-
-                            {authorBio && (
-                                <p className="text-lg text-muted-foreground leading-relaxed max-w-4xl mb-8">
-                                    {authorBio}
-                                </p>
-                            )}
-
-                            <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm font-bold text-muted-foreground">
-                                {address && (
-                                    <div className="flex items-center gap-2">
-                                        <MapPin size={18} className="text-club" />
-                                        <span>{address}</span>
-                                    </div>
-                                )}
-                                {memberOf && (
-                                    <div className="flex items-center gap-2">
-                                        <Globe size={18} className="text-club" />
-                                        <span>{memberOf}</span>
-                                    </div>
-                                )}
-                                <div className="flex items-center gap-2">
-                                    <BookOpen size={18} className="text-club" />
-                                    <span>{articlesCount} مساهمة منشورة</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                 
 
                 {/* Author's Content */}
                 <div>

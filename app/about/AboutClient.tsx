@@ -200,7 +200,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
                             )}
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mt-16">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12 mt-16">
                             {boardSection.directors.map((member, i) => (
                                 <div key={i} className="text-center group">
                                     <div className="relative mb-6 mx-auto w-48 h-48">
@@ -294,7 +294,7 @@ const HistorySlider = ({ historyItems, footerText }: { historyItems: any[], foot
                                     className="w-full h-full object-cover"
                                 />
                                 {milestone.year && (
-                                    <div className="absolute top-3 right-3 bg-black/70 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                    <div className="absolute top-3 left-3 bg-black/70 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                                         <Clock size={14} />
                                         <span>{milestone.year}</span>
                                     </div>
@@ -319,7 +319,7 @@ const HistorySlider = ({ historyItems, footerText }: { historyItems: any[], foot
 
             {/* Controls */}
             {historyItems.length > itemsToShow && (
-                <div className="flex items-center justify-between mt-6">
+                <div className="flex items-center justify-between mt-6 flex-row-reverse">
                     <button
                         type="button"
                         onClick={next}
