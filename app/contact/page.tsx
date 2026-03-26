@@ -199,7 +199,7 @@ export default async function ContactPage() {
             )}
             {mapSection.mapEmbedCode && (
               <div
-                className="bg-linear-to-l from-club-purple/10 to-club-blue/10 p-8 md:p-12 rounded-4xl border border-club-purple/20 shadow-lg overflow-hidden h-[320px] md:h-[420px] [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
+                className="bg-linear-to-l from-club-purple/10 to-club-blue/10 p-3 md:p-12 rounded-4xl border border-club-purple/20 shadow-lg overflow-hidden h-[400px] md:h-[600px] [&>iframe]:w-full [&>iframe]:h-full! [&>iframe]:border-0 [&>iframe]:rounded-4xl"
                 dangerouslySetInnerHTML={{ __html: mapSection.mapEmbedCode }}
               />
             )}
