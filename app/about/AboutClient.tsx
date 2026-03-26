@@ -256,7 +256,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
               </div>
 
               {/* Row 1: first 2 directors */}
-              <div className="flex flex-col sm:flex-row justify-center mb-16 items-center gap-30 mt-16">
+              <div className="flex flex-col sm:flex-row justify-center mb-12 md:mb-16 items-center gap-16 md:gap-30 mt-16">
                 {firstTwoDirectors.map((member, i) => (
                   <div
                     key={`director-${i}`}
