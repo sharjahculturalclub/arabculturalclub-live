@@ -111,19 +111,19 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
 
                 {(heroSection.signatureTitle ||
                   heroSection.signatureSubtitle) && (
-                  <div className="mt-4">
-                    {heroSection.signatureTitle && (
-                      <p className="font-bold text-primary">
-                        {heroSection.signatureTitle}
-                      </p>
-                    )}
-                    {heroSection.signatureSubtitle && (
-                      <p className="text-muted-foreground text-sm">
-                        {heroSection.signatureSubtitle}
-                      </p>
-                    )}
-                  </div>
-                )}
+                    <div className="mt-4">
+                      {heroSection.signatureTitle && (
+                        <p className="font-bold text-primary">
+                          {heroSection.signatureTitle}
+                        </p>
+                      )}
+                      {heroSection.signatureSubtitle && (
+                        <p className="text-muted-foreground text-sm">
+                          {heroSection.signatureSubtitle}
+                        </p>
+                      )}
+                    </div>
+                  )}
               </div>
             </motion.div>
           </section>
@@ -256,7 +256,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
               </div>
 
               {/* Row 1: first 2 directors */}
-              <div className="flex flex-col sm:flex-row justify-center mb-16 items-center gap-16 mt-16">
+              <div className="flex flex-col sm:flex-row justify-center mb-16 items-center gap-30 mt-16">
                 {firstTwoDirectors.map((member, i) => (
                   <div
                     key={`director-${i}`}
@@ -267,7 +267,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
                       <ImageWithFallback
                         src={normalizeImageUrl(
                           member.image?.node?.sourceUrl ||
-                            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400",
+                          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400",
                         )}
                         alt={
                           member.image?.node?.altText ||
@@ -292,7 +292,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
               {/* Row 2: remaining directors (column on mobile) */}
               {remainingDirectors.length > 0 && (
                 <div className="flex justify-center mt-12 pb-2">
-                  <div className="flex flex-col lg:flex-row lg:flex-nowrap items-start gap-16 p-4">
+                  <div className="flex flex-col lg:flex-row lg:flex-nowrap justify-center items-center gap-16 p-4">
                     {remainingDirectors.map((member, idx) => {
                       const i = idx + 2;
                       return (
@@ -305,7 +305,7 @@ export default function AboutClient({ data }: { data: AboutPageData }) {
                             <ImageWithFallback
                               src={normalizeImageUrl(
                                 member.image?.node?.sourceUrl ||
-                                  "../../assets/images/placeholder-profile.png",
+                                "../../assets/images/placeholder-profile.png",
                               )}
                               alt={
                                 member.image?.node?.altText ||
@@ -466,9 +466,8 @@ const HistorySlider = ({
                 key={i}
                 type="button"
                 onClick={() => setIndex(i)}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  i === index ? "bg-club-purple w-6" : "bg-club-purple/20"
-                }`}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${i === index ? "bg-club-purple w-6" : "bg-club-purple/20"
+                  }`}
                 aria-label={`الشريحة ${i + 1}`}
               />
             ))}
