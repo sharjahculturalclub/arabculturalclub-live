@@ -71,56 +71,66 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500  ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg py-4' : 'bg-transparent py-4'}`}
       >
-        <div className="container max-w-7xl mx-auto px-4 md:px-6 flex flex-row-reverse lg:flex-row items-center justify-between gap-1">
-          {/* Logo - Visually Left on Mobile (due to flex-row-reverse flipping RTL) */}
-          <div className="flex items-center cursor-pointer group">
-            <Link href="/" className="flex items-center gap-2 group w-[140px]">
-              <img src={logoUrl || fallbackLogo} alt={siteName} className="w-full h-full" />
-            </Link>
-          </div>
-
-          {/* Menu & Actions Group - Visually Right on Mobile */}
-          <div className="flex items-center gap-4 md:gap-8">
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center space-x-reverse space-x-1 gap-x-2">
-              {navLinks && navLinks.map((link) => {
-                const active = isLinkActive(link.path);
-                return (
-                  <Link
-                    key={link.path}
-                    href={link.path}
-                    className={`px-4 py-2 font-tajawal text-lg font-medium transition-all relative group overflow-hidden rounded-lg ${active ? 'text-club-purple bg-club-purple/10' : 'text-primary/70 hover:text-club-purple hover:bg-white/50'
-                      }`}
-                  >
-                    {link.title}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            <div className="flex items-center gap-2">
+        <div className="container max-w-7xl mx-auto px-4 md:px-6">
+          {/* Mobile layout: Search | Logo (centered) | Menu */}
+          <div className="grid grid-cols-3 items-center lg:hidden">
+            <div className="flex items-center">
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="p-2 transition-colors cursor-pointer text-black hover:text-club-purple hidden lg:block"
+                className="p-2 cursor-pointer text-black"
+              >
+                <Search size={24} />
+              </button>
+            </div>
+            <div className="flex justify-center">
+              <Link href="/" className="flex items-center justify-center">
+                <motion.img
+                  src={logoUrl || fallbackLogo}
+                  alt={siteName}
+                  animate={{ width: scrolled ? 100 : 120 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="h-auto"
+                />
+              </Link>
+            </div>
+            <div className="flex justify-end">
+              <button
+                className="p-2 cursor-pointer text-black"
+                onClick={() => setIsOpen(true)}
+              >
+                <Menu size={28} />
+              </button>
+            </div>
+          </div>
+
+          {/* Desktop layout */}
+          <div className="hidden lg:flex flex-row items-center justify-between gap-1">
+            <div className="flex items-center cursor-pointer group">
+              <Link href="/" className="flex items-center gap-2 group w-[140px]">
+                <img src={logoUrl || fallbackLogo} alt={siteName} className="w-full h-full" />
+              </Link>
+            </div>
+            <div className="flex items-center gap-4 md:gap-8">
+              <nav className="flex items-center space-x-reverse space-x-1 gap-x-2">
+                {navLinks && navLinks.map((link) => {
+                  const active = isLinkActive(link.path);
+                  return (
+                    <Link
+                      key={link.path}
+                      href={link.path}
+                      className={`px-4 py-2 font-tajawal text-lg font-medium transition-all relative group overflow-hidden rounded-lg ${active ? 'text-club-purple bg-club-purple/10' : 'text-primary/70 hover:text-club-purple hover:bg-white/50'}`}
+                    >
+                      {link.title}
+                    </Link>
+                  );
+                })}
+              </nav>
+              <button
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 transition-colors cursor-pointer text-black hover:text-club-purple"
               >
                 <Search size={20} />
               </button>
-
-              {/* Mobile Menu Button */}
-              <div className="lg:hidden flex items-center gap-4">
-                <button
-                  onClick={() => setIsSearchOpen(true)}
-                  className="p-2 cursor-pointer text-black"
-                >
-                  <Search size={26} />
-                </button>
-                <button
-                  className="p-2 cursor-pointer text-black"
-                  onClick={() => setIsOpen(true)}
-                >
-                  <Menu size={28} />
-                </button>
-              </div>
             </div>
           </div>
         </div>
