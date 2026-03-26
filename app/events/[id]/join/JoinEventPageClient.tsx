@@ -23,6 +23,7 @@ interface FormErrors {
 
 export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
     const formRef = useRef<HTMLDivElement>(null);
+    const statusRef = useRef<HTMLDivElement>(null);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -42,7 +43,7 @@ export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
         date: event.eventOptions.eventDate,
         time: event.eventOptions.eventTime,
         location: event.eventOptions.eventLocation,
-        description: event.content.replace(/<[^>]*>/g, '').substring(0, 160),
+        description: (event.content ?? '').replace(/<[^>]*>/g, '').substring(0, 160),
     };
 
     const handleChange = (
@@ -117,7 +118,12 @@ export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
             if (result.success) {
                 setSubmitStatus('success');
                 setSubmitMessage(result.message);
-                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setTimeout(() => {
+                    if (statusRef.current) {
+                        const top = statusRef.current.getBoundingClientRect().top + window.scrollY - 100;
+                        window.scrollTo({ top, behavior: 'smooth' });
+                    }
+                }, 50);
                 setFormData({
                     name: '',
                     email: '',
@@ -133,7 +139,12 @@ export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
             } else {
                 setSubmitStatus('error');
                 setSubmitMessage(result.message);
-                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setTimeout(() => {
+                    if (statusRef.current) {
+                        const top = statusRef.current.getBoundingClientRect().top + window.scrollY - 100;
+                        window.scrollTo({ top, behavior: 'smooth' });
+                    }
+                }, 50);
                 setTimeout(() => {
                     setSubmitStatus('idle');
                     setSubmitMessage('');
@@ -142,7 +153,12 @@ export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
         } catch {
             setSubmitStatus('error');
             setSubmitMessage('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى لاحقاً.');
-            formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(() => {
+                if (statusRef.current) {
+                    const top = statusRef.current.getBoundingClientRect().top + window.scrollY - 100;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+            }, 50);
             setTimeout(() => {
                 setSubmitStatus('idle');
                 setSubmitMessage('');
@@ -156,7 +172,7 @@ export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
         <div className="pt-25 pb-25">
             <SEO title={`الانضمام إلى الفعالية: ${mappedEvent.title}`} description={mappedEvent.description} />
 
-            <div className="container max-w-5xl mx-auto px-4 md:px-6">
+            <div className="container max-w-5xl mx-auto px-4 md:px-6 mt-10">
                 {/* Header */}
                 <div className="mb-10">
                     <Link
@@ -205,7 +221,7 @@ export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
                         >
                             {/* Success Message */}
                             {submitStatus === 'success' && (
-                                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-right">
+                                <div ref={statusRef} className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-right">
                                     <div className="flex items-start gap-3">
                                         <div className="shrink-0">
                                             <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -222,7 +238,7 @@ export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
 
                             {/* Error Message */}
                             {submitStatus === 'error' && (
-                                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-right">
+                                <div ref={statusRef} className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-right">
                                     <div className="flex items-start gap-3">
                                         <div className="shrink-0">
                                             <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
