@@ -152,7 +152,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
             />
-            <div className="container max-w-7xl mx-auto px-4 md:px-6">
+            <div className="container max-w-7xl mx-auto px-4 md:px-6 pt-12">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center space-x-reverse space-x-2 text-sm text-primary/40 mb-10 font-tajawal">
                     <Link

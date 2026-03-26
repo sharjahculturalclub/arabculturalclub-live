@@ -60,7 +60,7 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
 
             <div className="container max-w-5xl mx-auto px-4 md:px-6">
                 {/* Hero */}
-                <div className="mb-10">
+                <div className="mb-10 mt-20">
                     <Link
                         href="/events"
                         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-club-purple mb-4"
