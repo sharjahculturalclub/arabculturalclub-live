@@ -33,7 +33,7 @@ export interface NewsCategory {
     count: number | null;
 }
 
-export interface NewsPageData {
+export interface NewsPostsData {
     posts: NewsPost[];
     hasNextPage: boolean;
     endCursor: string | null;
@@ -49,7 +49,7 @@ export async function fetchNewsPosts(
     first: number = 12,
     after?: string,
     categoryName?: string
-): Promise<NewsPageData> {
+): Promise<NewsPostsData> {
     try {
         const { data } = await client.query<{
             posts: {
@@ -121,9 +121,21 @@ export async function fetchNewsCategories(): Promise<NewsCategory[]> {
 
 /* ─── Page Options (Title & Description) ─────────────────── */
 
+export interface SeoOptions {
+    seoTitle: string | null;
+    metaDescription: string | null;
+    focusKeyword: string | null;
+    canonicalUrl: string | null;
+}
+
 export interface NewsPageOptions {
     pageTitle: string | null;
     pageDescription: string | null;
+}
+
+export interface NewsPageData {
+    pageOptions: NewsPageOptions | null;
+    seoOptions: SeoOptions | null;
 }
 
 /**
@@ -132,11 +144,12 @@ export interface NewsPageOptions {
  */
 export async function fetchNewsPageOptions(
     uri: string
-): Promise<NewsPageOptions | null> {
+): Promise<NewsPageData | null> {
     try {
         const { data } = await client.query<{
             pageBy: {
                 pageOptions: NewsPageOptions;
+                seoOptions: SeoOptions;
             } | null;
         }>({
             query: GET_NEWS_PAGE_OPTIONS,
@@ -144,7 +157,11 @@ export async function fetchNewsPageOptions(
             fetchPolicy: "network-only",
         });
 
-        return data?.pageBy?.pageOptions ?? null;
+        if (!data?.pageBy) return null;
+        return {
+            pageOptions: data.pageBy.pageOptions ?? null,
+            seoOptions: data.pageBy.seoOptions ?? null,
+        };
     } catch (error) {
         console.error("[fetchNewsPageOptions] Error fetching page options:", error);
         return null;

@@ -5,7 +5,7 @@ import { SEO } from '@/components/SEO';
 import { BookOpen, ArrowLeft, Facebook, Twitter, Instagram, Youtube, Linkedin, Link2, type LucideIcon } from 'lucide-react';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, SITE_ORIGIN } from '@/lib/utils/seo';
 
 // Map icon names from WordPress ACF to Lucide components
 const socialIconMap: Record<string, LucideIcon> = {
@@ -21,23 +21,23 @@ export async function generateMetadata(): Promise<Metadata> {
   const images = await getMetadataImages();
 
   return {
-    title: 'أقلام النادي | النادي الثقافي العربي',
-    description: 'تعرف على نخبة من الكتاب والمبدعين المساهمين في إثراء المحتوى الثقافي للنادي.',
+    title: undefined,
+    description: undefined,
     alternates: {
-      canonical: 'https://shjarabclub.ae/authors',
+      canonical: `${SITE_ORIGIN}/authors`,
     },
     openGraph: {
-      title: 'أقلام النادي | النادي الثقافي العربي',
-      description: 'تعرف على نخبة من الكتاب والمبدعين المساهمين في إثراء المحتوى الثقافي للنادي.',
-      url: 'https://shjarabclub.ae/authors',
+      title: undefined,
+      description: undefined,
+      url: `${SITE_ORIGIN}/authors`,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
       images,
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'أقلام النادي | النادي الثقافي العربي',
-      description: 'تعرف على نخبة من الكتاب والمبدعين المساهمين في إثراء المحتوى الثقافي للنادي.',
+      title: undefined,
+      description: undefined,
       images: images.map(img => img.url),
     },
   };
@@ -51,12 +51,12 @@ export default async function AuthorsPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title="كتابنا ومبدعونا"
-        description="تعرف على نخبة من الكتاب والمبدعين المساهمين في إثراء المحتوى الثقافي للنادي."
-        url="https://shjarabclub.ae/authors"
+        title={undefined}
+        description={undefined}
+        url={`${SITE_ORIGIN}/authors`}
         breadcrumbs={[
-          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: "كتابنا ومبدعونا", item: "https://shjarabclub.ae/authors" }
+          { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+          { name: "كتابنا ومبدعونا", item: `${SITE_ORIGIN}/authors` }
         ]}
       />
 

@@ -27,9 +27,21 @@ export interface GalleryNode {
     } | null;
 }
 
+export interface SeoOptions {
+    seoTitle: string | null;
+    metaDescription: string | null;
+    focusKeyword: string | null;
+    canonicalUrl: string | null;
+}
+
 export interface GalleryPageOptions {
     pageTitle: string | null;
     pageDescription: string | null;
+}
+
+export interface GalleryPageData {
+    pageOptions: GalleryPageOptions | null;
+    seoOptions: SeoOptions | null;
 }
 
 export async function fetchGalleries(): Promise<GalleryNode[]> {
@@ -50,26 +62,24 @@ export async function fetchGalleries(): Promise<GalleryNode[]> {
     }
 }
 
-export async function fetchGalleryPageOptions(uri: string): Promise<GalleryPageOptions | null> {
+export async function fetchGalleryPageOptions(uri: string): Promise<GalleryPageData | null> {
     try {
         const { data } = await client.query<{
             page: {
-                pageOptions: {
-                    pageTitle: string | null;
-                    pageDescription: string | null;
-                };
-            };
+                pageOptions: GalleryPageOptions;
+                seoOptions: SeoOptions;
+            } | null;
         }>({
             query: GET_GALLERY_PAGE_OPTIONS,
             variables: { uri },
             fetchPolicy: "network-only",
         });
 
-        if (!data?.page?.pageOptions) return null;
+        if (!data?.page) return null;
 
         return {
-            pageTitle: data.page.pageOptions.pageTitle || null,
-            pageDescription: data.page.pageOptions.pageDescription || null,
+            pageOptions: data.page.pageOptions ?? null,
+            seoOptions: data.page.seoOptions ?? null,
         };
     } catch (error) {
         console.error("[fetchGalleryPageOptions] Error fetching page options:", error);

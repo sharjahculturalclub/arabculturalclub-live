@@ -2,29 +2,38 @@ import { Metadata } from 'next';
 import { fetchOurProgramsPageData } from '@/lib/actions/site/ourProgramsPageAction';
 import OurProgramsClient from './OurProgramsClient';
 import { SEO } from '@/components/SEO';
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await fetchOurProgramsPageData();
-  const pageTitle = data?.pageOptions?.pageTitle || 'برامج النادي';
-  const pageDescription = data?.pageOptions?.pageDescription || 'منظومة متكاملة من البرامج التي تخدم الثقافة والمجتمع وتفتح أبواب النادي لكل الأجيال.';
-  const images = await getMetadataImages();
+  const [data, images] = await Promise.all([
+    fetchOurProgramsPageData(),
+    getMetadataImages(),
+  ]);
+
+  const seo = data?.seoOptions;
+  const title = seo?.seoTitle || data?.pageOptions?.pageTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || data?.pageOptions?.pageDescription || undefined;
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/programs`;
 
   return {
-    title: `${pageTitle} | النادي الثقافي العربي`,
-    description: pageDescription,
+    title,
+    description,
+    keywords: seo?.focusKeyword || undefined,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
-      title: `${pageTitle} | النادي الثقافي العربي`,
-      description: pageDescription,
-      url: 'https://shjarabclub.ae/programs',
+      title,
+      description,
+      url: canonicalUrl,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
       images,
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${pageTitle} | النادي الثقافي العربي`,
-      description: pageDescription,
+      title,
+      description,
       images: images.map(img => img.url),
     },
   };
@@ -45,15 +54,18 @@ export default async function OurPrograms() {
     );
   }
 
+  const seoOptions = data.seoOptions;
+  const pageOptions = data.pageOptions;
+
   return (
     <>
       <SEO
-        title={`${data.pageOptions?.pageTitle || 'برامج النادي'} | النادي الثقافي العربي`}
-        description={data.pageOptions?.pageDescription || 'منظومة متكاملة من البرامج التي تخدم الثقافة والمجتمع وتفتح أبواب النادي لكل الأجيال.'}
-        url="https://shjarabclub.ae/programs"
+        title={seoOptions?.seoTitle || pageOptions?.pageTitle || undefined}
+        description={seoOptions?.metaDescription || pageOptions?.pageDescription || undefined}
+        url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/programs`}
         breadcrumbs={[
-          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: data.pageOptions?.pageTitle || 'برامج النادي', item: "https://shjarabclub.ae/programs" }
+          { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+          { name: pageOptions?.pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/programs` }
         ]}
       />
       <OurProgramsClient data={data} />

@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { ShareButtons } from "@/components/ShareButtons";
-import { getMetadataImages, stripHtml } from "@/lib/utils/seo";
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
 import { normalizeImageUrl } from "@/lib/utils/url";
 import {
     fetchPostById,
@@ -42,16 +42,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const post = await fetchPostById(id);
 
     if (!post) {
-        return { title: "الخبر غير موجود | النادي الثقافي العربي" };
+        return { title: undefined };
     }
 
     const seo = post.seoOptions;
     const featuredImageUrl = normalizeImageUrl(post.featuredImage?.node?.sourceUrl ?? "");
-    const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
+    const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/${category}/${id}`;
     const images = await getMetadataImages(undefined, featuredImageUrl);
 
-    const title = seo?.seoTitle || `${post.title} | النادي الثقافي العربي`;
-    const description = stripHtml(seo?.metaDescription) || "";
+    const title = seo?.seoTitle || post.title || undefined;
+    const description = stripHtml(seo?.metaDescription) || undefined;
 
     return {
         title,
@@ -109,7 +109,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
         })
         : "";
     const seo = post.seoOptions;
-    const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/${category}/${id}`;
+    const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/${category}/${id}`;
 
     const breadcrumbsSchema = {
         "@context": "https://schema.org",
@@ -119,19 +119,19 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "الرئيسية",
-                "item": "https://shjarabclub.ae/"
+                "item": `${SITE_ORIGIN}/`
             },
             {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "أخبار النادي",
-                "item": "https://shjarabclub.ae/news"
+                "item": `${SITE_ORIGIN}/news`
             },
             ...(post.categories?.nodes?.[0] ? [{
                 "@type": "ListItem",
                 "position": 3,
                 "name": post.categories.nodes[0].name,
-                "item": `https://shjarabclub.ae/category/${post.categories.nodes[0].slug}`
+                "item": `${SITE_ORIGIN}/category/${post.categories.nodes[0].slug}`
             }, {
                 "@type": "ListItem",
                 "position": 4,
@@ -294,7 +294,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                                         مشاركة:
                                     </span>
                                     <ShareButtons
-                                        url={`https://shjarabclub.ae/${category}/${id}`}
+                                        url={`${SITE_ORIGIN}/${category}/${id}`}
                                         title={post.title}
                                     />
                                 </div>
@@ -418,10 +418,10 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                         publisher: {
                             "@type": "Organization",
                             name: "النادي الثقافي العربي",
-                            url: "https://shjarabclub.ae",
+                            url: `${SITE_ORIGIN}`,
                         },
                         image: normalizeImageUrl(post.featuredImage?.node?.sourceUrl || "") || undefined,
-                        description: seo?.metaDescription || "",
+                        description: seo?.metaDescription || undefined,
                         mainEntityOfPage: {
                             "@type": "WebPage",
                             "@id": canonicalUrl,

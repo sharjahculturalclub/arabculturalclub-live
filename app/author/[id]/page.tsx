@@ -16,7 +16,7 @@ const socialIconMap: Record<string, LucideIcon> = {
     linkedin: Linkedin,
 };
 
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, SITE_ORIGIN } from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 interface AuthorDetailPageProps {
@@ -29,29 +29,32 @@ export async function generateMetadata({ params }: AuthorDetailPageProps): Promi
     const author = await fetchAuthorDetail(id);
 
     if (!author) {
-        return { title: 'الكاتب غير موجود | النادي الثقافي العربي' };
+        return { title: undefined };
     }
 
     const images = await getMetadataImages(author.avatar?.url || normalizeImageUrl(author.userProfileImage?.profileImage?.node?.sourceUrl ?? ""));
+    const canonicalUrl = `${SITE_ORIGIN}/author/${id}`;
+    const title = author.name || undefined;
+    const description = author.description || undefined;
 
     return {
-        title: `${author.name} | النادي الثقافي العربي`,
-        description: author.description || `مساهمات ${author.name} في النادي الثقافي العربي`,
+        title,
+        description,
         alternates: {
-            canonical: `https://shjarabclub.ae/author/${id}`,
+            canonical: canonicalUrl,
         },
         openGraph: {
-            title: `${author.name} | النادي الثقافي العربي`,
-            description: author.description || `مساهمات ${author.name} في النادي الثقافي العربي`,
-            url: `https://shjarabclub.ae/author/${id}`,
+            title,
+            description,
+            url: canonicalUrl,
             siteName: 'النادي الثقافي العربي',
             type: 'profile',
             images,
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${author.name} | النادي الثقافي العربي`,
-            description: author.description || `مساهمات ${author.name} في النادي الثقافي العربي`,
+            title,
+            description,
             images: images.map(img => img.url),
         },
     };
@@ -114,13 +117,13 @@ export default async function AuthorDetailPage({ params }: AuthorDetailPageProps
     return (
         <div className="pt-30 pb-25 min-h-screen ">
             <SEO
-                title={author.name || 'الكاتب'}
-                description={author.description || `مساهمات ${author.name}`}
-                url={`https://shjarabclub.ae/author/${id}`}
+                title={author.name || undefined}
+                description={author.description || undefined}
+                url={`${SITE_ORIGIN}/author/${id}`}
                 breadcrumbs={[
-                    { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-                    { name: "كتابنا ومبدعونا", item: "https://shjarabclub.ae/authors" },
-                    { name: author.name || 'الكاتب', item: `https://shjarabclub.ae/author/${id}` }
+                    { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+                    { name: "كتابنا ومبدعونا", item: `${SITE_ORIGIN}/authors` },
+                    { name: author.name || undefined, item: `${SITE_ORIGIN}/author/${id}` }
                 ]}
             />
 

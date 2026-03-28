@@ -7,6 +7,12 @@ query OurProgramPageQuery {
       pageTitle
       pageDescription
     }
+    seoOptions {
+      seoTitle
+      metaDescription
+      focusKeyword
+      canonicalUrl
+    }
     template {
       ... on Template_OurProgramPage {
         templateName

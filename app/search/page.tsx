@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react';
 
 /* ─── Types ───────────────────────────────────────────────── */
 
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, SITE_ORIGIN } from '@/lib/utils/seo';
 
 /* ─── Types ───────────────────────────────────────────────── */
 
@@ -29,7 +29,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     openGraph: {
       title: query ? `نتائج البحث عن: ${query} | النادي الثقافي العربي` : 'البحث | النادي الثقافي العربي',
       description: `نتائج البحث عن ${query} في موقع النادي الثقافي العربي.`,
-      url: `https://shjarabclub.ae/search?q=${encodeURIComponent(query)}`,
+      url: `${SITE_ORIGIN}/search?q=${encodeURIComponent(query)}`,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
       images,
@@ -58,10 +58,10 @@ export default async function SearchPage({ searchParams }: PageProps) {
       <SEO
         title={query ? `نتائج البحث عن: ${query}` : 'البحث'}
         description={`نتائج البحث عن ${query} في موقع النادي الثقافي العربي.`}
-        url={`https://shjarabclub.ae/search?q=${encodeURIComponent(query)}`}
+        url={`${SITE_ORIGIN}/search?q=${encodeURIComponent(query)}`}
         breadcrumbs={[
-          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: "نتائج البحث", item: "https://shjarabclub.ae/search" }
+          { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+          { name: "نتائج البحث", item: `${SITE_ORIGIN}/search` }
         ]}
       />
       <Suspense

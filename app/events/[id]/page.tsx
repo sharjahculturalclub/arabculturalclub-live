@@ -4,8 +4,9 @@ import { EventDetailPageClient } from "./EventDetailPageClient";
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
-import { getMetadataImages } from "@/lib/utils/seo";
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
 import { normalizeImageUrl } from "@/lib/utils/url";
+import { SEO } from "@/components/SEO";
 
 interface EventPageProps {
   params: Promise<{ id: string }>;
@@ -16,25 +17,27 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
   const event = await fetchEventById(id);
 
   if (!event) {
-    return {
-      title: "الفعالية غير موجودة | النادي الثقافي العربي",
-    };
+    return {};
   }
 
   const images = await getMetadataImages(normalizeImageUrl(event.featuredImage?.node?.sourceUrl ?? ""));
+  const description = stripHtml(event.content) || undefined;
 
   return {
-    title: `${event.title} | النادي الثقافي العربي`,
-    description: (event.content ?? '').replace(/<[^>]*>/g, '').substring(0, 160),
+    title: event.title || undefined,
+    description,
+    alternates: {
+      canonical: `${SITE_ORIGIN}/events/${id}`,
+    },
     openGraph: {
-      title: event.title,
-      description: (event.content ?? '').replace(/<[^>]*>/g, '').substring(0, 160),
+      title: event.title || undefined,
+      description,
       images,
     },
     twitter: {
       card: "summary_large_image",
-      title: event.title,
-      description: (event.content ?? '').replace(/<[^>]*>/g, '').substring(0, 160),
+      title: event.title || undefined,
+      description,
       images: images.map(img => img.url),
     },
   };
@@ -62,5 +65,22 @@ export default async function EventPage({ params }: EventPageProps) {
     );
   }
 
-  return <EventDetailPageClient event={event} />;
+  const description = stripHtml(event.content) || undefined;
+  const canonicalUrl = `${SITE_ORIGIN}/events/${id}`;
+
+  return (
+    <>
+      <SEO
+        title={event.title || undefined}
+        description={description}
+        url={canonicalUrl}
+        breadcrumbs={[
+          { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+          { name: 'الفعاليات', item: `${SITE_ORIGIN}/events` },
+          { name: event.title || undefined, item: canonicalUrl },
+        ]}
+      />
+      <EventDetailPageClient event={event} />
+    </>
+  );
 }

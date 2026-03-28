@@ -2,18 +2,18 @@ import { Metadata } from 'next';
 import { fetchSwimmingSubscriptionPageData } from '@/lib/actions/site/swimmingSubscriptionPageAction';
 import { SEO } from '@/components/SEO';
 import SwimmingSubscriptionForm from './SwimmingSubscriptionForm';
-import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchSwimmingSubscriptionPageData();
   const seo = data?.seoOptions;
-  const pageTitle = data?.pageTitle || 'اشتراك لنشاط السباحة';
+  const pageTitle = data?.pageTitle;
 
-  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'سجل الآن في نشاط السباحة لدى النادي الثقافي العربي.';
-  const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/swimming-subscription';
+  const title = seo?.seoTitle || pageTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || undefined;
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/swimming-subscription`;
   const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
@@ -62,12 +62,12 @@ export default async function SwimmingSubscriptionPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={seoOptions?.seoTitle || `${pageTitle || 'اشتراك لنشاط السباحة'} | النادي الثقافي العربي`}
-        description={seoOptions?.metaDescription || pageDescription || 'سجل الآن في نشاط السباحة واستمتع بأفضل البرامج الرياضية لدى النادي الثقافي العربي.'}
-        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/swimming-subscription'}
+        title={seoOptions?.seoTitle || pageTitle || undefined}
+        description={seoOptions?.metaDescription || pageDescription || undefined}
+        url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/swimming-subscription`}
         breadcrumbs={[
-          { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'اشتراك لنشاط السباحة', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/swimming-subscription' },
+          { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/swimming-subscription` },
         ]}
       />
 

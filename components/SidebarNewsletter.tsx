@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { submitNewsletterAction } from '@/lib/actions/site/submitNewsletterAction';
 
 interface SidebarNewsletterProps {
     title: string;
@@ -25,11 +24,12 @@ export function SidebarNewsletter({ title, description, formId }: SidebarNewslet
         setSubmitMessage('');
 
         try {
-            const formData = new FormData();
-            formData.append('email', email);
-            formData.append('formId', formId);
-
-            const result = await submitNewsletterAction(formData);
+            const response = await fetch('/api/newsletter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, formId }),
+            });
+            const result = await response.json();
 
             if (result.success) {
                 setSubmitStatus('success');

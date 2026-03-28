@@ -5,30 +5,39 @@ import {
     fetchNewsPageOptions,
 } from "@/lib/actions/site/newsAction";
 import { NewsPageClient } from "./NewsPageClient";
-
-import { getMetadataImages } from "@/lib/utils/seo";
+import { SEO } from "@/components/SEO";
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const images = await getMetadataImages();
+  const [pageData, images] = await Promise.all([
+    fetchNewsPageOptions("news"),
+    getMetadataImages(),
+  ]);
+
+  const seo = pageData?.seoOptions;
+  const title = seo?.seoTitle || pageData?.pageOptions?.pageTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || pageData?.pageOptions?.pageDescription || undefined;
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/news`;
 
   return {
-    title: "المركز الإعلامي | النادي الثقافي العربي",
-    description: "تابع آخر الأخبار والتقارير والفعاليات في النادي الثقافي العربي بالشارقة.",
+    title,
+    description,
+    keywords: seo?.focusKeyword || undefined,
     alternates: {
-      canonical: "https://shjarabclub.ae/news",
+      canonical: canonicalUrl,
     },
     openGraph: {
-      title: "المركز الإعلامي | النادي الثقافي العربي",
-      description: "نافذتكم على أنشطة النادي، وتقاريرنا الثقافية، وإصداراتنا الأدبية المتنوعة.",
-      url: "https://shjarabclub.ae/news",
+      title,
+      description,
+      url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
       images,
     },
     twitter: {
       card: "summary_large_image",
-      title: "المركز الإعلامي | النادي الثقافي العربي",
-      description: "نافذتكم على أنشطة النادي، وتقاريرنا الثقافية، وإصداراتنا الأدبية المتنوعة.",
+      title,
+      description,
       images: images.map(img => img.url),
     },
   };
@@ -36,21 +45,35 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 export default async function NewsPage() {
-    // Fetch initial data server-side in parallel for SEO and fast first paint
-    const [newsData, categories, pageOptions] = await Promise.all([
+    const [newsData, categories, pageData] = await Promise.all([
         fetchNewsPosts(6),
         fetchNewsCategories(),
         fetchNewsPageOptions("news"),
     ]);
 
+    const seoOptions = pageData?.seoOptions;
+    const pageOptions = pageData?.pageOptions;
+
     return (
-        <NewsPageClient
-            initialPosts={newsData.posts}
-            initialHasNextPage={newsData.hasNextPage}
-            initialEndCursor={newsData.endCursor}
-            categories={categories}
-            pageTitle={pageOptions?.pageTitle || null}
-            pageDescription={pageOptions?.pageDescription || null}
-        />
+        <>
+            <SEO
+                title={seoOptions?.seoTitle || pageOptions?.pageTitle || undefined}
+                description={seoOptions?.metaDescription || pageOptions?.pageDescription || undefined}
+                url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/news`}
+                breadcrumbs={[
+                    { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+                    { name: pageOptions?.pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/news` },
+                ]}
+            />
+            <NewsPageClient
+                initialPosts={newsData.posts}
+                initialHasNextPage={newsData.hasNextPage}
+                initialEndCursor={newsData.endCursor}
+                categories={categories}
+                pageTitle={pageOptions?.pageTitle || null}
+                pageDescription={pageOptions?.pageDescription || null}
+                canonicalUrl={seoOptions?.canonicalUrl || null}
+            />
+        </>
     );
 }

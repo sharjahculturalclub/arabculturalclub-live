@@ -2,20 +2,20 @@ import { Metadata } from 'next';
 import { fetchAboutPageData } from '@/lib/actions/site/aboutPageAction';
 import AboutClient from './AboutClient';
 import { SEO } from '@/components/SEO';
-import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchAboutPageData();
   const pageTitle = data?.pageOptions?.pageTitle || 'من نحن';
-  const pageDescription = data?.pageOptions?.pageDescription || 'النادي الثقافي العربي هو بيت المبدعين ومنارة الفكر، تأسس ليكون جسراً يربط بين عراقة الماضي وإبداع المستقبل.';
+  const pageDescription = data?.pageOptions?.pageDescription || undefined;
 
   const seo = data?.seoOptions;
-  const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/about";
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/about`;
   const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
-  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
+  const title = seo?.seoTitle || pageTitle || undefined;
   const description = stripHtml(seo?.metaDescription) || pageDescription;
 
   return {
@@ -60,12 +60,12 @@ export default async function About() {
   return (
     <>
       <SEO
-        title={`${data.pageOptions?.pageTitle || 'من نحن'} | النادي الثقافي العربي`}
-        description={data.pageOptions?.pageDescription || 'النادي الثقافي العربي هو بيت المبدعين ومنارة الفكر، تأسس ليكون جسراً يربط بين عراقة الماضي وإبداع المستقبل.'}
-        url={data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/about"}
+        title={data.pageOptions?.pageTitle || undefined}
+        description={data.pageOptions?.pageDescription || undefined}
+        url={data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/about`}
         breadcrumbs={[
-          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: data.pageOptions?.pageTitle || 'من نحن', item: data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/about" }
+          { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+          { name: data.pageOptions?.pageTitle || undefined, item: data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/about` }
         ]}
       />
       <AboutClient data={data} />

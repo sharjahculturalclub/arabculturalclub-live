@@ -2,18 +2,18 @@ import { Metadata } from 'next';
 import { fetchMembershipRegistrationPageData } from '@/lib/actions/site/membershipRegistrationPageAction';
 import { SEO } from '@/components/SEO';
 import MembershipForm from './MembershipForm';
-import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchMembershipRegistrationPageData();
   const seo = data?.seoOptions;
-  const pageTitle = data?.pageTitle || 'تسجيل العضوية';
+  const pageTitle = data?.pageTitle;
 
-  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'انضم إلى النادي الثقافي العربي واستمتع بجميع المزايا والخدمات الثقافية.';
-  const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/membership/registration';
+  const title = seo?.seoTitle || pageTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || undefined;
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/membership/registration`;
   const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
@@ -62,12 +62,12 @@ export default async function MembershipRegistrationPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={seoOptions?.seoTitle || `${pageTitle || 'تسجيل العضوية'} | النادي الثقافي العربي`}
-        description={seoOptions?.metaDescription || pageDescription || 'انضم إلى النادي الثقافي العربي واستمتع بجميع المزايا والخدمات الثقافية.'}
-        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/membership/registration'}
+        title={seoOptions?.seoTitle || pageTitle || undefined}
+        description={seoOptions?.metaDescription || pageDescription || undefined}
+        url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/membership/registration`}
         breadcrumbs={[
-          { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'تسجيل العضوية', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/membership/registration' },
+          { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/membership/registration` },
         ]}
       />
 

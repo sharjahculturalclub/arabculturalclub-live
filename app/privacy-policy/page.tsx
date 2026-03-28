@@ -2,20 +2,20 @@ import { Metadata } from 'next';
 import { fetchPolicyPageData } from '@/lib/actions/site/policyPageAction';
 import PrivacyPolicyClient from './PrivacyPolicyClient';
 import { SEO } from '@/components/SEO';
-import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchPolicyPageData(3);
-  const pageTitle = data?.pageOptions?.pageTitle || 'سياسة الخصوصية';
-  const pageDescription = data?.pageOptions?.pageDescription || 'نحن ملتزمون بحماية خصوصيتك وضمان أمان معلوماتك الشخصية';
+  const pageTitle = data?.pageOptions?.pageTitle;
+  const pageDescription = data?.pageOptions?.pageDescription || undefined;
 
   const seo = data?.seoOptions;
-  const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/privacy-policy";
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/privacy-policy`;
   const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
-  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
+  const title = seo?.seoTitle || pageTitle || undefined;
   const description = stripHtml(seo?.metaDescription) || pageDescription;
 
   return {
@@ -60,12 +60,12 @@ export default async function PrivacyPolicy() {
   return (
     <>
       <SEO
-        title={`${data.pageOptions?.pageTitle || 'سياسة الخصوصية'} | النادي الثقافي العربي`}
-        description={data.pageOptions?.pageDescription || 'نحن ملتزمون بحماية خصوصيتك وضمان أمان معلوماتك الشخصية'}
-        url={data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/privacy-policy"}
+        title={data.pageOptions?.pageTitle || undefined}
+        description={data.pageOptions?.pageDescription || undefined}
+        url={data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/privacy-policy`}
         breadcrumbs={[
-          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: data.pageOptions?.pageTitle || 'سياسة الخصوصية', item: data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/privacy-policy" }
+          { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+          { name: data.pageOptions?.pageTitle || undefined, item: data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/privacy-policy` }
         ]}
       />
       <PrivacyPolicyClient data={data} />

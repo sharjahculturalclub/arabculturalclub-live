@@ -6,7 +6,7 @@ import { ChevronLeft, ArrowRight } from "lucide-react";
 import { fetchCategoryWithPosts } from "@/lib/actions/site/categoryAction";
 import { NewsCard } from "@/components/Cards";
 
-import { getMetadataImages, stripHtml } from "@/lib/utils/seo";
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
 import { normalizeImageUrl } from "@/lib/utils/url";
 
 interface PageProps {
@@ -22,16 +22,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!categoryData) {
         return {
-            title: "القسم غير موجود | النادي الثقافي العربي",
+            title: undefined,
         };
     }
 
     const seo = categoryData.seoOptions;
     const images = await getMetadataImages();
-    const canonicalUrl = seo?.canonicalUrl || `https://shjarabclub.ae/category/${categorySlug}`;
+    const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/category/${categorySlug}`;
 
-    const title = seo?.seoTitle || `${categoryData.name} | النادي الثقافي العربي`;
-    const description = stripHtml(seo?.metaDescription) || stripHtml(categoryData.description) || "";
+    const title = seo?.seoTitle || categoryData.name || undefined;
+    const description = stripHtml(seo?.metaDescription) || stripHtml(categoryData.description) || undefined;
 
     return {
         title,
@@ -70,7 +70,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
     const articles = categoryData.posts.nodes;
 
-    const canonicalUrl = `https://shjarabclub.ae/category/${categorySlug}`;
+    const canonicalUrl = `${SITE_ORIGIN}/category/${categorySlug}`;
 
     const breadcrumbSchema = {
         "@context": "https://schema.org",
@@ -80,7 +80,7 @@ export default async function CategoryPage({ params }: PageProps) {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "الرئيسية",
-                "item": "https://shjarabclub.ae/"
+                "item": `${SITE_ORIGIN}/`
             },
             {
                 "@type": "ListItem",
@@ -102,7 +102,7 @@ export default async function CategoryPage({ params }: PageProps) {
             "itemListElement": articles.map((item, index) => ({
                 "@type": "ListItem",
                 "position": index + 1,
-                "url": `https://shjarabclub.ae/${item.categories?.nodes?.[0]?.slug || categorySlug}/${item.databaseId}`,
+                "url": `${SITE_ORIGIN}/${item.categories?.nodes?.[0]?.slug || categorySlug}/${item.databaseId}`,
                 "name": item.title,
             })),
         },
@@ -116,7 +116,7 @@ export default async function CategoryPage({ params }: PageProps) {
         "description": categoryData.description || "",
         "url": canonicalUrl,
         "publisher": {
-            "@id": "https://shjarabclub.ae/#organization"
+            "@id": `${SITE_ORIGIN}/#organization`
         }
     };
 

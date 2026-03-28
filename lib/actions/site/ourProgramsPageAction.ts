@@ -22,11 +22,19 @@ export interface OurProgramsPageMainAreasSection {
 
 export type OurProgramsPageSection = OurProgramsPageMainAreasSection;
 
+export interface SeoOptions {
+    seoTitle?: string | null;
+    metaDescription?: string | null;
+    focusKeyword?: string | null;
+    canonicalUrl?: string | null;
+}
+
 export interface OurProgramsPageData {
     pageOptions?: {
         pageTitle?: string | null;
         pageDescription?: string | null;
     };
+    seoOptions?: SeoOptions | null;
     sections: OurProgramsPageSection[];
 }
 
@@ -44,9 +52,10 @@ export async function fetchOurProgramsPageData(): Promise<OurProgramsPageData | 
 
         const pageBy = result.data?.pageBy;
         const pageOptions = pageBy?.pageOptions;
+        const seoOptions = pageBy?.seoOptions ?? null;
         const sections = pageBy?.template?.ourProgramsPageBuilder?.ourProgramsPageBuilder || [];
 
-        return { pageOptions, sections };
+        return { pageOptions, seoOptions, sections };
     } catch (error) {
         console.error("Error fetching our programs page data:", error);
         return null;
