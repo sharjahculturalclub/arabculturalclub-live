@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
-    User, Send, CheckCircle2,
-    ShieldCheck, AlertCircle, Activity, FileKey
+    User, Users, Send, CheckCircle2,
+    ShieldCheck, AlertCircle, HeartPulse, FileKey
 } from 'lucide-react';
 import { submitSwimmingSubscriptionAction } from '@/lib/actions/site/submitSwimmingSubscriptionAction';
 
@@ -12,11 +12,12 @@ interface SwimmingSubscriptionFormProps {
 }
 
 // ─── Section Header ──────────────────────────────────────────────────────────
-function SectionHeader({ icon: Icon, title, color = 'purple' }: { icon: any; title: string; color?: 'purple' | 'blue' | 'green' }) {
+function SectionHeader({ icon: Icon, title, color = 'purple' }: { icon: any; title: string; color?: 'purple' | 'blue' | 'green' | 'orange' }) {
     const styles = {
         purple: 'bg-purple-600/10 text-purple-600',
         blue: 'bg-blue-600/10 text-blue-600',
         green: 'bg-emerald-600/10 text-emerald-600',
+        orange: 'bg-orange-500/10 text-orange-500',
     };
     return (
         <div className="flex items-center gap-4 mb-8">
@@ -50,7 +51,7 @@ function Field({ label, required, children, hint, error }: { label: string; requ
     );
 }
 
-// ─── Text Input ───────────────────────────────────────────────────────────────
+// ─── Input styles ─────────────────────────────────────────────────────────────
 const inputCls = (error?: string) =>
     `w-full h-12 px-4 bg-gray-50 border rounded-xl text-gray-900 text-sm font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all ${error
         ? 'border-red-400 bg-red-50/30 focus:border-red-500 focus:ring-red-500/15'
@@ -59,14 +60,12 @@ const inputCls = (error?: string) =>
 
 function AutoTextarea({ label, name, required, maxLength, placeholder, hint, error }: any) {
     const ref = useRef<HTMLTextAreaElement>(null);
-
     const handleInput = () => {
         const el = ref.current;
         if (!el) return;
         el.style.height = 'auto';
         el.style.height = `${el.scrollHeight}px`;
     };
-
     return (
         <Field label={label} required={required} hint={hint} error={error}>
             <textarea
@@ -89,14 +88,7 @@ function AutoTextarea({ label, name, required, maxLength, placeholder, hint, err
 function TextInput({ label, name, required, minLength, maxLength, placeholder, hint, error }: any) {
     return (
         <Field label={label} required={required} hint={hint} error={error}>
-            <input
-                type="text"
-                name={name}
-                minLength={minLength}
-                maxLength={maxLength}
-                placeholder={placeholder}
-                className={inputCls(error)}
-            />
+            <input type="text" name={name} minLength={minLength} maxLength={maxLength} placeholder={placeholder} className={inputCls(error)} />
         </Field>
     );
 }
@@ -104,13 +96,7 @@ function TextInput({ label, name, required, minLength, maxLength, placeholder, h
 function EmailInput({ label, name, required, placeholder, hint, error }: any) {
     return (
         <Field label={label} required={required} hint={hint} error={error}>
-            <input
-                type="email"
-                name={name}
-                placeholder={placeholder}
-                dir="ltr"
-                className={`${inputCls(error)} text-left`}
-            />
+            <input type="email" name={name} placeholder={placeholder} dir="ltr" className={`${inputCls(error)} text-left`} />
         </Field>
     );
 }
@@ -118,25 +104,49 @@ function EmailInput({ label, name, required, placeholder, hint, error }: any) {
 function TelInput({ label, name, required, placeholder, hint, error }: any) {
     return (
         <Field label={label} required={required} hint={hint} error={error}>
-            <input
-                type="tel"
-                name={name}
-                placeholder={placeholder}
-                dir="ltr"
-                className={`${inputCls(error)} text-left`}
-            />
+            <input type="tel" name={name} placeholder={placeholder} dir="ltr" className={`${inputCls(error)} text-left`} />
         </Field>
     );
 }
 
-function DateInput({ label, name, required, hint, error }: any) {
+function DateInput({ label, name, required, min, max, hint, error }: any) {
     return (
         <Field label={label} required={required} hint={hint} error={error}>
-            <input
-                type="date"
-                name={name}
-                className={inputCls(error)}
-            />
+            <input type="date" name={name} min={min} max={max} className={inputCls(error)} />
+        </Field>
+    );
+}
+
+function SelectInput({ label, name, required, options, placeholder, hint, error }: any) {
+    return (
+        <Field label={label} required={required} hint={hint} error={error}>
+            <select name={name} defaultValue="" className={`${inputCls(error)} cursor-pointer`}>
+                <option value="" disabled>{placeholder || 'اختر...'}</option>
+                {options.map((opt: string) => (
+                    <option key={opt} value={opt}>{opt}</option>
+                ))}
+            </select>
+        </Field>
+    );
+}
+
+function RadioGroup({ label, name, required, options, error }: { label: string; name: string; required?: boolean; options: { value: string; desc: string }[]; error?: string }) {
+    return (
+        <Field label={label} required={required} error={error}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
+                {options.map(({ value, desc }) => (
+                    <label key={value} className="flex items-center gap-3 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 has-checked:border-blue-500 has-checked:bg-blue-50 transition-all">
+                        <div className="relative w-5 h-5 shrink-0">
+                            <input type="radio" name={name} value={value} className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full focus:outline-none checked:border-blue-600 transition-all" />
+                            <div className="w-2.5 h-2.5 bg-blue-600 rounded-full absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 scale-0 peer-checked:scale-100 transition-all" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold text-gray-800">{value}</p>
+                            <p className="text-xs text-gray-400 mt-0.5">{desc}</p>
+                        </div>
+                    </label>
+                ))}
+            </div>
         </Field>
     );
 }
@@ -144,37 +154,52 @@ function DateInput({ label, name, required, hint, error }: any) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptionFormProps) {
     const topRef = useRef<HTMLDivElement>(null);
+    const captchaRef = useRef<HTMLInputElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [message, setMessage] = useState('');
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-    
-    // Track conditional display
+
+    const [maxDob, setMaxDob] = useState('');
+    useEffect(() => {
+        const d = new Date();
+        d.setFullYear(d.getFullYear() - 6);
+        setMaxDob(d.toISOString().split('T')[0]);
+    }, []);
+
+    const [hasFamilyMembership, setHasFamilyMembership] = useState<string | null>(null);
+    const [guardianRelationship, setGuardianRelationship] = useState<string>('');
     const [hasHealthIssues, setHasHealthIssues] = useState<string | null>(null);
+
+    const [captcha, setCaptcha] = useState<{ a: number; b: number } | null>(null);
+    const [captchaInput, setCaptchaInput] = useState('');
+    const [captchaError, setCaptchaError] = useState('');
+
+    const refreshCaptcha = () => {
+        setCaptcha({ a: Math.floor(Math.random() * 9) + 1, b: Math.floor(Math.random() * 9) + 1 });
+        setCaptchaInput('');
+        setCaptchaError('');
+    };
+
+    useEffect(() => { refreshCaptcha(); }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLFormElement>) => {
         const target = e.target as unknown as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-        
-        // Handle radio explicit state
-        if (target.name === 'has_health_issues') {
-            setHasHealthIssues((target as HTMLInputElement).value);
-        }
+
+        if (target.name === 'has_family_membership') setHasFamilyMembership((target as HTMLInputElement).value);
+        if (target.name === 'guardian_relationship') setGuardianRelationship((target as HTMLSelectElement).value);
+        if (target.name === 'has_health_issues') setHasHealthIssues((target as HTMLInputElement).value);
 
         if (target.name && fieldErrors[target.name]) {
-            setFieldErrors(prev => {
-                const newErrs = { ...prev };
-                delete newErrs[target.name];
-                return newErrs;
-            });
+            setFieldErrors(prev => { const n = { ...prev }; delete n[target.name]; return n; });
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         setStatus('idle');
         setMessage('');
 
-        // ── Client-side validation ──────────────────────────────────────────
         const form = e.currentTarget;
         const data = new FormData(form);
         const errs: Record<string, string> = {};
@@ -185,37 +210,67 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
             if (minLen && val.length < minLen) errs[key] = `يجب ألا يقل عن ${minLen} أحرف`;
         };
 
-        // Main Fields
-        req('full_name',       'الاسم', 2);
-        req('nationality',     'الجنسية', 2);
-        req('id_number',       'رقم الهوية', 5);
-        req('date_of_birth',   'تاريخ الميلاد');
-        req('user-email',      'البريد الإلكتروني');
-        req('mobile_number',   'رقم الهاتف المتحرك');
-        req('declarant_name',  'الاسم', 2);
+        req('participant_full_name', 'الاسم الكامل', 2);
+        req('participant_nationality', 'الجنسية', 2);
+        req('participant_date_of_birth', 'تاريخ الميلاد');
+        const dob = (data.get('participant_date_of_birth') as string || '').trim();
+        if (dob && dob > maxDob)
+            errs['participant_date_of_birth'] = 'الحد الأدنى لعمر الاشتراك هو 6 سنوات';
+        req('participant_mobile', 'رقم الهاتف المتحرك');
+        req('participant_email', 'البريد الإلكتروني');
+        req('participant_emirates_id', 'رقم الهوية');
+        req('membership_type', 'نوع العضوية');
+        req('declaration_name', 'الاسم في الإقرار', 2);
 
-        // Email format
-        const emailVal = (data.get('user-email') as string || '').trim();
+        const emailVal = (data.get('participant_email') as string || '').trim();
         if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal))
-            errs['user-email'] = 'البريد الإلكتروني غير صحيح';
+            errs['participant_email'] = 'البريد الإلكتروني غير صحيح';
 
-        // Checkbox & Radios
+        // UAE Emirates ID: 784-YYYY-XXXXXXX-X
+        const eidVal = (data.get('participant_emirates_id') as string || '').trim();
+        if (eidVal && !/^784-\d{4}-\d{7}-\d$/.test(eidVal))
+            errs['participant_emirates_id'] = 'صيغة الهوية الإماراتية غير صحيحة (مثال: 784-1234-1234567-1)';
+
+        // UAE phone
+        const mobileVal = (data.get('participant_mobile') as string || '').trim();
+        if (mobileVal && !/^(?:00971|\+971|0)?(?:50|51|52|55|56|58|2|3|4|6|7|9)\d{7}$/.test(mobileVal.replace(/[\s-]/g, '')))
+            errs['participant_mobile'] = 'يجب إدخال رقم هاتف إماراتي صحيح (مثال: 501234567)';
+
+        const guardianMobileVal = (data.get('guardian_mobile') as string || '').trim();
+        if (guardianMobileVal && !/^(?:00971|\+971|0)?(?:50|51|52|55|56|58|2|3|4|6|7|9)\d{7}$/.test(guardianMobileVal.replace(/[\s-]/g, '')))
+            errs['guardian_mobile'] = 'يجب إدخال رقم هاتف إماراتي صحيح (مثال: 501234567)';
+
+        if (!data.get('has_family_membership'))
+            errs['has_family_membership'] = 'يجب الإجابة على هذا السؤال';
+
         if (!data.get('has_health_issues'))
             errs['has_health_issues'] = 'يجب الإجابة على هذا السؤال';
 
-        // Consent
-        if (!data.get('declaration_confirm'))
-            errs['declaration_confirm'] = 'يجب الموافقة على الإقرار للمتابعة';
+        if (!data.get('declaration_accepted'))
+            errs['declaration_accepted'] = 'يجب الموافقة على الشروط للمتابعة.';
 
-        if (!data.get('declaration_acceptance'))
-            errs['declaration_acceptance'] = 'يجب الموافقة على الإقرار للمتابعة';
+        // Captcha
+        if (!captchaInput.trim()) {
+            setCaptchaError('يرجى إدخال الجواب');
+            errs['_captcha'] = 'captcha';
+        } else if (captcha && parseInt(captchaInput.trim()) !== captcha.a + captcha.b) {
+            refreshCaptcha();
+            setCaptchaError('الجواب غير صحيح، حاول مرة أخرى');
+            errs['_captcha'] = 'captcha';
+        }
 
         if (Object.keys(errs).length > 0) {
             setFieldErrors(errs);
-            if (topRef.current) {
-                const y = topRef.current.getBoundingClientRect().top + window.scrollY - 120;
-                window.scrollTo({ top: y, behavior: 'smooth' });
-            }
+            setTimeout(() => {
+                const firstKey = Object.keys(errs)[0];
+                const el = firstKey === '_captcha'
+                    ? captchaRef.current
+                    : document.querySelector<HTMLElement>(`[name="${firstKey}"]`);
+                if (el) {
+                    const y = el.getBoundingClientRect().top + window.scrollY - 140;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                }
+            }, 0);
             return;
         }
 
@@ -230,11 +285,13 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
                 setMessage(result.message);
                 setFieldErrors({});
                 form.reset();
+                setHasFamilyMembership(null);
+                setGuardianRelationship('');
                 setHasHealthIssues(null);
+                refreshCaptcha();
             } else {
                 setStatus('error');
                 setMessage(result.message);
-                // Map CF7 invalid_fields → { fieldName: errorMessage }
                 const errMap: Record<string, string> = {};
                 for (const f of (result as any).invalidFields || []) {
                     if (f.field) errMap[f.field] = f.message || 'هذا الحقل يحتوي على خطأ';
@@ -263,7 +320,7 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
                         <ShieldCheck size={22} className="text-green-600" />
                     </div>
                     <div>
-                        <p className="font-bold text-green-800">تم إرسال الطلب بنجاح!</p>
+                        <p className="font-bold text-green-800">تم إرسال الطلب بنجاح. سيتم التواصل معكم بعد مراجعة البيانات.</p>
                         <p className="text-sm text-green-700 mt-1">{message}</p>
                     </div>
                 </div>
@@ -285,53 +342,94 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
             <div className="bg-white rounded-3xl border border-gray-100 shadow-sm" suppressHydrationWarning>
                 <form onSubmit={handleSubmit} onChange={handleChange} noValidate suppressHydrationWarning>
 
-                    {/* ══ 1. Applicant Info ══════════════════════════════════════ */}
+                    {/* ══ 1. Participant Info ══════════════════════════════════════ */}
                     <div className="p-5 sm:p-8">
                         <SectionHeader icon={User} title="بيانات المشترك" color="purple" />
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <TextInput label="الاسم" name="full_name" required minLength={2} maxLength={150} placeholder="اسم المشترك" error={fieldErrors['full_name']} />
-                            <TextInput label="الجنسية" name="nationality" required minLength={2} maxLength={80} placeholder="الجنسية" error={fieldErrors['nationality']} />
-                            <DateInput label="تاريخ الميلاد" name="date_of_birth" required error={fieldErrors['date_of_birth']} />
-                            <TextInput label="رقم الهوية" name="id_number" required minLength={5} maxLength={30} placeholder="رقم الهوية" error={fieldErrors['id_number']} />
-                            <EmailInput label="البريد الإلكتروني" name="user-email" required placeholder="example@mail.com" error={fieldErrors['user-email']} />
-                            <TelInput label="رقم الهاتف المتحرك" name="mobile_number" required placeholder="+971 5X XXX XXXX" error={fieldErrors['mobile_number']} />
+                            <TextInput label="الاسم الكامل" name="participant_full_name" required minLength={2} maxLength={150} placeholder="اسم المشترك" error={fieldErrors['participant_full_name']} />
+                            <TextInput label="الجنسية" name="participant_nationality" required minLength={2} maxLength={80} placeholder="الجنسية" error={fieldErrors['participant_nationality']} />
+                            <DateInput label="تاريخ الميلاد" name="participant_date_of_birth" required max={maxDob} error={fieldErrors['participant_date_of_birth']} hint="الحد الأدنى للعمر 6 سنوات" />
+                            <TelInput label="رقم الهاتف المتحرك" name="participant_mobile" required placeholder="5X XXX XXXX" error={fieldErrors['participant_mobile']} />
+                            <EmailInput label="البريد الإلكتروني" name="participant_email" required placeholder="example@mail.com" error={fieldErrors['participant_email']} />
+                            <TextInput label="رقم الهوية" name="participant_emirates_id" required maxLength={30} placeholder="784-1234-1234567-1" error={fieldErrors['participant_emirates_id']} />
+                            <div className="sm:col-span-2">
+                                <SelectInput
+                                    label="نوع العضوية"
+                                    name="membership_type"
+                                    required
+                                    placeholder="اختر نوع العضوية"
+                                    options={['عضوية عائلية', 'أخرى']}
+                                    error={fieldErrors['membership_type']}
+                                />
+                            </div>
+                            <div className="sm:col-span-2">
+                                <RadioGroup
+                                    label="هل توجد عضوية عائلية؟"
+                                    name="has_family_membership"
+                                    required
+                                    options={[
+                                        { value: 'نعم', desc: 'يوجد رقم عضوية عائلية' },
+                                        { value: 'لا', desc: 'لا يوجد' },
+                                    ]}
+                                    error={fieldErrors['has_family_membership']}
+                                />
+                            </div>
+                            {hasFamilyMembership === 'نعم' && (
+                                <div className="sm:col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <TextInput label="رقم العضوية العائلية" name="family_membership_number" maxLength={50} placeholder="رقم العضوية" error={fieldErrors['family_membership_number']} />
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <div className="h-px bg-gray-100 mx-8" />
 
-                    {/* ══ 2. Health Info ════════════════════════════════════════ */}
-                    <div className="p-5 sm:p-8 space-y-5">
-                        <SectionHeader icon={Activity} title="المعلومات الصحية" color="blue" />
-                        
-                        <Field label="هل تعاني من أي مشاكل صحية؟" required error={fieldErrors['has_health_issues']}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
-                                {[
-                                    { value: 'نعم',   desc: 'لدي مشاكل صحية يجب التدقيق فيها' },
-                                    { value: 'لا',    desc: 'لا يوجد' },
-                                ].map(({ value, desc }) => (
-                                    <label key={value} className="flex items-center gap-3 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 has-checked:border-blue-500 has-checked:bg-blue-50 transition-all">
-                                        <div className="relative w-5 h-5 shrink-0">
-                                            <input type="radio" name="has_health_issues" value={value} className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full focus:outline-none checked:border-blue-600 transition-all" />
-                                            <div className="w-2.5 h-2.5 bg-blue-600 rounded-full absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 scale-0 peer-checked:scale-100 transition-all" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-gray-800">{value}</p>
-                                            <p className="text-xs text-gray-400 mt-0.5">{desc}</p>
-                                        </div>
-                                    </label>
-                                ))}
-                            </div>
-                        </Field>
+                    {/* ══ 2. Guardian Info ══════════════════════════════════════════ */}
+                    <div className="p-5 sm:p-8">
+                        <SectionHeader icon={Users} title="بيانات ولي الأمر" color="blue" />
+                        <p className="text-sm text-gray-400 -mt-4 mb-6">يُرجى تعبئة هذا القسم إذا كان عمر المشترك أقل من 18 سنة</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <TextInput label="اسم ولي الأمر" name="guardian_full_name" maxLength={150} placeholder="الاسم الكامل" error={fieldErrors['guardian_full_name']} />
+                            <SelectInput
+                                label="صلة القرابة"
+                                name="guardian_relationship"
+                                placeholder="اختر صلة القرابة"
+                                options={['الأب', 'الأم', 'الأخ', 'الأخت', 'الوصي', 'أخرى']}
+                                error={fieldErrors['guardian_relationship']}
+                            />
+                            {guardianRelationship === 'أخرى' && (
+                                <div className="sm:col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <TextInput label="يرجى التوضيح" name="guardian_relationship_other" maxLength={100} placeholder="اذكر صلة القرابة" error={fieldErrors['guardian_relationship_other']} />
+                                </div>
+                            )}
+                            <TelInput label="رقم هاتف ولي الأمر" name="guardian_mobile" placeholder="5X XXX XXXX" error={fieldErrors['guardian_mobile']} />
+                            <EmailInput label="البريد الإلكتروني لولي الأمر" name="guardian_email" placeholder="example@mail.com" error={fieldErrors['guardian_email']} />
+                        </div>
+                    </div>
 
+                    <div className="h-px bg-gray-100 mx-8" />
+
+                    {/* ══ 3. Health Info ════════════════════════════════════════════ */}
+                    <div className="p-5 sm:p-8 space-y-5">
+                        <SectionHeader icon={HeartPulse} title="الحالة الصحية" color="orange" />
+                        <RadioGroup
+                            label="هل يعاني المشترك من أي مشاكل صحية؟"
+                            name="has_health_issues"
+                            required
+                            options={[
+                                { value: 'نعم', desc: 'لدي مشاكل صحية يجب التدقيق فيها' },
+                                { value: 'لا', desc: 'لا يوجد' },
+                            ]}
+                            error={fieldErrors['has_health_issues']}
+                        />
                         {hasHealthIssues === 'نعم' && (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 pt-2">
-                                <AutoTextarea 
-                                    label="إذا كانت الإجابة بنعم، يرجى ذكر المشاكل الصحية" 
-                                    name="health_issues_details" 
-                                    maxLength={1000} 
-                                    placeholder="اكتب التفاصيل هنا..." 
-                                    error={fieldErrors['health_issues_details']} 
+                                <AutoTextarea
+                                    label="يرجى ذكر المشاكل الصحية"
+                                    name="health_issue_details"
+                                    maxLength={1000}
+                                    placeholder="اكتب التفاصيل هنا..."
+                                    error={fieldErrors['health_issue_details']}
                                     hint="سنقوم بمراجعة حالتك بأعلى درجات السرية لضمان سلامتك"
                                 />
                             </div>
@@ -340,92 +438,101 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
 
                     <div className="h-px bg-gray-100 mx-8" />
 
-                    {/* ══ 3. Declaration & Signature ════════════════════════════════════ */}
+                    {/* ══ 4. Declaration ════════════════════════════════════════════ */}
                     <div className="p-5 sm:p-8 space-y-6">
-                        <SectionHeader icon={FileKey} title="الإقرار والتوقيع" color="green" />
+                        <SectionHeader icon={FileKey} title="الإقرار والموافقة" color="green" />
+
+                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 text-sm text-gray-600 leading-relaxed text-justify">
+                            أقر أنا / ولي أمر المشترك بأن البيانات المقدمة صحيحة، وأن المشترك لائق طبياً لممارسة النشاط، وأنني أتحمل المسؤولية عن حالته الصحية، وأوافق على شروط الاشتراك.
+                        </div>
+
+                        <TextInput label="الاسم كما سيظهر في الإقرار" name="declaration_name" required minLength={2} maxLength={150} placeholder="الاسم الكامل" error={fieldErrors['declaration_name']} />
 
                         <div className="space-y-2">
-                            <label className={`flex items-start gap-4 cursor-pointer group p-4 rounded-2xl border transition-all ${fieldErrors['declaration_confirm']
-                                    ? 'border-red-300 bg-red-50/40'
-                                    : 'border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50'
+                            <label className={`flex items-start gap-4 cursor-pointer group p-4 rounded-2xl border transition-all ${fieldErrors['declaration_accepted']
+                                ? 'border-red-300 bg-red-50/40'
+                                : 'border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50'
                                 }`}>
                                 <div className="relative w-6 h-6 shrink-0 mt-0.5">
                                     <input
                                         type="checkbox"
-                                        name="declaration_confirm"
-                                        className={`peer appearance-none w-6 h-6 border-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/20 ${
-                                            fieldErrors['declaration_confirm']
-                                                ? 'border-red-400 bg-red-50 checked:border-red-600 checked:bg-red-600'
-                                                : 'border-gray-300 checked:border-purple-600 checked:bg-purple-600 bg-white'
-                                        }`}
+                                        name="declaration_accepted"
+                                        className={`peer appearance-none w-6 h-6 border-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/20 ${fieldErrors['declaration_accepted']
+                                            ? 'border-red-400 bg-red-50 checked:border-red-600 checked:bg-red-600'
+                                            : 'border-gray-300 checked:border-purple-600 checked:bg-purple-600 bg-white'
+                                            }`}
                                     />
                                     <CheckCircle2 size={16} strokeWidth={3} className="absolute inset-0 m-auto text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
                                 </div>
-                                <p className={`text-sm leading-relaxed text-justify select-none transition-colors ${fieldErrors['declaration_confirm'] ? 'text-red-700' : 'text-emerald-900'}`}>
-                                    أقر أنا / ولي أمر المشترك بأنه لائق طبيا لممارسة الرياضة، وأنني مسؤول مسؤولية كاملة عن الحالة الصحية، وأن المشترك خالٍ من الأمراض العصبية، والتشنجية، والجلدية المعدية، كما أقر بعلمي وموافقتي على جميع شروط الاشتراك، وأنه في حال الإصابة أو حدوث أي حوادث عرضية، فإنني بموجب هذا الإقرار أخلي كل من النادي والعاملين به من كامل المسؤولية. <span className="text-red-500">*</span>
+                                <p className={`text-sm leading-relaxed select-none transition-colors ${fieldErrors['declaration_accepted'] ? 'text-red-700' : 'text-emerald-900'}`}>
+                                    أوافق على الإقرار والشروط <span className="text-red-500">*</span>
                                 </p>
                             </label>
-                            {fieldErrors['declaration_confirm'] && (
+                            {fieldErrors['declaration_accepted'] && (
                                 <p className="text-xs text-red-500 font-medium flex items-center gap-1 px-1">
                                     <AlertCircle size={11} strokeWidth={2.5} />
-                                    {fieldErrors['declaration_confirm']}
+                                    {fieldErrors['declaration_accepted']}
                                 </p>
                             )}
                         </div>
-
-                        <TextInput label="الاسم" name="declarant_name" required minLength={2} maxLength={150} placeholder="الاسم الكامل للمقر" error={fieldErrors['declarant_name']} />
                     </div>
 
-                    {/* ══ 4. Submit Area ═══════════════════════════════════════════ */}
-                    <div className="p-5 sm:p-8 space-y-6 bg-gray-50/80 border-t border-gray-100 rounded-b-3xl">
-                        
-                        <div className="space-y-2">
-                            <label className={`flex items-start gap-4 cursor-pointer group p-4 rounded-2xl border transition-all ${fieldErrors['declaration_acceptance']
-                                    ? 'border-red-300 bg-red-50/40'
-                                    : 'border-transparent hover:bg-gray-50'
-                                }`}>
-                                <div className="relative w-6 h-6 shrink-0 mt-0.5">
+                    {/* ══ 5. Submit Area ════════════════════════════════════════════ */}
+                    <div className="p-5 sm:p-8 bg-gray-50/80 border-t border-gray-100 rounded-b-3xl space-y-5">
+
+                        {/* Captcha */}
+                        {captcha && (
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-sm font-semibold text-gray-700">
+                                    التحقق من الهوية <span className="text-red-500 ms-1">*</span>
+                                </label>
+                                <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-2 px-4 h-12 bg-white border border-gray-200 rounded-xl select-none">
+                                        <span className="text-lg font-bold text-gray-800 tabular-nums">{captcha.a}</span>
+                                        <span className="text-gray-400 font-medium">+</span>
+                                        <span className="text-lg font-bold text-gray-800 tabular-nums">{captcha.b}</span>
+                                        <span className="text-gray-400 font-medium">=</span>
+                                        <span className="text-gray-400">?</span>
+                                    </div>
                                     <input
-                                        type="checkbox"
-                                        name="declaration_acceptance"
-                                        className={`peer appearance-none w-6 h-6 border-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/20 ${
-                                            fieldErrors['declaration_acceptance'] 
-                                                ? 'border-red-400 bg-red-50 checked:border-red-600 checked:bg-red-600' 
-                                                : 'border-gray-300 checked:border-purple-600 checked:bg-purple-600 bg-white'
-                                        }`}
+                                        ref={captchaRef}
+                                        type="number"
+                                        inputMode="numeric"
+                                        value={captchaInput}
+                                        onChange={e => { setCaptchaInput(e.target.value); setCaptchaError(''); }}
+                                        placeholder="الجواب"
+                                        dir="ltr"
+                                        className={`w-28 h-12 px-4 border rounded-xl text-gray-900 text-sm font-medium text-center focus:outline-none focus:ring-2 transition-all ${captchaError ? 'border-red-400 bg-red-50/30 focus:border-red-500 focus:ring-red-500/15' : 'bg-gray-50 border-gray-200 focus:border-purple-500 focus:bg-white focus:ring-purple-500/15'}`}
                                     />
-                                    <CheckCircle2 size={16} strokeWidth={3} className="absolute inset-0 m-auto text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
+                                    <button type="button" onClick={refreshCaptcha} className="h-12 px-3 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all" title="تغيير السؤال">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></svg>
+                                    </button>
                                 </div>
-                                <div>
-                                    <p className={`text-sm font-bold select-none transition-colors ${fieldErrors['declaration_acceptance'] ? 'text-red-700' : 'text-gray-900 group-hover:text-purple-700'}`}>
-                                        أقر بصحة البيانات وأوافق على الإقرار أعلاه <span className="text-red-500">*</span>
+                                {captchaError && (
+                                    <p className="text-xs text-red-500 font-medium flex items-center gap-1 mt-0.5">
+                                        <AlertCircle size={11} strokeWidth={2.5} />
+                                        {captchaError}
                                     </p>
-                                </div>
-                            </label>
-                            {fieldErrors['declaration_acceptance'] && (
-                                <p className="text-xs text-red-500 font-medium flex items-center gap-1 px-1">
-                                    <AlertCircle size={11} strokeWidth={2.5} />
-                                    {fieldErrors['declaration_acceptance']}
-                                </p>
-                            )}
-                        </div>
+                                )}
+                            </div>
+                        )}
 
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full h-14 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl flex items-center justify-center gap-3 transition-all disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-purple-600/20 active:scale-[0.98] py-4 text-base"
+                            className="w-full h-14 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl flex items-center justify-center gap-3 transition-all disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-purple-600/20 active:scale-[0.98] text-base"
                         >
                             {isSubmitting ? (
                                 <span className="opacity-90">جاري الإرسال...</span>
                             ) : (
                                 <>
-                                    <span>إرسال الطلب</span>
+                                    <span>إرسال طلب الاشتراك</span>
                                     <Send size={18} strokeWidth={2.5} className="rotate-180" />
                                 </>
                             )}
                         </button>
-
                     </div>
+
                 </form>
             </div>
         </div>
