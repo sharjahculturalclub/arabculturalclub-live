@@ -36,21 +36,21 @@ export async function submitSwimmingSubscriptionAction(
 
         // Form fields — matching CF7 shortcodes
         const textFields = [
-            'full_name', 'nationality', 'date_of_birth', 'user-email',
-            'mobile_number', 'id_number', 'has_health_issues',
-            'health_issues_details', 'declarant_name'
+            'participant_full_name', 'participant_nationality', 'participant_date_of_birth',
+            'participant_mobile', 'participant_email', 'participant_emirates_id',
+            'membership_type', 'has_family_membership', 'family_membership_number',
+            'guardian_full_name', 'guardian_relationship', 'guardian_relationship_other',
+            'guardian_mobile', 'guardian_email',
+            'has_health_issues', 'health_issue_details',
+            'declaration_name',
         ];
 
         for (const field of textFields) {
             cf7FormData.append(field, (formData.get(field) as string) || '');
         }
 
-        if (formData.get('declaration_confirm')) {
-            cf7FormData.append('declaration_confirm', 'أقر أنا / ولي أمر المشترك بأنه لائق طبيا لممارسة الرياضة، وأنني مسؤول مسؤولية كاملة عن الحالة الصحية، وأن المشترك خالٍ من الأمراض العصبية، والتشنجية، والجلدية المعدية، كما أقر بعلمي وموافقتي على جميع شروط الاشتراك، وأنه في حال الإصابة أو حدوث أي حوادث عرضية، فإنني بموجب هذا الإقرار أخلي كل من النادي والعاملين به من كامل المسؤولية.');
-        }
-
-        if (formData.get('declaration_acceptance')) {
-            cf7FormData.append('declaration_acceptance', 'أقر بصحة البيانات وأوافق على الإقرار أعلاه');
+        if (formData.get('declaration_accepted')) {
+            cf7FormData.append('declaration_accepted', 'on');
         }
 
         const response = await fetch(endpoint, {
