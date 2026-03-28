@@ -36,19 +36,22 @@ export async function submitCondolenceHallBookingAction(
 
         // Form fields — matching CF7 shortcodes
         const textFields = [
-            'booking_day', 'booking_duration_days', 'booking_start_date', 'booking_end_date', 'booking_fee',
-            'booking_start_time', 'booking_end_time',
-            'renter_name', 'email', 'id_card_number', 'phone_number', 'mobile_number', 'occupation', 'employer',
-            'deceased_name', 'deceased_nationality', 'deceased_location', 'relationship_to_renter'
+            'booking_start_date', 'booking_duration_days', 'booking_slot',
+            'has_time_exception_request', 'time_exception_details',
+            'applicant_full_name', 'applicant_phone', 'applicant_mobile',
+            'applicant_email', 'applicant_emirates_id', 'applicant_job_title', 'applicant_employer',
+            'deceased_full_name', 'deceased_nationality', 'deceased_location_status',
+            'applicant_relationship_to_deceased', 'applicant_relationship_other',
+            'declaration_name', 'rules_accepted',
         ];
 
         for (const field of textFields) {
             cf7FormData.append(field, (formData.get(field) as string) || '');
         }
 
-        const idCardCopy = formData.get('id_card_copy');
-        if (idCardCopy instanceof File && idCardCopy.size > 0) {
-            cf7FormData.append('id_card_copy', idCardCopy);
+        const attachment = formData.get('applicant_id_attachment');
+        if (attachment instanceof File && attachment.size > 0) {
+            cf7FormData.append('applicant_id_attachment', attachment);
         }
 
 
@@ -69,7 +72,7 @@ export async function submitCondolenceHallBookingAction(
         if (result.status === 'mail_sent') {
             return {
                 success: true,
-                message: result.message === 'Thank you for your message. It has been sent.' ? 'تم إرسال رسالتك بنجاح!' : (result.message || 'تم إرسال رسالتك بنجاح!'),
+                message: result.message === 'Thank you for your message. It has been sent.' ? 'تم إرسال الطلب بنجاح. سيتم التواصل معكم بعد مراجعة البيانات.' : (result.message || 'تم إرسال الطلب بنجاح. سيتم التواصل معكم بعد مراجعة البيانات.'),
             };
         } else if (result.status === 'validation_failed') {
             return {

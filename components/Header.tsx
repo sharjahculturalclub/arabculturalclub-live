@@ -72,14 +72,14 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500  ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg py-4' : 'bg-transparent py-4'}`}
       >
         <div className="container max-w-7xl mx-auto px-4 md:px-6">
-          {/* Mobile layout: Search | Logo (centered) | Menu */}
+          {/* Mobile layout: Menu (right) | Logo (centered) | Search (left) */}
           <div className="grid grid-cols-3 items-center lg:hidden">
-            <div className="flex items-center">
+            <div className="flex items-center justify-start">
               <button
-                onClick={() => setIsSearchOpen(true)}
                 className="p-2 cursor-pointer text-black"
+                onClick={() => setIsOpen(true)}
               >
-                <Search size={24} />
+                <Menu size={28} />
               </button>
             </div>
             <div className="flex justify-center">
@@ -95,10 +95,10 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
             </div>
             <div className="flex justify-end">
               <button
+                onClick={() => setIsSearchOpen(true)}
                 className="p-2 cursor-pointer text-black"
-                onClick={() => setIsOpen(true)}
               >
-                <Menu size={28} />
+                <Search size={24} />
               </button>
             </div>
           </div>
