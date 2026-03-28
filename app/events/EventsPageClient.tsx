@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { SEO } from '@/components/SEO';
 import { EventCard } from '@/components/Cards';
 import { Search, Filter } from 'lucide-react';
 import { fetchEvents, EventNode } from '@/lib/actions/site/eventsAction';
 import { normalizeImageUrl } from '@/lib/utils/url';
+import { SITE_ORIGIN } from '@/lib/utils/site-origin';
 
 interface EventsPageClientProps {
     initialNodes: EventNode[];
@@ -14,6 +14,7 @@ interface EventsPageClientProps {
     initialEndCursor: string | null;
     pageTitle: string | null;
     pageDescription: string | null;
+    canonicalUrl?: string | null;
 }
 
 export function EventsPageClient({
@@ -21,7 +22,8 @@ export function EventsPageClient({
     initialHasNextPage,
     initialEndCursor,
     pageTitle,
-    pageDescription
+    pageDescription,
+    canonicalUrl,
 }: EventsPageClientProps) {
     const [events, setEvents] = useState<EventNode[]>(initialNodes);
     const [hasNextPage, setHasNextPage] = useState(initialHasNextPage);
@@ -68,19 +70,21 @@ export function EventsPageClient({
         }
     };
 
+    const pageUrl = canonicalUrl || `${SITE_ORIGIN}/events`;
+
     const collectionSchema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        name: pageTitle || "الفعاليات وورش العمل",
-        description: pageDescription || "استكشف الفعاليات والأنشطة الثقافية القادمة في النادي الثقافي العربي.",
-        url: "https://shjarabclub.ae/events",
+        ...(pageTitle && { name: pageTitle }),
+        ...(pageDescription && { description: pageDescription }),
+        url: pageUrl,
         inLanguage: "ar",
         mainEntity: {
             "@type": "ItemList",
             itemListElement: filteredEvents.map((event, index) => ({
                 "@type": "ListItem",
                 position: index + 1,
-                url: `https://shjarabclub.ae/events/${event.id}`,
+                url: `${SITE_ORIGIN}/events/${event.id}`,
                 name: event.title,
             })),
         },
@@ -94,23 +98,23 @@ export function EventsPageClient({
                 "@type": "ListItem",
                 "position": 1,
                 "name": "الرئيسية",
-                "item": "https://shjarabclub.ae/"
+                "item": `${SITE_ORIGIN}/`
             },
-            {
+            ...(pageTitle ? [{
                 "@type": "ListItem",
                 "position": 2,
-                "name": pageTitle || "الفعاليات وورش العمل",
-                "item": "https://shjarabclub.ae/events"
-            }
+                "name": pageTitle,
+                "item": pageUrl
+            }] : [])
         ]
     };
 
     const webPageSchema = {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": pageTitle || "الفعاليات وورش العمل",
-        "description": pageDescription || "استكشف الفعاليات والأنشطة الثقافية القادمة في النادي الثقافي العربي.",
-        "url": "https://shjarabclub.ae/events",
+        ...(pageTitle && { "name": pageTitle }),
+        ...(pageDescription && { "description": pageDescription }),
+        "url": pageUrl,
         "publisher": {
             "@id": "https://shjarabclub.ae/#organization"
         }
@@ -118,10 +122,6 @@ export function EventsPageClient({
 
     return (
         <div className="pt-25 pb-25">
-            <SEO
-                title={pageTitle || "الفعاليات وورش العمل"}
-                description={pageDescription || "استكشف الفعاليات والأنشطة الثقافية القادمة في النادي الثقافي العربي."}
-            />
 
             {/* JSON-LD */}
             <script
@@ -146,8 +146,8 @@ export function EventsPageClient({
             <div className="container max-w-7xl mx-auto px-4 md:px-6 mb-16">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-border py-10 mb-10">
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4">{pageTitle || "الفعاليات والورش"}</h1>
-                        <p className="text-muted-foreground text-lg space-y-4">{pageDescription || "شاركنا شغف المعرفة في رحاب النادي."}</p>
+                        {pageTitle && <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4">{pageTitle}</h1>}
+                        {pageDescription && <p className="text-muted-foreground text-lg space-y-4">{pageDescription}</p>}
                     </div>
 
                     <div className="w-full md:w-auto flex flex-col sm:flex-row gap-4">

@@ -4,29 +4,24 @@ import { SEO } from '@/components/SEO';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { Book, Award, Globe, Music } from 'lucide-react';
 import cultureBanner from '@/assets/acc-banner-3.jpg';
-import { getMetadataImages } from '@/lib/utils/seo';
+import { getMetadataImages, SITE_ORIGIN } from '@/lib/utils/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const images = await getMetadataImages();
+  const canonicalUrl = `${SITE_ORIGIN}/sharjah-culture`;
 
   return {
-    title: 'ثقافة الشارقة | النادي الثقافي العربي',
-    description: 'اكتشف الهوية الثقافية لشارقة العلم والمعرفة وعلاقتها الوثيقة بالنادي الثقافي العربي.',
     alternates: {
-      canonical: 'https://shjarabclub.ae/sharjah-culture',
+      canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'ثقافة الشارقة | النادي الثقافي العربي',
-      description: 'اكتشف الهوية الثقافية لشارقة العلم والمعرفة وعلاقتها الوثيقة بالنادي الثقافي العربي.',
-      url: 'https://shjarabclub.ae/sharjah-culture',
+      url: canonicalUrl,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
       images,
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'ثقافة الشارقة | النادي الثقافي العربي',
-      description: 'اكتشف الهوية الثقافية لشارقة العلم والمعرفة وعلاقتها الوثيقة بالنادي الثقافي العربي.',
       images: images.map(img => img.url),
     },
   };
@@ -39,12 +34,9 @@ export default function SharjahCulture() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title="ثقافة الشارقة"
-        description="اكتشف الهوية الثقافية لشارقة العلم والمعرفة."
-        url="https://shjarabclub.ae/sharjah-culture"
+        url={`${SITE_ORIGIN}/sharjah-culture`}
         breadcrumbs={[
-          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: "ثقافة الشارقة", item: "https://shjarabclub.ae/sharjah-culture" }
+          { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
         ]}
       />
 

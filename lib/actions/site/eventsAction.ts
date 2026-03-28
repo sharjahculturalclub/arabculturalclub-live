@@ -75,9 +75,21 @@ export async function fetchEventById(id: string): Promise<EventNode | null> {
     }
 }
 
+export interface SeoOptions {
+    seoTitle: string | null;
+    metaDescription: string | null;
+    focusKeyword: string | null;
+    canonicalUrl: string | null;
+}
+
 export interface EventsPageOptions {
     pageTitle: string | null;
     pageDescription: string | null;
+}
+
+export interface EventsPageData {
+    pageOptions: EventsPageOptions | null;
+    seoOptions: SeoOptions | null;
 }
 
 /**
@@ -86,11 +98,12 @@ export interface EventsPageOptions {
  */
 export async function fetchEventsPageOptions(
     uri: string
-): Promise<EventsPageOptions | null> {
+): Promise<EventsPageData | null> {
     try {
         const { data } = await client.query<{
             pageBy: {
                 pageOptions: EventsPageOptions;
+                seoOptions: SeoOptions;
             } | null;
         }>({
             query: GET_EVENTS_PAGE_OPTIONS,
@@ -98,7 +111,11 @@ export async function fetchEventsPageOptions(
             fetchPolicy: "network-only",
         });
 
-        return data?.pageBy?.pageOptions ?? null;
+        if (!data?.pageBy) return null;
+        return {
+            pageOptions: data.pageBy.pageOptions ?? null,
+            seoOptions: data.pageBy.seoOptions ?? null,
+        };
     } catch (error) {
         console.error("[fetchEventsPageOptions] Error fetching page options:", error);
         return null;

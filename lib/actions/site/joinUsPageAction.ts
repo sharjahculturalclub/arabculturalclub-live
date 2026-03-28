@@ -17,11 +17,19 @@ export interface JoinUsCardsSection {
 
 export type JoinUsPageSection = JoinUsCardsSection;
 
+export interface SeoOptions {
+    seoTitle?: string | null;
+    metaDescription?: string | null;
+    focusKeyword?: string | null;
+    canonicalUrl?: string | null;
+}
+
 export interface JoinUsPageData {
     pageOptions?: {
         pageTitle?: string | null;
         pageDescription?: string | null;
     };
+    seoOptions?: SeoOptions | null;
     sections: JoinUsPageSection[];
 }
 
@@ -39,9 +47,10 @@ export async function fetchJoinUsPageData(): Promise<JoinUsPageData | null> {
 
         const pageBy = result.data?.pageBy;
         const pageOptions = pageBy?.pageOptions;
+        const seoOptions = pageBy?.seoOptions ?? null;
         const sections = pageBy?.template?.joinUsPageBuilder?.joinUsPageBuilder || [];
 
-        return { pageOptions, sections };
+        return { pageOptions, seoOptions, sections };
     } catch (error) {
         console.error("Error fetching join us page data:", error);
         return null;

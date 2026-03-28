@@ -52,6 +52,12 @@ export const GET_NEWS_PAGE_OPTIONS = gql`
         pageDescription
         pageTitle
       }
+      seoOptions {
+        seoTitle
+        metaDescription
+        focusKeyword
+        canonicalUrl
+      }
     }
   }
 `;

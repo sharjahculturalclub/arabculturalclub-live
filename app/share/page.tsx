@@ -2,18 +2,18 @@ import { Metadata } from 'next';
 import { fetchShareOpinionsPageData } from '@/lib/actions/site/shareOpinionsPageAction';
 import { SEO } from '@/components/SEO';
 import ShareOpinionsForm from './ShareOpinionsForm';
-import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchShareOpinionsPageData();
   const seo = data?.seoOptions;
-  const pageTitle = data?.pageTitle || 'شارك آراءك واقتراحاتك';
+  const pageTitle = data?.pageTitle;
 
-  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'شاركنا آراءك واقتراحاتك لمساعدتنا في تحسين خدماتنا وبرامجنا الثقافية.';
-  const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/share';
+  const title = seo?.seoTitle || pageTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || undefined;
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/share`;
   const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
@@ -62,12 +62,12 @@ export default async function ShareOpinionsPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={seoOptions?.seoTitle || `${pageTitle || 'شارك آراءك واقتراحاتك'} | النادي الثقافي العربي`}
-        description={seoOptions?.metaDescription || pageDescription || 'شاركنا آراءك واقتراحاتك لمساعدتنا في تحسين خدماتنا وبرامجنا الثقافية.'}
-        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/share'}
+        title={seoOptions?.seoTitle || pageTitle || undefined}
+        description={seoOptions?.metaDescription || pageDescription || undefined}
+        url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/share`}
         breadcrumbs={[
-          { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'شارك آراءك واقتراحاتك', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/share' },
+          { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/share` },
         ]}
       />
 

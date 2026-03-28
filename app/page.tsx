@@ -7,7 +7,7 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { EventCard, NewsCard } from "@/components/Cards";
 import { VideoModal } from "@/components/HomeClient";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { getMetadataImages, stripHtml } from "@/lib/utils/seo";
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
 import { normalizeImageUrl } from "@/lib/utils/url";
 import {
   fetchHomePageData,
@@ -30,13 +30,11 @@ export async function generateMetadata(): Promise<Metadata> {
   ) as HeroSection | undefined;
   const featuredImageUrl = heroSection?.heroImage?.node?.sourceUrl;
 
-  const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/";
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/`;
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
-  const defaultTitle = "الرئيسية | النادي الثقافي العربي";
-  const defaultDescription = "الموقع الرسمي للنادي الثقافي العربي في الشارقة - منارة الثقافة والأدب والإبداع العربي.";
-  const title = seo?.seoTitle || defaultTitle;
-  const description = stripHtml(seo?.metaDescription) || defaultDescription;
+  const title = seo?.seoTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || undefined;
 
   return {
     title,
@@ -444,14 +442,14 @@ export default async function Home() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": seo?.seoTitle || "النادي الثقافي العربي",
-    "url": seo?.canonicalUrl || "https://shjarabclub.ae",
-    "description": seo?.metaDescription || "الموقع الرسمي للنادي الثقافي العربي في الشارقة",
+    ...(seo?.seoTitle && { "name": seo.seoTitle }),
+    ...(seo?.canonicalUrl && { "url": seo.canonicalUrl }),
+    ...(seo?.metaDescription && { "description": seo.metaDescription }),
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://shjarabclub.ae/search?q={search_term_string}"
+        "urlTemplate": `${SITE_ORIGIN}/search?q={search_term_string}`
       },
       "query-input": "required name=search_term_string"
     }
@@ -461,7 +459,7 @@ export default async function Home() {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "النادي الثقافي العربي",
-    "url": "https://shjarabclub.ae",
+    "url": `${SITE_ORIGIN}`,
     "logo": "https://shjarabclub.ae/logo.png",
     "contactPoint": {
       "@type": "ContactPoint",
@@ -475,9 +473,9 @@ export default async function Home() {
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": seo?.seoTitle || "الرئيسية | النادي الثقافي العربي",
-    "description": seo?.metaDescription || "الموقع الرسمي للنادي الثقافي العربي في الشارقة",
-    "url": seo?.canonicalUrl || "https://shjarabclub.ae",
+    ...(seo?.seoTitle && { "name": seo.seoTitle }),
+    ...(seo?.metaDescription && { "description": seo.metaDescription }),
+    "url": seo?.canonicalUrl || `${SITE_ORIGIN}`,
     "publisher": {
       "@id": "https://shjarabclub.ae/#organization"
     }
@@ -491,7 +489,7 @@ export default async function Home() {
         "@type": "ListItem",
         "position": 1,
         "name": "الرئيسية",
-        "item": "https://shjarabclub.ae/"
+        "item": `${SITE_ORIGIN}/`
       }
     ]
   };

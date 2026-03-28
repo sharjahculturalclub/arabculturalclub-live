@@ -12,6 +12,7 @@ import {
     type NewsCategory,
 } from "@/lib/actions/site/newsAction";
 import { normalizeImageUrl } from "@/lib/utils/url";
+import { SITE_ORIGIN } from "@/lib/utils/site-origin";
 
 /* ─── Props ───────────────────────────────────────────────── */
 
@@ -22,6 +23,7 @@ interface NewsPageClientProps {
     categories: NewsCategory[];
     pageTitle: string | null;
     pageDescription: string | null;
+    canonicalUrl?: string | null;
 }
 
 /* ─── Helper: map a NewsPost to the shape NewsCard expects ── */
@@ -53,6 +55,7 @@ export function NewsPageClient({
     categories,
     pageTitle,
     pageDescription,
+    canonicalUrl,
 }: NewsPageClientProps) {
     const [posts, setPosts] = useState(initialPosts);
     const [hasNextPage, setHasNextPage] = useState(initialHasNextPage);
@@ -105,19 +108,21 @@ export function NewsPageClient({
         : posts;
 
     /* ── Schema.org structured data ─── */
+    const pageUrl = canonicalUrl || `${SITE_ORIGIN}/news`;
+
     const collectionSchema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        name: "المركز الإعلامي",
-        description: "أخبار وتقارير النادي الثقافي العربي",
-        url: "https://shjarabclub.ae/news",
+        ...(pageTitle && { name: pageTitle }),
+        ...(pageDescription && { description: pageDescription }),
+        url: pageUrl,
         inLanguage: "ar",
         mainEntity: {
             "@type": "ItemList",
             itemListElement: displayedPosts.map((post, index) => ({
                 "@type": "ListItem",
                 position: index + 1,
-                url: `https://shjarabclub.ae/${post.categories?.nodes?.[0]?.slug || "uncategorized"}/${post.databaseId}`,
+                url: `${SITE_ORIGIN}/${post.categories?.nodes?.[0]?.slug || "uncategorized"}/${post.databaseId}`,
                 name: post.title,
             })),
         },
@@ -131,23 +136,23 @@ export function NewsPageClient({
                 "@type": "ListItem",
                 "position": 1,
                 "name": "الرئيسية",
-                "item": "https://shjarabclub.ae/"
+                "item": `${SITE_ORIGIN}/`
             },
-            {
+            ...(pageTitle ? [{
                 "@type": "ListItem",
                 "position": 2,
-                "name": "المركز الإعلامي",
-                "item": "https://shjarabclub.ae/news"
-            }
+                "name": pageTitle,
+                "item": pageUrl
+            }] : [])
         ]
     };
 
     const webPageSchema = {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "المركز الإعلامي | النادي الثقافي العربي",
-        "description": "تابع آخر الأخبار والتقارير والفعاليات في النادي الثقافي العربي بالشارقة.",
-        "url": "https://shjarabclub.ae/news",
+        ...(pageTitle && { "name": pageTitle }),
+        ...(pageDescription && { "description": pageDescription }),
+        "url": pageUrl,
         "publisher": {
             "@id": "https://shjarabclub.ae/#organization"
         }
@@ -187,15 +192,15 @@ export function NewsPageClient({
                             الرئيسية
                         </Link>
                         <ChevronLeft size={14} />
-                        <span className="text-primary/70">المركز الإعلامي</span>
+                        <span className="text-primary/70">الأخبار</span>
                     </nav>
 
                     <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-black">
-                        {pageTitle || "المركز الإعلامي"}
+                        {pageTitle}
                     </h1>
                     {(pageDescription || !pageTitle) && (
                         <p className="text-lg max-w-2xl mx-auto leading-relaxed text-black/70">
-                            {pageDescription || "نافذتكم على أنشطة النادي، وتقاريرنا الثقافية، وإصداراتنا الأدبية المتنوعة."}
+                            {pageDescription}
                         </p>
                     )}
                 </div>

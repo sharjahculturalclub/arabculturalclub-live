@@ -3,12 +3,12 @@
 import React from 'react';
 
 interface SEOProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   type?: string;
   image?: string;
   url?: string;
-  breadcrumbs?: { name: string; item: string }[];
+  breadcrumbs?: { name?: string; item: string }[];
 }
 
 export const SEO: React.FC<SEOProps> = ({
@@ -19,18 +19,20 @@ export const SEO: React.FC<SEOProps> = ({
   url,
   breadcrumbs
 }) => {
-  const fullTitle = `${title} | النادي الثقافي العربي`;
+  const fullTitle = title || undefined;
 
   React.useEffect(() => {
-    document.title = fullTitle;
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = description;
-      document.head.appendChild(meta);
+    if (fullTitle) document.title = fullTitle;
+    if (description) {
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', description);
+      } else {
+        const meta = document.createElement('meta');
+        meta.name = 'description';
+        meta.content = description;
+        document.head.appendChild(meta);
+      }
     }
   }, [fullTitle, description]);
 
@@ -52,18 +54,19 @@ export const SEO: React.FC<SEOProps> = ({
   const webPageSchema = url ? {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": fullTitle,
-    "description": description,
+    ...(fullTitle && { "name": fullTitle }),
+    ...(description && { "description": description }),
     "url": url,
     "publisher": {
       "@id": "https://shjarabclub.ae/#organization"
     }
   } : null;
 
-  const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
+  const validCrumbs = breadcrumbs?.filter(c => c.name) ?? [];
+  const breadcrumbSchema = validCrumbs.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": breadcrumbs.map((crumb, idx) => ({
+    "itemListElement": validCrumbs.map((crumb, idx) => ({
       "@type": "ListItem",
       "position": idx + 1,
       "name": crumb.name,

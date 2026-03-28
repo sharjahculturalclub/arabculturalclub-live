@@ -2,20 +2,20 @@ import { Metadata } from 'next';
 import { fetchPolicyPageData } from '@/lib/actions/site/policyPageAction';
 import PrivacyPolicyClient from '../privacy-policy/PrivacyPolicyClient';
 import { SEO } from '@/components/SEO';
-import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchPolicyPageData(321);
-  const pageTitle = data?.pageOptions?.pageTitle || 'شروط الاستخدام';
-  const pageDescription = data?.pageOptions?.pageDescription || 'شروط وأحكام استخدام موقع النادي الثقافي العربي.';
+  const pageTitle = data?.pageOptions?.pageTitle;
+  const pageDescription = data?.pageOptions?.pageDescription || undefined;
 
   const seo = data?.seoOptions;
-  const canonicalUrl = seo?.canonicalUrl || "https://shjarabclub.ae/terms-of-use";
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/terms-of-use`;
   const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
-  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
+  const title = seo?.seoTitle || pageTitle || undefined;
   const description = stripHtml(seo?.metaDescription) || pageDescription;
 
   return {
@@ -60,12 +60,12 @@ export default async function TermsOfUse() {
   return (
     <>
       <SEO
-        title={`${data.pageOptions?.pageTitle || 'شروط الاستخدام'} | النادي الثقافي العربي`}
-        description={data.pageOptions?.pageDescription || 'شروط وأحكام استخدام موقع النادي الثقافي العربي.'}
-        url={data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/terms-of-use"}
+        title={data.pageOptions?.pageTitle || undefined}
+        description={data.pageOptions?.pageDescription || undefined}
+        url={data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/terms-of-use`}
         breadcrumbs={[
-          { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-          { name: data.pageOptions?.pageTitle || 'شروط الاستخدام', item: data?.seoOptions?.canonicalUrl || "https://shjarabclub.ae/terms-of-use" }
+          { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+          { name: data.pageOptions?.pageTitle || undefined, item: data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/terms-of-use` }
         ]}
       />
       <PrivacyPolicyClient data={data} />

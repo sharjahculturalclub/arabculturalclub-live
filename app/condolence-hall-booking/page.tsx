@@ -2,18 +2,18 @@ import { Metadata } from 'next';
 import { fetchCondolenceHallBookingPageData } from '@/lib/actions/site/condolenceHallBookingPageAction';
 import { SEO } from '@/components/SEO';
 import CondolenceHallBookingForm from './CondolenceHallBookingForm';
-import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchCondolenceHallBookingPageData();
   const seo = data?.seoOptions;
-  const pageTitle = data?.pageTitle || 'حجز قاعة التعازي';
+  const pageTitle = data?.pageTitle;
 
-  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'احجز قاعة التعازي الآن.';
-  const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/condolence-hall-booking';
+  const title = seo?.seoTitle || pageTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || undefined;
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/condolence-hall-booking`;
   const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
@@ -62,12 +62,12 @@ export default async function CondolenceHallBookingPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={seoOptions?.seoTitle || `${pageTitle || 'حجز قاعة التعازي'} | النادي الثقافي العربي`}
-        description={seoOptions?.metaDescription || pageDescription || 'احجز قاعة التعازي الآن.'}
-        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/condolence-hall-booking'}
+        title={seoOptions?.seoTitle || pageTitle || undefined}
+        description={seoOptions?.metaDescription || pageDescription || undefined}
+        url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/condolence-hall-booking`}
         breadcrumbs={[
-          { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'حجز قاعة التعازي', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/condolence-hall-booking' },
+          { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/condolence-hall-booking` },
         ]}
       />
 

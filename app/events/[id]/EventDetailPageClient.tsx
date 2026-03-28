@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 
 import { motion } from 'motion/react';
-import { SEO } from '@/components/SEO';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { Calendar, MapPin, Tag, ArrowLeft, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { EventNode } from '@/lib/actions/site/eventsAction';
@@ -47,16 +46,6 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
 
     return (
         <div className="pt-25 pb-25">
-            <SEO
-                title={mappedEvent.title}
-                description={mappedEvent.description}
-                url={`https://shjarabclub.ae/events/${mappedEvent.id}`}
-                breadcrumbs={[
-                    { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-                    { name: "الفعاليات", item: "https://shjarabclub.ae/events" },
-                    { name: mappedEvent.title, item: `https://shjarabclub.ae/events/${mappedEvent.id}` }
-                ]}
-            />
 
             <div className="container max-w-5xl mx-auto px-4 md:px-6">
                 {/* Hero */}
@@ -95,7 +84,7 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
 
                 {/* Content + Gallery */}
                 <div className="bg-white rounded-[2rem] border border-border shadow-lg overflow-hidden mb-10">
-                    <div className="relative h-64 md:h-96">
+                    <div className="relative h-74 md:h-120" suppressHydrationWarning>
                         <ImageWithFallback
                             src={gallery[currentIndex]}
                             alt={mappedEvent.title}

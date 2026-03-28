@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
-import { SEO } from '@/components/SEO';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -19,28 +17,31 @@ export function GalleryPageClient({ initialGalleries, pageTitle, pageDescription
     const [selectedGallery, setSelectedGallery] = useState<any>(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [activeTab, setActiveTab] = useState('الكل');
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     // Extract categories dynamically from galleries
     const categories = ['الكل', ...Array.from(new Set(initialGalleries.flatMap(gallery =>
         gallery.categories?.nodes.map(cat => cat.name) || []
     )))];
 
-    const mappedGalleries = initialGalleries.map((gallery, index) => ({
+    const mappedGalleries = initialGalleries.map((gallery, index) => {
+        const firstGalleryImage = gallery.galleryOptions?.gallery?.nodes?.[0];
+        const thumbnailUrl = gallery.featuredImage?.node.sourceUrl
+            || firstGalleryImage?.sourceUrl
+            || '';
+        const thumbnailAlt = gallery.featuredImage?.node.altText
+            || firstGalleryImage?.altText
+            || gallery.title;
+        return ({
         id: index + 1,
-        src: normalizeImageUrl(gallery.featuredImage?.node.sourceUrl || ''),
-        alt: gallery.featuredImage?.node.altText || gallery.title,
+        src: normalizeImageUrl(thumbnailUrl),
+        alt: thumbnailAlt,
         category: gallery.categories?.nodes[0]?.name || 'عام',
         title: gallery.title,
         images: gallery.galleryOptions?.gallery?.nodes?.map(node => ({
             src: normalizeImageUrl(node.sourceUrl),
             alt: node.altText || gallery.title
         })) || []
-    }));
+    });});
 
     const filteredImages = activeTab === 'الكل'
         ? mappedGalleries
@@ -77,24 +78,11 @@ export function GalleryPageClient({ initialGalleries, pageTitle, pageDescription
 
     return (
         <div className="pt-25 pb-25">
-            <SEO
-                title={pageTitle || "معرض الصور | النادي الثقافي العربي"}
-                description={pageDescription || "لحظات توثق حراكنا الثقافي وجماليات الإبداع في نادينا."}
-                url="https://shjarabclub.ae/gallery"
-                breadcrumbs={[
-                    { name: "الرئيسية", item: "https://shjarabclub.ae/" },
-                    { name: "معرض الصور", item: "https://shjarabclub.ae/gallery" }
-                ]}
-            />
 
             <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
                 <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10 ">
-                    <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary">
-                        {pageTitle || "معرض الصور"}
-                    </h1>
-                    <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-primary">
-                        {pageDescription || "لحظات توثق حراكنا الثقافي وجماليات الإبداع في نادينا."}
-                    </p>
+                    {pageTitle && <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary">{pageTitle}</h1>}
+                    {pageDescription && <p className="text-x2 max-w-2xl mx-auto leading-relaxed text-primary">{pageDescription}</p>}
                 </div>
             </div>
 
@@ -115,38 +103,32 @@ export function GalleryPageClient({ initialGalleries, pageTitle, pageDescription
                     ))}
                 </div>
 
-                {/* Masonry Grid */}
-                {mounted ? (
-                    <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 1100: 3 }}>
-                        <Masonry gutter="24px">
-                            {filteredImages.map((img) => (
-                                <motion.div
-                                    layout
-                                    key={img.id}
-                                    className="relative group cursor-pointer rounded-2xl overflow-hidden shadow-sm"
-                                    onClick={() => openLightbox(img)}
-                                >
-                                    <ImageWithFallback
-                                        src={img.src}
-                                        alt={img.alt}
-                                        className="w-full h-auto block transform group-hover:scale-105 transition-transform duration-500"
-                                    />
-                                    <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4">
-                                        <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white">
-                                            <Maximize2 size={24} />
-                                        </div>
-                                        <div className="text-white text-center px-4">
-                                            <p className="font-bold text-lg leading-tight">{img.title}</p>
-                                            <span className="text-sm opacity-80">{img.category}</span>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </Masonry>
-                    </ResponsiveMasonry>
-                ) : (
-                    <div className="min-h-[400px]" />
-                )}
+                {/* Uniform Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredImages.map((img) => (
+                        <motion.div
+                            layout
+                            key={img.id}
+                            className="relative group cursor-pointer rounded-2xl overflow-hidden shadow-sm aspect-square"
+                            onClick={() => openLightbox(img)}
+                        >
+                            <ImageWithFallback
+                                src={img.src}
+                                alt={img.alt}
+                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4">
+                                <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white">
+                                    <Maximize2 size={24} />
+                                </div>
+                                <div className="text-white text-center px-4">
+                                    <p className="font-bold text-lg leading-tight">{img.title}</p>
+                                    <span className="text-sm opacity-80">{img.category}</span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
 
             {/* Lightbox */}

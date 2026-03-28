@@ -1,7 +1,7 @@
 import { fetchLogoData } from "@/lib/actions/site/logoAction";
 import { normalizeImageUrl } from "@/lib/utils/url";
-
-const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shjarabclub.ae";
+export { SITE_ORIGIN } from "@/lib/utils/site-origin";
+import { SITE_ORIGIN } from "@/lib/utils/site-origin";
 
 function toAbsoluteUrl(url: string): string {
     const normalized = normalizeImageUrl(url);

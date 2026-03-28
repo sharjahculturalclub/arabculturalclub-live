@@ -1,31 +1,39 @@
 import type { Metadata } from "next";
 import { fetchGalleries, fetchGalleryPageOptions } from "@/lib/actions/site/galleryAction";
 import { GalleryPageClient } from "./GalleryPageClient";
-
-import { getMetadataImages } from "@/lib/utils/seo";
+import { SEO } from "@/components/SEO";
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const pageOptions = await fetchGalleryPageOptions("gallery");
-  const images = await getMetadataImages();
+  const [pageData, images] = await Promise.all([
+    fetchGalleryPageOptions("gallery"),
+    getMetadataImages(),
+  ]);
+
+  const seo = pageData?.seoOptions;
+  const title = seo?.seoTitle || pageData?.pageOptions?.pageTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || pageData?.pageOptions?.pageDescription || undefined;
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/gallery`;
 
   return {
-    title: pageOptions?.pageTitle || "معرض الصور | النادي الثقافي العربي",
-    description: pageOptions?.pageDescription || "لحظات توثق حراكنا الثقافي وجماليات الإبداع في نادينا.",
+    title,
+    description,
+    keywords: seo?.focusKeyword || undefined,
     alternates: {
-      canonical: "https://shjarabclub.ae/gallery",
+      canonical: canonicalUrl,
     },
     openGraph: {
-      title: pageOptions?.pageTitle || "معرض الصور | النادي الثقافي العربي",
-      description: pageOptions?.pageDescription || "لحظات توثق حراكنا الثقافي وجماليات الإبداع في نادينا.",
-      url: "https://shjarabclub.ae/gallery",
+      title,
+      description,
+      url: canonicalUrl,
       siteName: "النادي الثقافي العربي",
       type: "website",
       images,
     },
     twitter: {
       card: "summary_large_image",
-      title: pageOptions?.pageTitle || "معرض الصور | النادي الثقافي العربي",
-      description: pageOptions?.pageDescription || "لحظات توثق حراكنا الثقافي وجماليات الإبداع في نادينا.",
+      title,
+      description,
       images: images.map(img => img.url),
     },
   };
@@ -33,16 +41,30 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 export default async function GalleryPage() {
-  const [galleries, pageOptions] = await Promise.all([
+  const [galleries, pageData] = await Promise.all([
     fetchGalleries(),
     fetchGalleryPageOptions("gallery"),
   ]);
 
+  const seoOptions = pageData?.seoOptions;
+  const pageOptions = pageData?.pageOptions;
+
   return (
-    <GalleryPageClient
-      initialGalleries={galleries}
-      pageTitle={pageOptions?.pageTitle || null}
-      pageDescription={pageOptions?.pageDescription || null}
-    />
+    <>
+      <SEO
+        title={seoOptions?.seoTitle || pageOptions?.pageTitle || undefined}
+        description={seoOptions?.metaDescription || pageOptions?.pageDescription || undefined}
+        url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/gallery`}
+        breadcrumbs={[
+          { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+          { name: pageOptions?.pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/gallery` },
+        ]}
+      />
+      <GalleryPageClient
+        initialGalleries={galleries}
+        pageTitle={pageOptions?.pageTitle || null}
+        pageDescription={pageOptions?.pageDescription || null}
+      />
+    </>
   );
 }

@@ -9,7 +9,7 @@ import {
 import { SEO } from '@/components/SEO';
 import ContactForm from './ContactForm';
 
-import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── Icon map for dynamic rendering ────────────────────────────────
@@ -44,11 +44,11 @@ const colorMap: Record<string, { bg: string; text: string; hoverBg: string; hove
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchContactPageData();
   const seo = data?.seoOptions;
-  const pageTitle = data?.pageTitle || 'اتصل بنا';
+  const pageTitle = data?.pageTitle;
 
-  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'تواصل مع النادي الثقافي العربي.';
-  const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/contact';
+  const title = seo?.seoTitle || pageTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || undefined;
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/contact`;
   const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
@@ -107,12 +107,12 @@ export default async function ContactPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={seoOptions?.seoTitle || `${pageTitle || 'اتصل بنا'} | النادي الثقافي العربي`}
-        description={seoOptions?.metaDescription || pageDescription || 'تواصل مع النادي الثقافي العربي.'}
-        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/contact'}
+        title={seoOptions?.seoTitle || pageTitle || undefined}
+        description={seoOptions?.metaDescription || pageDescription || undefined}
+        url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/contact`}
         breadcrumbs={[
-          { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'اتصل بنا', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/contact' },
+          { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/contact` },
         ]}
       />
 

@@ -37,6 +37,12 @@ export const GET_GALLERY_PAGE_OPTIONS = gql`
         pageTitle
         pageDescription
       }
+      seoOptions {
+        seoTitle
+        metaDescription
+        focusKeyword
+        canonicalUrl
+      }
     }
   }
 `;

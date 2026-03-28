@@ -3,18 +3,18 @@ import Link from 'next/link';
 import { fetchFaqPageData } from '@/lib/actions/site/faqPageAction';
 import { SEO } from '@/components/SEO';
 import FaqCategoriesList from './FaqCategoriesList';
-import { getMetadataImages, stripHtml } from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
 export async function generateMetadata(): Promise<Metadata> {
   const data = await fetchFaqPageData();
   const seo = data?.seoOptions;
-  const pageTitle = data?.pageTitle || 'الأسئلة الشائعة';
+  const pageTitle = data?.pageTitle;
 
-  const title = seo?.seoTitle || `${pageTitle} | النادي الثقافي العربي`;
-  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || 'إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي.';
-  const canonicalUrl = seo?.canonicalUrl || 'https://shjarabclub.ae/faq';
+  const title = seo?.seoTitle || pageTitle || undefined;
+  const description = stripHtml(seo?.metaDescription) || data?.pageDescription || undefined;
+  const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/faq`;
   const featuredImageUrl = normalizeImageUrl(data?.featuredImage?.node?.sourceUrl ?? "");
   const images = await getMetadataImages(undefined, featuredImageUrl);
 
@@ -63,12 +63,12 @@ export default async function FaqPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={seoOptions?.seoTitle || `${pageTitle || 'الأسئلة الشائعة'} | النادي الثقافي العربي`}
-        description={seoOptions?.metaDescription || pageDescription || 'إجابات على الأسئلة الأكثر شيوعاً حول النادي الثقافي العربي.'}
-        url={seoOptions?.canonicalUrl || 'https://shjarabclub.ae/faq'}
+        title={seoOptions?.seoTitle || pageTitle || undefined}
+        description={seoOptions?.metaDescription || pageDescription || undefined}
+        url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/faq`}
         breadcrumbs={[
-          { name: 'الرئيسية', item: 'https://shjarabclub.ae/' },
-          { name: pageTitle || 'الأسئلة الشائعة', item: seoOptions?.canonicalUrl || 'https://shjarabclub.ae/faq' },
+          { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
+          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/faq` },
         ]}
       />
 
