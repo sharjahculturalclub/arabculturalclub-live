@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
-    User, Send, ShieldCheck, AlertCircle, FileKey, Calendar, CheckCircle2
+    User, Send, ShieldCheck, AlertCircle, Calendar, CheckCircle2, FileUp, CheckCircle
 } from 'lucide-react';
 import { submitLectureHallBookingAction } from '@/lib/actions/site/submitLectureHallBookingAction';
 
@@ -49,7 +49,7 @@ function Field({ label, required, children, hint, error }: { label: string; requ
     );
 }
 
-// ─── Text Input ───────────────────────────────────────────────────────────────
+// ─── Input styles ─────────────────────────────────────────────────────────────
 const inputCls = (error?: string) =>
     `w-full h-12 px-4 bg-gray-50 border rounded-xl text-gray-900 text-sm font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all ${error
         ? 'border-red-400 bg-red-50/30 focus:border-red-500 focus:ring-red-500/15'
@@ -59,14 +59,15 @@ const inputCls = (error?: string) =>
 function TextInput({ label, name, required, minLength, maxLength, placeholder, hint, error }: any) {
     return (
         <Field label={label} required={required} hint={hint} error={error}>
-            <input
-                type="text"
-                name={name}
-                minLength={minLength}
-                maxLength={maxLength}
-                placeholder={placeholder}
-                className={inputCls(error)}
-            />
+            <input type="text" name={name} minLength={minLength} maxLength={maxLength} placeholder={placeholder} className={inputCls(error)} />
+        </Field>
+    );
+}
+
+function TimeInput({ label, name, required, hint, error }: any) {
+    return (
+        <Field label={label} required={required} hint={hint} error={error}>
+            <input type="time" name={name} dir="ltr" className={`${inputCls(error)} text-left`} />
         </Field>
     );
 }
@@ -74,13 +75,7 @@ function TextInput({ label, name, required, minLength, maxLength, placeholder, h
 function EmailInput({ label, name, required, placeholder, hint, error }: any) {
     return (
         <Field label={label} required={required} hint={hint} error={error}>
-            <input
-                type="email"
-                name={name}
-                placeholder={placeholder}
-                dir="ltr"
-                className={`${inputCls(error)} text-left`}
-            />
+            <input type="email" name={name} placeholder={placeholder} dir="ltr" className={`${inputCls(error)} text-left`} />
         </Field>
     );
 }
@@ -88,25 +83,15 @@ function EmailInput({ label, name, required, placeholder, hint, error }: any) {
 function TelInput({ label, name, required, placeholder, hint, error }: any) {
     return (
         <Field label={label} required={required} hint={hint} error={error}>
-            <input
-                type="tel"
-                name={name}
-                placeholder={placeholder}
-                dir="ltr"
-                className={`${inputCls(error)} text-left`}
-            />
+            <input type="tel" name={name} placeholder={placeholder} dir="ltr" className={`${inputCls(error)} text-left`} />
         </Field>
     );
 }
 
-function DateInput({ label, name, required, hint, error }: any) {
+function DateInput({ label, name, required, min, hint, error }: any) {
     return (
         <Field label={label} required={required} hint={hint} error={error}>
-            <input
-                type="date"
-                name={name}
-                className={inputCls(error)}
-            />
+            <input type="date" name={name} min={min} className={inputCls(error)} suppressHydrationWarning />
         </Field>
     );
 }
@@ -114,14 +99,117 @@ function DateInput({ label, name, required, hint, error }: any) {
 function NumberInput({ label, name, required, min, max, placeholder, hint, error }: any) {
     return (
         <Field label={label} required={required} hint={hint} error={error}>
-            <input
-                type="number"
+            <input type="number" name={name} min={min} max={max} placeholder={placeholder} className={inputCls(error)} />
+        </Field>
+    );
+}
+
+function AutoTextarea({ label, name, required, maxLength, placeholder, hint, error }: any) {
+    const ref = useRef<HTMLTextAreaElement>(null);
+    const handleInput = () => {
+        const el = ref.current;
+        if (!el) return;
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+    };
+    return (
+        <Field label={label} required={required} hint={hint} error={error}>
+            <textarea
+                ref={ref}
                 name={name}
-                min={min}
-                max={max}
+                maxLength={maxLength}
                 placeholder={placeholder}
-                className={inputCls(error)}
+                rows={1}
+                onInput={handleInput}
+                className={`w-full px-4 py-3 border rounded-xl text-gray-900 text-sm font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all resize-none overflow-hidden leading-6 min-h-12 ${error
+                    ? 'border-red-400 bg-red-50/30 focus:border-red-500 focus:ring-red-500/15'
+                    : 'bg-gray-50 border-gray-200 focus:border-purple-500 focus:bg-white focus:ring-purple-500/15'
+                    }`}
             />
+        </Field>
+    );
+}
+
+function RadioGroup({ label, name, required, options, accentColor = 'blue', error }: any) {
+    const accents: Record<string, string> = {
+        blue: 'hover:border-blue-400 hover:bg-blue-50/40 has-checked:border-blue-500 has-checked:bg-blue-50',
+        purple: 'hover:border-purple-400 hover:bg-purple-50/40 has-checked:border-purple-500 has-checked:bg-purple-50',
+    };
+    const dotColors: Record<string, string> = {
+        blue: 'checked:border-blue-600 bg-blue-600',
+        purple: 'checked:border-purple-600 bg-purple-600',
+    };
+    return (
+        <Field label={label} required={required} error={error}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
+                {options.map((value: string) => (
+                    <label key={value} className={`flex items-center gap-3 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer transition-all ${accents[accentColor] || accents.blue}`}>
+                        <div className="relative w-5 h-5 shrink-0">
+                            <input type="radio" name={name} value={value} className={`peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full focus:outline-none transition-all ${dotColors[accentColor]?.split(' ')[0] || 'checked:border-blue-600'}`} />
+                            <div className={`w-2.5 h-2.5 rounded-full absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 scale-0 peer-checked:scale-100 transition-all ${dotColors[accentColor]?.split(' ').slice(1).join(' ') || 'bg-blue-600'}`} />
+                        </div>
+                        <p className="text-sm font-bold text-gray-800">{value}</p>
+                    </label>
+                ))}
+            </div>
+        </Field>
+    );
+}
+
+// ─── File Upload ──────────────────────────────────────────────────────────────
+function FileUpload({ label, name, required, accept, maxBytes, hint, error }: any) {
+    const [file, setFile] = useState<File | null>(null);
+    const [sizeError, setSizeError] = useState('');
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const f = e.target.files?.[0] || null;
+        if (f && maxBytes && f.size > maxBytes) {
+            setSizeError(`حجم الملف يتجاوز الحد المسموح به (${(maxBytes / 1024 / 1024).toFixed(0)} ميجابايت)`);
+            e.target.value = '';
+            setFile(null);
+        } else {
+            setSizeError('');
+            setFile(f);
+        }
+    };
+
+    const displayError = sizeError || error;
+
+    return (
+        <Field label={label} required={required} hint={hint} error={displayError}>
+            <div className="relative group cursor-pointer">
+                <input
+                    type="file"
+                    name={name}
+                    accept={accept}
+                    onChange={handleChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                />
+                <div className={`w-full flex items-center gap-4 px-5 py-4 border-2 border-dashed rounded-2xl transition-all ${displayError
+                    ? 'border-red-400 bg-red-50/30'
+                    : file
+                        ? 'border-purple-400 bg-purple-50/60'
+                        : 'border-gray-200 bg-gray-50 group-hover:border-purple-300 group-hover:bg-purple-50/30'
+                    }`}
+                >
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${displayError ? 'bg-red-100 text-red-500' : file ? 'bg-purple-100 text-purple-600' : 'bg-white text-gray-400 group-hover:text-purple-500'}`}>
+                        {displayError ? <AlertCircle size={20} /> : file ? <CheckCircle size={20} /> : <FileUp size={20} />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        {file ? (
+                            <>
+                                <p className="text-sm font-bold text-gray-900 truncate">{file.name}</p>
+                                <p className="text-xs font-medium text-purple-600 mt-0.5">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                            </>
+                        ) : (
+                            <>
+                                <p className="text-sm font-bold text-gray-700 group-hover:text-purple-700 transition-colors">اختر ملفاً أو اسحبه هنا</p>
+                                <p className="text-xs font-medium text-gray-400 mt-0.5">{hint}</p>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
         </Field>
     );
 }
@@ -129,29 +217,55 @@ function NumberInput({ label, name, required, min, max, placeholder, hint, error
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function LectureHallBookingForm({ formId }: LectureHallBookingFormProps) {
     const topRef = useRef<HTMLDivElement>(null);
+    const captchaRef = useRef<HTMLInputElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [message, setMessage] = useState('');
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
+    const [selectedHall, setSelectedHall] = useState('');
+
+    const [minDate, setMinDate] = useState('');
+    useEffect(() => {
+        setMinDate(new Date().toISOString().split('T')[0]);
+    }, []);
+
+    const [captcha, setCaptcha] = useState<{ a: number; b: number } | null>(null);
+    const [captchaInput, setCaptchaInput] = useState('');
+    const [captchaError, setCaptchaError] = useState('');
+
+    const refreshCaptcha = () => {
+        setCaptcha({ a: Math.floor(Math.random() * 9) + 1, b: Math.floor(Math.random() * 9) + 1 });
+        setCaptchaInput('');
+        setCaptchaError('');
+    };
+    useEffect(() => { refreshCaptcha(); }, []);
+
     const handleChange = (e: React.ChangeEvent<HTMLFormElement>) => {
         const target = e.target as unknown as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-        
+        if (target.name === 'requested_hall') setSelectedHall((target as HTMLInputElement).value);
         if (target.name && fieldErrors[target.name]) {
-            setFieldErrors(prev => {
-                const newErrs = { ...prev };
-                delete newErrs[target.name];
-                return newErrs;
-            });
+            setFieldErrors(prev => { const n = { ...prev }; delete n[target.name]; return n; });
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const scrollToFirstError = (errs: Record<string, string>) => {
+        setTimeout(() => {
+            const firstKey = Object.keys(errs)[0];
+            const el = firstKey === '_captcha'
+                ? captchaRef.current
+                : document.querySelector<HTMLElement>(`[name="${firstKey}"]`);
+            if (el) {
+                window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 180, behavior: 'smooth' });
+            }
+        }, 0);
+    };
+
+    const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         setStatus('idle');
         setMessage('');
 
-        // ── Client-side validation ──────────────────────────────────────────
         const form = e.currentTarget;
         const data = new FormData(form);
         const errs: Record<string, string> = {};
@@ -162,36 +276,63 @@ export default function LectureHallBookingForm({ formId }: LectureHallBookingFor
             if (minLen && val.length < minLen) errs[key] = `يجب ألا يقل عن ${minLen} أحرف`;
         };
 
-        // Main Fields
-        req('applicant_name', 'اسم مقدم الطلب', 2);
-        req('email', 'البريد الإلكتروني');
-        req('identity_number', 'بطاقة هوية رقم', 5);
-        req('mobile_number', 'الهاتف المتحرك');
-        req('booking_purpose', 'الغرض من الحجز', 3);
-
         // Booking details
-        if (!data.get('requested_hall')) errs['requested_hall'] = 'القاعة المطلوبة مطلوب';
-        req('requested_days_count', 'عدد الأيام المطلوبة');
-        req('from_time', 'من الساعة');
-        req('to_time', 'إلى الساعة');
-        if (!data.get('booking_period')) errs['booking_period'] = 'فترة الحجز مطلوب';
-        req('booking_day', 'عن يوم');
+        req('booking_purpose', 'الغرض من الحجز', 3);
+        if (!data.get('requested_hall')) errs['requested_hall'] = 'يجب اختيار القاعة المطلوبة';
+        req('requested_event_date', 'التاريخ المطلوب');
+        req('requested_days', 'عدد الأيام');
+        if (!data.get('booking_period')) errs['booking_period'] = 'يجب اختيار فترة الحجز';
+        req('requested_time_from', 'من الساعة');
+        req('requested_time_to', 'إلى الساعة');
+        const timeFrom = (data.get('requested_time_from') as string || '').trim();
+        const timeTo = (data.get('requested_time_to') as string || '').trim();
+        if (timeFrom && timeTo && timeTo <= timeFrom)
+            errs['requested_time_to'] = 'وقت الانتهاء يجب أن يكون بعد وقت البداية';
+
+        // Applicant
+        req('applicant_full_name', 'اسم مقدم الطلب', 2);
+        req('applicant_emirates_id', 'رقم بطاقة الهوية');
+        req('applicant_mobile', 'الهاتف المتحرك');
+        req('applicant_email', 'البريد الإلكتروني');
 
         // Email format
-        const emailVal = (data.get('email') as string || '').trim();
+        const emailVal = (data.get('applicant_email') as string || '').trim();
         if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal))
-            errs['email'] = 'البريد الإلكتروني غير صحيح';
+            errs['applicant_email'] = 'البريد الإلكتروني غير صحيح';
 
-        // Consent
-        if (!data.get('terms_acceptance'))
-            errs['terms_acceptance'] = 'يجب الموافقة على شروط الحجز للمتابعة';
+        // UAE phone
+        const mobileVal = (data.get('applicant_mobile') as string || '').trim();
+        if (mobileVal && !/^(?:00971|\+971|0)?(?:50|51|52|55|56|58|2|3|4|6|7|9)\d{7}$/.test(mobileVal.replace(/[\s-]/g, '')))
+            errs['applicant_mobile'] = 'يجب إدخال رقم هاتف إماراتي صحيح (مثال: 0501234567)';
+
+        // Emirates ID
+        const eidVal = (data.get('applicant_emirates_id') as string || '').trim();
+        if (eidVal && !/^784-\d{4}-\d{7}-\d$/.test(eidVal))
+            errs['applicant_emirates_id'] = 'صيغة الهوية الإماراتية غير صحيحة (مثال: 784-1234-1234567-1)';
+
+        // File
+        const attachFile = data.get('applicant_id_attachment') as File;
+        if (!attachFile || attachFile.size === 0)
+            errs['applicant_id_attachment'] = 'يرجى رفع صورة الهوية';
+
+        // Declaration
+        req('declaration_name', 'الاسم في الإقرار', 2);
+        if (!data.get('rules_accepted'))
+            errs['rules_accepted'] = 'يجب الموافقة على الشروط للمتابعة.';
+
+        // Captcha
+        if (!captchaInput.trim()) {
+            setCaptchaError('يرجى إدخال الجواب');
+            errs['_captcha'] = 'captcha';
+        } else if (captcha && parseInt(captchaInput.trim()) !== captcha.a + captcha.b) {
+            refreshCaptcha();
+            setCaptchaError('الجواب غير صحيح، حاول مرة أخرى');
+            errs['_captcha'] = 'captcha';
+        }
 
         if (Object.keys(errs).length > 0) {
             setFieldErrors(errs);
-            if (topRef.current) {
-                const y = topRef.current.getBoundingClientRect().top + window.scrollY - 120;
-                window.scrollTo({ top: y, behavior: 'smooth' });
-            }
+            scrollToFirstError(errs);
             return;
         }
 
@@ -206,6 +347,8 @@ export default function LectureHallBookingForm({ formId }: LectureHallBookingFor
                 setMessage(result.message);
                 setFieldErrors({});
                 form.reset();
+                setSelectedHall('');
+                refreshCaptcha();
             } else {
                 setStatus('error');
                 setMessage(result.message);
@@ -221,8 +364,7 @@ export default function LectureHallBookingForm({ formId }: LectureHallBookingFor
         } finally {
             setIsSubmitting(false);
             if (topRef.current) {
-                const y = topRef.current.getBoundingClientRect().top + window.scrollY - 120;
-                window.scrollTo({ top: y, behavior: 'smooth' });
+                window.scrollTo({ top: topRef.current.getBoundingClientRect().top + window.scrollY - 180, behavior: 'smooth' });
             }
         }
     };
@@ -232,13 +374,12 @@ export default function LectureHallBookingForm({ formId }: LectureHallBookingFor
 
             {/* ── Status Banners ── */}
             {status === 'success' && (
-                <div className="mb-6 flex items-start gap-4 p-5 bg-green-50 border border-green-200 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="mb-6 flex items-center gap-4 p-5 bg-green-50 border border-green-200 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="p-2 bg-green-100 rounded-xl shrink-0">
                         <ShieldCheck size={22} className="text-green-600" />
                     </div>
                     <div>
-                        <p className="font-bold text-green-800">تم إرسال الطلب بنجاح!</p>
-                        <p className="text-sm text-green-700 mt-1">{message}</p>
+                        <p className="font-bold text-green-800">{message}</p>
                     </div>
                 </div>
             )}
@@ -255,141 +396,193 @@ export default function LectureHallBookingForm({ formId }: LectureHallBookingFor
                 </div>
             )}
 
-            {/* ── Single Form Card ── */}
+            {/* ── Form Card ── */}
             <div className="bg-white rounded-3xl border border-gray-100 shadow-sm" suppressHydrationWarning>
-                <form onSubmit={handleSubmit} onChange={handleChange} noValidate suppressHydrationWarning>
+                <form onSubmit={handleSubmit} onChange={handleChange} noValidate>
 
-                    {/* ══ 1. Applicant Info ══════════════════════════════════════ */}
-                    <div className="p-5 sm:p-8">
-                        <SectionHeader icon={User} title="بيانات مقدم الطلب" color="purple" />
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <TextInput label="اسم مقدم الطلب" name="applicant_name" required minLength={2} maxLength={150} placeholder="اسم مقدم الطلب" error={fieldErrors['applicant_name']} />
-                            <TextInput label="بطاقة هوية رقم" name="identity_number" required minLength={5} maxLength={30} placeholder="بطاقة هوية رقم" error={fieldErrors['identity_number']} />
-                            <EmailInput label="البريد الإلكتروني" name="email" required placeholder="example@mail.com" error={fieldErrors['email']} />
-                            <TelInput label="الهاتف المتحرك" name="mobile_number" required placeholder="+971 5X XXX XXXX" error={fieldErrors['mobile_number']} />
-                        </div>
-                        <div className="mt-5">
-                            <TextInput label="الغرض من الحجز" name="booking_purpose" required minLength={3} maxLength={250} placeholder="أدخل الغرض من الحجز" error={fieldErrors['booking_purpose']} />
-                        </div>
-                    </div>
-
-                    <div className="h-px bg-gray-100 mx-8" />
-
-                    {/* ══ 2. Booking Details ════════════════════════════════════════ */}
+                    {/* ══ 1. Booking Details ══════════════════════════════════════ */}
                     <div className="p-5 sm:p-8 space-y-5">
                         <SectionHeader icon={Calendar} title="تفاصيل الحجز" color="blue" />
-                        
-                        <Field label="القاعة المطلوبة" required error={fieldErrors['requested_hall']}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-1">
-                                {[
-                                    { value: 'قاعة المناسبات', label: 'قاعة المناسبات' },
-                                    { value: 'قاعة المحاضرات', label: 'قاعة المحاضرات' },
-                                    { value: 'القاعة الدائرية', label: 'القاعة الدائرية' },
-                                    { value: 'أخرى', label: 'أخرى' },
-                                ].map(({ value, label }) => (
-                                    <label key={value} className="flex items-center gap-3 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 has-checked:border-blue-500 has-checked:bg-blue-50 transition-all">
-                                        <div className="relative w-5 h-5 shrink-0">
-                                            <input type="radio" name="requested_hall" value={value} className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full focus:outline-none checked:border-blue-600 transition-all" />
-                                            <div className="w-2.5 h-2.5 bg-blue-600 rounded-full absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 scale-0 peer-checked:scale-100 transition-all" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-gray-800">{label}</p>
-                                        </div>
-                                    </label>
-                                ))}
-                            </div>
-                        </Field>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
-                            <NumberInput label="عدد الأيام المطلوبة" name="requested_days_count" min={1} max={30} required placeholder="مثال: 3" error={fieldErrors['requested_days_count']} />
-                            <DateInput label="عن يوم" name="booking_day" required error={fieldErrors['booking_day']} />
+                        <TextInput
+                            label="الغرض من الحجز"
+                            name="booking_purpose"
+                            required
+                            minLength={3}
+                            maxLength={250}
+                            placeholder="أدخل الغرض من الحجز"
+                            error={fieldErrors['booking_purpose']}
+                        />
+
+                        <RadioGroup
+                            label="القاعة المطلوبة"
+                            name="requested_hall"
+                            required
+                            accentColor="blue"
+                            options={['قاعة المناسبات', 'قاعة المحاضرات', 'القاعة الدائرية', 'أخرى']}
+                            error={fieldErrors['requested_hall']}
+                        />
+
+                        {selectedHall === 'أخرى' && (
+                            <TextInput
+                                label="يرجى تحديد القاعة الأخرى"
+                                name="requested_hall_other"
+                                maxLength={150}
+                                placeholder="اذكر اسم القاعة"
+                                error={fieldErrors['requested_hall_other']}
+                            />
+                        )}
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <DateInput label="التاريخ المطلوب" name="requested_event_date" required min={minDate} error={fieldErrors['requested_event_date']} />
+                            <NumberInput label="عدد الأيام" name="requested_days" required min={1} placeholder="مثال: 1" error={fieldErrors['requested_days']} />
                         </div>
-                        
-                        <Field label="فترة الحجز" required error={fieldErrors['booking_period']}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
-                                {['صباحا', 'مساء'].map((value) => (
-                                    <label key={value} className="flex items-center gap-3 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 has-checked:border-blue-500 has-checked:bg-blue-50 transition-all">
-                                        <div className="relative w-5 h-5 shrink-0">
-                                            <input type="radio" name="booking_period" value={value} className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full focus:outline-none checked:border-blue-600 transition-all" />
-                                            <div className="w-2.5 h-2.5 bg-blue-600 rounded-full absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 scale-0 peer-checked:scale-100 transition-all" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-gray-800">{value}</p>
-                                        </div>
-                                    </label>
-                                ))}
-                            </div>
-                        </Field>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
-                            <TextInput label="من الساعة" name="from_time" required placeholder="00:00" error={fieldErrors['from_time']} />
-                            <TextInput label="إلى الساعة" name="to_time" required placeholder="00:00" error={fieldErrors['to_time']} />
+                        <RadioGroup
+                            label="فترة الحجز"
+                            name="booking_period"
+                            required
+                            accentColor="blue"
+                            options={['صباحاً', 'مساءً']}
+                            error={fieldErrors['booking_period']}
+                        />
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <TimeInput label="من الساعة" name="requested_time_from" required error={fieldErrors['requested_time_from']} />
+                            <TimeInput label="إلى الساعة" name="requested_time_to" required error={fieldErrors['requested_time_to']} />
+                        </div>
+
+                        <AutoTextarea
+                            label="ملاحظات إضافية"
+                            name="booking_notes"
+                            maxLength={500}
+                            placeholder="أي ملاحظات إضافية (اختياري)"
+                            error={fieldErrors['booking_notes']}
+                        />
+                    </div>
+
+                    <div className="h-px bg-gray-100 mx-8" />
+
+                    {/* ══ 2. Applicant Data ══════════════════════════════════════ */}
+                    <div className="p-5 sm:p-8 space-y-5">
+                        <SectionHeader icon={User} title="بيانات مقدم الطلب" color="purple" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <TextInput label="اسم مقدم الطلب" name="applicant_full_name" required minLength={2} maxLength={150} placeholder="الاسم الكامل" error={fieldErrors['applicant_full_name']} />
+                            <TextInput label="رقم بطاقة الهوية" name="applicant_emirates_id" required maxLength={20} placeholder="784-1234-1234567-1" error={fieldErrors['applicant_emirates_id']} />
+                            <TelInput label="الهاتف المتحرك" name="applicant_mobile" required placeholder="0501234567" error={fieldErrors['applicant_mobile']} />
+                            <EmailInput label="البريد الإلكتروني" name="applicant_email" required placeholder="example@mail.com" error={fieldErrors['applicant_email']} />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <FileUpload
+                                label="صورة عن بطاقة الهوية"
+                                name="applicant_id_attachment"
+                                required
+                                accept=".pdf,.jpg,.jpeg,.png"
+                                maxBytes={2097152}
+                                hint="PDF أو JPG أو PNG، بحجم لا يتجاوز 2 ميجابايت"
+                                error={fieldErrors['applicant_id_attachment']}
+                            />
                         </div>
                     </div>
 
                     <div className="h-px bg-gray-100 mx-8" />
 
-                    {/* ══ 3. Terms ════════════════════════════════════ */}
-                    <div className="p-5 sm:p-8 space-y-6">
-                        <SectionHeader icon={FileKey} title="شروط الحجز" color="green" />
+                    {/* ══ 3. Declaration ══════════════════════════════════════ */}
+                    <div className="p-5 sm:p-8 space-y-5">
+                        <SectionHeader icon={ShieldCheck} title="الشروط والإقرار" color="green" />
+
+                        <p className="text-sm text-gray-600 leading-relaxed bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                            يلتزم مقدم الطلب باستخدام القاعة المحجوزة فقط، وعدم استخدام الساحات أو الممرات التابعة للنادي،
+                            واستخدام القاعة للغرض المحجوز من أجله فقط، ويتحمل مسؤولية أي تلفيات وفقاً لأنظمة النادي.
+                        </p>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <TextInput label="الاسم كما سيظهر في الإقرار" name="declaration_name" required minLength={2} maxLength={150} placeholder="الاسم الكامل" error={fieldErrors['declaration_name']} />
+                        </div>
 
                         <div className="space-y-2">
-                            <label className={`flex items-start gap-4 cursor-pointer group p-4 rounded-2xl border transition-all ${fieldErrors['terms_acceptance']
-                                    ? 'border-red-300 bg-red-50/40'
-                                    : 'border-gray-200 bg-gray-50/70 hover:border-purple-300 hover:bg-purple-50/30'
+                            <label className={`flex items-start gap-4 cursor-pointer group p-4 rounded-2xl border transition-all ${fieldErrors['rules_accepted']
+                                ? 'border-red-300 bg-red-50/40'
+                                : 'border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50'
                                 }`}>
                                 <div className="relative w-6 h-6 shrink-0 mt-0.5">
                                     <input
                                         type="checkbox"
-                                        name="terms_acceptance"
-                                        className={`peer appearance-none w-6 h-6 border-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/20 ${
-                                            fieldErrors['terms_acceptance']
-                                                ? 'border-red-400 bg-red-50 checked:border-red-600 checked:bg-red-600'
-                                                : 'border-gray-300 checked:border-purple-600 checked:bg-purple-600 bg-white'
-                                        }`}
+                                        name="rules_accepted"
+                                        className={`peer appearance-none w-6 h-6 border-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/20 ${fieldErrors['rules_accepted']
+                                            ? 'border-red-400 bg-red-50 checked:border-red-600 checked:bg-red-600'
+                                            : 'border-gray-300 checked:border-purple-600 checked:bg-purple-600 bg-white'
+                                            }`}
                                     />
                                     <CheckCircle2 size={16} strokeWidth={3} className="absolute inset-0 m-auto text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
                                 </div>
-                                <div className="flex-1">
-                                    <p className={`text-sm font-bold select-none transition-colors mb-3 ${fieldErrors['terms_acceptance'] ? 'text-red-700' : 'text-gray-900 group-hover:text-purple-700'}`}>
-                                        أوافق على الشروط والأحكام الواردة في النموذج <span className="text-red-500">*</span>
-                                    </p>
-                                    <ul className="space-y-2 text-sm text-gray-600 leading-relaxed">
-                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>الالتزام باستخدام القاعة المخصصة فقط، ولا يسمح باستخدام الساحات وممرات النادي.</span></li>
-                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>الدخول والخروج من أبواب (قاعة المناسبات) الخارجية فقط.</span></li>
-                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>أية أضرار تلحق بالقاعة تُحتسب من مبلغ التأمين وقيمته 2000 درهم، ويحق للنادي مطالبة المستأجر بمبالغ إضافية إذا تجاوز الضرر مبلغ التأمين.</span></li>
-                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>الالتزام بمواعيد الحجز، وفي حالة تجاوز الوقت المحدد أعلاه يضاف مبلغ 500 درهم عن كل ساعة تأخير.</span></li>
-                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>عدم إدخال الطعام إلى غرفة انتظار العروس والمحافظة عليها من التلف.</span></li>
-                                        <li className="flex gap-2"><span className="text-gray-400 shrink-0">•</span><span>الالتزام بنظم ولوائح النادي، واستخدام القاعة في الغرض الذي حجزت من أجله فقط.</span></li>
-                                    </ul>
-                                </div>
+                                <p className={`text-sm leading-relaxed select-none transition-colors ${fieldErrors['rules_accepted'] ? 'text-red-700' : 'text-emerald-900'}`}>
+                                    أوافق على شروط الحجز والاستخدام <span className="text-red-500">*</span>
+                                </p>
                             </label>
-                            {fieldErrors['terms_acceptance'] && (
+                            {fieldErrors['rules_accepted'] && (
                                 <p className="text-xs text-red-500 font-medium flex items-center gap-1 px-1">
                                     <AlertCircle size={11} strokeWidth={2.5} />
-                                    {fieldErrors['terms_acceptance']}
+                                    {fieldErrors['rules_accepted']}
                                 </p>
                             )}
                         </div>
                     </div>
 
-                    {/* ══ 4. Submit Area ═══════════════════════════════════════════ */}
-                    <div className="p-5 sm:p-8 bg-gray-50/80 border-t border-gray-100 rounded-b-3xl">
+                    {/* ══ 4. Submit Area ══════════════════════════════════════ */}
+                    <div className="p-5 sm:p-8 bg-gray-50/80 border-t border-gray-100 rounded-b-3xl space-y-5">
+
+                        {/* Captcha */}
+                        {captcha && (
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-sm font-semibold text-gray-700">
+                                    التحقق من الهوية <span className="text-red-500 ms-1">*</span>
+                                </label>
+                                <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-2 px-4 h-12 bg-white border border-gray-200 rounded-xl select-none">
+                                        <span className="text-lg font-bold text-gray-800 tabular-nums">{captcha.a}</span>
+                                        <span className="text-gray-400 font-medium">+</span>
+                                        <span className="text-lg font-bold text-gray-800 tabular-nums">{captcha.b}</span>
+                                        <span className="text-gray-400 font-medium">=</span>
+                                        <span className="text-gray-400">?</span>
+                                    </div>
+                                    <input
+                                        ref={captchaRef}
+                                        type="number"
+                                        inputMode="numeric"
+                                        value={captchaInput}
+                                        onChange={e => { setCaptchaInput(e.target.value); setCaptchaError(''); }}
+                                        placeholder="الجواب"
+                                        dir="ltr"
+                                        className={`w-28 h-12 px-4 border rounded-xl text-gray-900 text-sm font-medium text-center focus:outline-none focus:ring-2 transition-all ${captchaError ? 'border-red-400 bg-red-50/30 focus:border-red-500 focus:ring-red-500/15' : 'bg-gray-50 border-gray-200 focus:border-purple-500 focus:bg-white focus:ring-purple-500/15'}`}
+                                    />
+                                    <button type="button" onClick={refreshCaptcha} className="h-12 px-3 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all" title="تغيير السؤال">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></svg>
+                                    </button>
+                                </div>
+                                {captchaError && (
+                                    <p className="text-xs text-red-500 font-medium flex items-center gap-1 mt-0.5">
+                                        <AlertCircle size={11} strokeWidth={2.5} />
+                                        {captchaError}
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full h-14 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl flex items-center justify-center gap-3 transition-all disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-purple-600/20 active:scale-[0.98] py-4 text-base"
+                            className="w-full h-14 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl flex items-center justify-center gap-3 transition-all disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-purple-600/20 active:scale-[0.98] text-base"
                         >
                             {isSubmitting ? (
                                 <span className="opacity-90">جاري الإرسال...</span>
                             ) : (
                                 <>
-                                    <span>إرسال الطلب</span>
+                                    <span>إرسال طلب الحجز</span>
                                     <Send size={18} strokeWidth={2.5} className="rotate-180" />
                                 </>
                             )}
                         </button>
-
                     </div>
                 </form>
             </div>

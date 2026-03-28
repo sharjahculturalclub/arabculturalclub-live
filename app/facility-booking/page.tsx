@@ -81,7 +81,7 @@ export default async function FacilityBookingPage() {
               <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4">{pageTitle}</h1>
             )}
             {pageDescription && (
-              <p className="text-xl max-w-2xl mx-auto leading-relaxed text-primary">{pageDescription}</p>
+              <div className="text-xl max-w-2xl mx-auto leading-relaxed text-primary" dangerouslySetInnerHTML={{ __html: pageDescription }} />
             )}
           </div>
         </div>

@@ -36,15 +36,24 @@ export async function submitLectureHallBookingAction(
 
         // Form fields — matching CF7 shortcodes
         const textFields = [
-            'applicant_name', 'email', 'identity_number', 'mobile_number', 'booking_purpose',
-            'requested_hall', 'requested_days_count', 'from_time', 'to_time', 'booking_period', 'booking_day'
+            'booking_purpose', 'requested_hall', 'requested_hall_other',
+            'requested_event_date', 'requested_days', 'booking_period',
+            'requested_time_from', 'requested_time_to', 'booking_notes',
+            'applicant_full_name', 'applicant_emirates_id', 'applicant_mobile', 'applicant_email',
+            'declaration_name',
         ];
 
         for (const field of textFields) {
             cf7FormData.append(field, (formData.get(field) as string) || '');
         }
 
-        cf7FormData.append('terms_acceptance', formData.get('terms_acceptance') ? '1. الالتزام باستخدام القاعة المخصصة فقط، ولا يسمح باستخدام الساحات وممرات النادي.' : '');
+        // File attachment
+        const attachFile = formData.get('applicant_id_attachment') as File | null;
+        if (attachFile && attachFile.size > 0) {
+            cf7FormData.append('applicant_id_attachment', attachFile, attachFile.name);
+        }
+
+        cf7FormData.append('rules_accepted', formData.get('rules_accepted') ? 'أوافق على شروط الحجز والاستخدام' : '');
 
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -63,7 +72,7 @@ export async function submitLectureHallBookingAction(
         if (result.status === 'mail_sent') {
             return {
                 success: true,
-                message: result.message === 'Thank you for your message. It has been sent.' ? 'تم إرسال رسالتك بنجاح!' : (result.message || 'تم إرسال رسالتك بنجاح!'),
+                message: 'تم إرسال الطلب بنجاح. سيتم التواصل معكم بعد مراجعة البيانات.',
             };
         } else if (result.status === 'validation_failed') {
             return {
