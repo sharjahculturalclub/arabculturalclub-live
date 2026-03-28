@@ -267,7 +267,7 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
                     ? captchaRef.current
                     : document.querySelector<HTMLElement>(`[name="${firstKey}"]`);
                 if (el) {
-                    const y = el.getBoundingClientRect().top + window.scrollY - 140;
+                    const y = el.getBoundingClientRect().top + window.scrollY - 180;
                     window.scrollTo({ top: y, behavior: 'smooth' });
                 }
             }, 0);
@@ -304,7 +304,7 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
         } finally {
             setIsSubmitting(false);
             if (topRef.current) {
-                const y = topRef.current.getBoundingClientRect().top + window.scrollY - 120;
+                const y = topRef.current.getBoundingClientRect().top + window.scrollY - 180;
                 window.scrollTo({ top: y, behavior: 'smooth' });
             }
         }
@@ -315,7 +315,7 @@ export default function SwimmingSubscriptionForm({ formId }: SwimmingSubscriptio
 
             {/* ── Status Banners ── */}
             {status === 'success' && (
-                <div className="mb-6 flex items-start gap-4 p-5 bg-green-50 border border-green-200 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="mb-6 flex items-center gap-4 p-5 bg-green-50 border border-green-200 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="p-2 bg-green-100 rounded-xl shrink-0">
                         <ShieldCheck size={22} className="text-green-600" />
                     </div>
