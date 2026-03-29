@@ -65,7 +65,7 @@ export default async function OurPrograms() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/programs`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageOptions?.pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/programs` }
+          { name: pageOptions?.pageTitle || 'البرامج', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/programs` }
         ]}
       />
       <OurProgramsClient data={data} />

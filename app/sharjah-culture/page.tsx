@@ -9,12 +9,18 @@ import { getMetadataImages, SITE_ORIGIN } from '@/lib/utils/seo';
 export async function generateMetadata(): Promise<Metadata> {
   const images = await getMetadataImages();
   const canonicalUrl = `${SITE_ORIGIN}/sharjah-culture`;
+  const title = 'الشارقة.. بين عراقة التراث وحداثة الفكر';
+  const description = 'تعرّف على المشروع الثقافي لإمارة الشارقة ودور النادي الثقافي العربي في إثراء المشهد الثقافي.';
 
   return {
+    title,
+    description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
+      title,
+      description,
       url: canonicalUrl,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
@@ -22,6 +28,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
+      title,
+      description,
       images: images.map(img => img.url),
     },
   };
@@ -34,9 +42,12 @@ export default function SharjahCulture() {
   return (
     <div className="pt-25 pb-25">
       <SEO
+        title="الشارقة.. بين عراقة التراث وحداثة الفكر"
+        description="تعرّف على المشروع الثقافي لإمارة الشارقة ودور النادي الثقافي العربي في إثراء المشهد الثقافي."
         url={`${SITE_ORIGIN}/sharjah-culture`}
         breadcrumbs={[
           { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+          { name: "الشارقة الثقافية", item: `${SITE_ORIGIN}/sharjah-culture` },
         ]}
       />
 

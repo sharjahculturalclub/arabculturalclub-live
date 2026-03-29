@@ -68,7 +68,7 @@ export default async function FaqPage() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/faq`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/faq` },
+          { name: pageTitle || 'الأسئلة الشائعة', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/faq` },
         ]}
       />
 

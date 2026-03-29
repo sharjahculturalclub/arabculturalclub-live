@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { ShareButtons } from "@/components/ShareButtons";
+import { SEO } from "@/components/SEO";
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
 import { normalizeImageUrl } from "@/lib/utils/url";
 import {
@@ -111,46 +112,25 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
     const seo = post.seoOptions;
     const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/${category}/${id}`;
 
-    const breadcrumbsSchema = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "الرئيسية",
-                "item": `${SITE_ORIGIN}/`
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "أخبار النادي",
-                "item": `${SITE_ORIGIN}/news`
-            },
-            ...(post.categories?.nodes?.[0] ? [{
-                "@type": "ListItem",
-                "position": 3,
-                "name": post.categories.nodes[0].name,
-                "item": `${SITE_ORIGIN}/category/${post.categories.nodes[0].slug}`
-            }, {
-                "@type": "ListItem",
-                "position": 4,
-                "name": post.title,
-                "item": canonicalUrl
-            }] : [{
-                "@type": "ListItem",
-                "position": 3,
-                "name": post.title,
-                "item": canonicalUrl
-            }])
-        ]
-    };
+    const breadcrumbs: { name?: string; item: string }[] = [
+        { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+        { name: "أخبار النادي", item: `${SITE_ORIGIN}/news` },
+        ...(post.categories?.nodes?.[0] ? [
+            { name: post.categories.nodes[0].name, item: `${SITE_ORIGIN}/category/${post.categories.nodes[0].slug}` },
+            { name: post.title || undefined, item: canonicalUrl },
+        ] : [
+            { name: post.title || undefined, item: canonicalUrl },
+        ]),
+    ];
 
     return (
         <div className="pb-30 pt-30 z-0 relative">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
+            <SEO
+                title={seo?.seoTitle || post.title || undefined}
+                description={seo?.metaDescription || undefined}
+                url={canonicalUrl}
+                pageType="Article"
+                breadcrumbs={breadcrumbs}
             />
             <div className="container max-w-7xl mx-auto px-4 md:px-6 pt-12">
                 {/* Breadcrumbs */}
@@ -416,9 +396,7 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                             }
                             : undefined,
                         publisher: {
-                            "@type": "Organization",
-                            name: "النادي الثقافي العربي",
-                            url: `${SITE_ORIGIN}`,
+                            "@id": "https://shjarabclub.ae/#organization",
                         },
                         image: normalizeImageUrl(post.featuredImage?.node?.sourceUrl || "") || undefined,
                         description: seo?.metaDescription || undefined,

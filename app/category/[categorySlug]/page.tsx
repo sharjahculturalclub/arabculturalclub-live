@@ -5,6 +5,7 @@ import { ChevronLeft, ArrowRight } from "lucide-react";
 
 import { fetchCategoryWithPosts } from "@/lib/actions/site/categoryAction";
 import { NewsCard } from "@/components/Cards";
+import { SEO } from "@/components/SEO";
 
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
 import { normalizeImageUrl } from "@/lib/utils/url";
@@ -70,26 +71,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
     const articles = categoryData.posts.nodes;
 
-    const canonicalUrl = `${SITE_ORIGIN}/category/${categorySlug}`;
-
-    const breadcrumbSchema = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "الرئيسية",
-                "item": `${SITE_ORIGIN}/`
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": categoryData.name,
-                "item": canonicalUrl
-            }
-        ]
-    };
+    const canonicalUrl = categoryData.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/category/${categorySlug}`;
 
     const collectionSchema = {
         "@context": "https://schema.org",
@@ -109,30 +91,20 @@ export default async function CategoryPage({ params }: PageProps) {
         "inLanguage": "ar",
     };
 
-    const webPageSchema = {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": categoryData.name,
-        "description": categoryData.description || "",
-        "url": canonicalUrl,
-        "publisher": {
-            "@id": `${SITE_ORIGIN}/#organization`
-        }
-    };
-
     return (
         <div className="pb-30 pt-30 z-0 relative min-h-screen">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            <SEO
+                title={categoryData.seoOptions?.seoTitle || categoryData.name || undefined}
+                description={categoryData.seoOptions?.metaDescription || categoryData.description || undefined}
+                url={canonicalUrl}
+                breadcrumbs={[
+                    { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+                    { name: categoryData.name || undefined, item: canonicalUrl },
+                ]}
             />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
             />
             <div className="container max-w-7xl mx-auto px-4 md:px-6">
 

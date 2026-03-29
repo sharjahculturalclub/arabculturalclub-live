@@ -67,7 +67,7 @@ export default async function LectureHallBookingPage() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/lecture-hall-booking`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/lecture-hall-booking` },
+          { name: pageTitle || 'حجز قاعة المحاضرات', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/lecture-hall-booking` },
         ]}
       />
 

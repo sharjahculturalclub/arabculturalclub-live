@@ -67,7 +67,7 @@ export default async function SwimmingSubscriptionPage() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/swimming-subscription`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/swimming-subscription` },
+          { name: pageTitle || 'الاشتراك في السباحة', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/swimming-subscription` },
         ]}
       />
 

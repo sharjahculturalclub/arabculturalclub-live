@@ -57,7 +57,7 @@ export default async function EventsPage() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/events`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageOptions?.pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/events` },
+          { name: pageOptions?.pageTitle || 'الفعاليات', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/events` },
         ]}
       />
       <EventsPageClient

@@ -67,7 +67,7 @@ export default async function ShareOpinionsPage() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/share`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/share` },
+          { name: pageTitle || 'شارك معنا', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/share` },
         ]}
       />
 

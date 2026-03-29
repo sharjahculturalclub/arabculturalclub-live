@@ -69,7 +69,7 @@ export default async function FacilityBookingPage() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/facility-booking`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/facility-booking` },
+          { name: pageTitle || 'حجز المرافق', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/facility-booking` },
         ]}
       />
 

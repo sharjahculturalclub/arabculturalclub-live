@@ -67,7 +67,7 @@ export default async function MembershipRegistrationPage() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/membership/registration`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/membership/registration` },
+          { name: pageTitle || 'التسجيل', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/membership/registration` },
         ]}
       />
 

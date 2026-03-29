@@ -439,51 +439,25 @@ export default async function Home() {
   const posts = data?.posts ?? [];
   const seo = data?.seoOptions;
 
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    ...(seo?.seoTitle && { "name": seo.seoTitle }),
-    ...(seo?.canonicalUrl && { "url": seo.canonicalUrl }),
-    ...(seo?.metaDescription && { "description": seo.metaDescription }),
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": `${SITE_ORIGIN}/search?q={search_term_string}`
-      },
-      "query-input": "required name=search_term_string"
-    }
-  };
-
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "النادي الثقافي العربي",
-    "url": `${SITE_ORIGIN}`,
-    "logo": "https://shjarabclub.ae/logo.png",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+971-6-567-2222",
-      "contactType": "customer service",
-      "areaServed": "AE",
-      "availableLanguage": "Arabic"
-    }
-  };
+  const homeUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/`;
 
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
+    "@id": `${homeUrl}#webpage`,
     ...(seo?.seoTitle && { "name": seo.seoTitle }),
     ...(seo?.metaDescription && { "description": seo.metaDescription }),
-    "url": seo?.canonicalUrl || `${SITE_ORIGIN}`,
-    "publisher": {
-      "@id": "https://shjarabclub.ae/#organization"
-    }
+    "url": homeUrl,
+    "inLanguage": "ar",
+    "isPartOf": { "@id": "https://shjarabclub.ae/#website" },
+    "about": { "@id": "https://shjarabclub.ae/#organization" },
+    "breadcrumb": { "@id": `${homeUrl}#breadcrumb` },
   };
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": `${homeUrl}#breadcrumb`,
     "itemListElement": [
       {
         "@type": "ListItem",
@@ -496,14 +470,6 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}

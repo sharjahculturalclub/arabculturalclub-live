@@ -65,7 +65,7 @@ export default async function JoinUs() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/membership`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageOptions?.pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/membership` }
+          { name: pageOptions?.pageTitle || 'العضوية', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/membership` }
         ]}
       />
       <JoinUsClient data={data} />
