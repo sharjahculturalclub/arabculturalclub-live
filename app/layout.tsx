@@ -60,7 +60,7 @@ export default async function RootLayout({
     "name": "النادي الثقافي العربي - الشارقة",
     "alternateName": "Arab Cultural Club - Sharjah",
     "url": "https://shjarabclub.ae",
-    "logo": logoUrl || "https://shjarabclub.ae/logo.png",
+    "logo": logoUrl?.startsWith("/") ? `https://shjarabclub.ae${logoUrl}` : (logoUrl || "https://shjarabclub.ae/logo.png"),
     "email": "info@shjarabclub.ae",
     "telephone": "+97165560077",
     "faxNumber": "+97165570770",
