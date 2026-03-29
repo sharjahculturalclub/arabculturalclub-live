@@ -60,19 +60,18 @@ export function NewsPageClient({
     const [posts, setPosts] = useState(initialPosts);
     const [hasNextPage, setHasNextPage] = useState(initialHasNextPage);
     const [endCursor, setEndCursor] = useState(initialEndCursor);
-    const [activeCategory, setActiveCategory] = useState<string>("الكل");
+    const [activeCategory, setActiveCategory] = useState<string>("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [isPending, startTransition] = useTransition();
     const [isLoadingMore, setIsLoadingMore] = useState(false);
 
     /* ── Filter by category (server fetch) ─── */
     const handleCategoryChange = useCallback(
-        (categoryName: string) => {
-            setActiveCategory(categoryName);
+        (slug: string, _name: string) => {
+            setActiveCategory(slug);
             setSearchTerm("");
             startTransition(async () => {
-                const catToFetch =
-                    categoryName === "الكل" ? undefined : categoryName;
+                const catToFetch = slug === "all" ? undefined : slug;
                 const result = await fetchNewsPosts(6, undefined, catToFetch);
                 setPosts(result.posts);
                 setHasNextPage(result.hasNextPage);
@@ -87,8 +86,7 @@ export function NewsPageClient({
         if (!hasNextPage || !endCursor) return;
         setIsLoadingMore(true);
         try {
-            const catToFetch =
-                activeCategory === "الكل" ? undefined : activeCategory;
+            const catToFetch = activeCategory === "all" ? undefined : activeCategory;
             const result = await fetchNewsPosts(6, endCursor, catToFetch);
             setPosts((prev) => [...prev, ...result.posts]);
             setHasNextPage(result.hasNextPage);
@@ -212,8 +210,8 @@ export function NewsPageClient({
                     {/* Category Tabs */}
                     <div className="flex flex-wrap gap-2">
                         <button
-                            onClick={() => handleCategoryChange("الكل")}
-                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeCategory === "الكل"
+                            onClick={() => handleCategoryChange("all", "الكل")}
+                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeCategory === "all"
                                 ? "bg-club-purple text-white shadow-lg"
                                 : "bg-white border border-border text-muted-foreground hover:border-club-purple hover:text-club-purple"
                                 }`}
@@ -223,8 +221,8 @@ export function NewsPageClient({
                         {categories.map((cat) => (
                             <button
                                 key={cat.databaseId}
-                                onClick={() => handleCategoryChange(cat.name)}
-                                className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeCategory === cat.name
+                                onClick={() => handleCategoryChange(cat.slug, cat.name)}
+                                className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeCategory === cat.slug
                                     ? "bg-club-purple text-white shadow-lg"
                                     : "bg-white border border-border text-muted-foreground hover:border-club-purple hover:text-club-purple"
                                     }`}
@@ -291,7 +289,7 @@ export function NewsPageClient({
                                 <button
                                     onClick={() => {
                                         setSearchTerm("");
-                                        handleCategoryChange("الكل");
+                                        handleCategoryChange("all", "الكل");
                                     }}
                                     className="text-club-purple font-bold hover:underline"
                                 >
