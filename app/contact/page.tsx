@@ -84,7 +84,8 @@ export default async function ContactPage() {
     fetchContactPageData(),
     fetchLogoData(),
   ]);
-  const logoUrl = logoData?.siteLogoUrl ? normalizeImageUrl(logoData.siteLogoUrl) : "https://shjarabclub.ae/logo.png";
+  const rawLogoUrl = logoData?.siteLogoUrl ? normalizeImageUrl(logoData.siteLogoUrl) : null;
+  const logoUrl = rawLogoUrl?.startsWith("/") ? `https://shjarabclub.ae${rawLogoUrl}` : (rawLogoUrl || "https://shjarabclub.ae/logo.png");
 
   if (!data) {
     return (
