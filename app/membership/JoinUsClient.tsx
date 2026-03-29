@@ -90,7 +90,7 @@ export default function JoinUsClient({ data }: { data: JoinUsPageData }) {
                                             </div>
                                             <div className="px-7 pb-6 pt-2 flex items-center justify-between text-sm font-bold text-club-purple mt-auto">
                                                 <span>{card.linkLabel || 'انتقل إلى الصفحة'}</span>
-                                                <span className="text-xs text-muted-foreground uppercase">{card.bottomLabel || 'Join Us'}</span>
+                                                {/* <span className="text-xs text-muted-foreground uppercase">{card.bottomLabel || 'Join Us'}</span> */}
                                             </div>
                                         </Link>
                                     </motion.div>

@@ -33,8 +33,8 @@ function mapPost(post: NewsPost) {
 
 export function SearchResultsClient({ query, results }: SearchResultsClientProps) {
     return (
-        <div className="container max-w-7xl mx-auto px-4 md:px-6">
-            <div className="mb-12">
+        <div className="container max-w-7xl mx-auto px-4 md:px-6 ">
+            <div className="mb-12 mt-12">
                 <Link href="/" className="text-club-purple font-bold flex items-center gap-2 mb-6 hover:gap-3 transition-all">
                     <ArrowRight size={18} />
                     العودة للرئيسية
