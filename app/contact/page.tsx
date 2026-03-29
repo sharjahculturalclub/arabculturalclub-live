@@ -11,6 +11,7 @@ import ContactForm from './ContactForm';
 
 import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
+import { fetchLogoData } from '@/lib/actions/site/logoAction';
 
 // ── Icon map for dynamic rendering ────────────────────────────────
 const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
@@ -79,7 +80,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // ── Page Component ────────────────────────────────────────────────
 export default async function ContactPage() {
-  const data = await fetchContactPageData();
+  const [data, logoData] = await Promise.all([
+    fetchContactPageData(),
+    fetchLogoData(),
+  ]);
+  const logoUrl = logoData?.siteLogoUrl ? normalizeImageUrl(logoData.siteLogoUrl) : "https://shjarabclub.ae/logo.png";
 
   if (!data) {
     return (
@@ -93,6 +98,55 @@ export default async function ContactPage() {
   }
 
   const { pageTitle, pageDescription, sections, seoOptions } = data;
+  const pageUrl = seoOptions?.canonicalUrl || `${SITE_ORIGIN}/contact`;
+
+  const culturalOrgSchema = {
+    "@context": "https://schema.org",
+    "@type": "CulturalOrganization",
+    "@id": "https://shjarabclub.ae/#localbusiness",
+    "name": "النادي الثقافي العربي - الشارقة",
+    "alternateName": "Arab Cultural Club - Sharjah",
+    "image": logoUrl,
+    "url": "https://shjarabclub.ae",
+    "telephone": "+97165560077",
+    "faxNumber": "+97165570770",
+    "email": "info@shjarabclub.ae",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1, 14 street, Al Majaz 3",
+      "postOfficeBoxNumber": "1913",
+      "addressLocality": "Sharjah",
+      "addressRegion": "Sharjah",
+      "addressCountry": "AE",
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 25.346306,
+      "longitude": 55.420889,
+    },
+    "hasMap": "https://maps.app.goo.gl/RW8sQuoG3pV2DBqPA",
+    "sameAs": [
+      "https://www.facebook.com/shjarabclub/",
+      "https://www.instagram.com/shjarabclub/",
+      "https://www.threads.com/@shjarabclub",
+      "https://x.com/shjarabclub",
+      "https://www.youtube.com/@shjarabclub",
+      "https://www.linkedin.com/company/shjarabclub",
+    ],
+  };
+
+  const placeSchema = {
+    "@context": "https://schema.org",
+    "@type": "Place",
+    "@id": "https://shjarabclub.ae/#place",
+    "name": "النادي الثقافي العربي - الشارقة",
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 25.346306,
+      "longitude": 55.420889,
+    },
+    "hasMap": "https://maps.app.goo.gl/RW8sQuoG3pV2DBqPA",
+  };
 
   const contactFormAndInfo = findContactSection<ContactFormAndInfoSection>(
     sections,
@@ -109,11 +163,20 @@ export default async function ContactPage() {
       <SEO
         title={seoOptions?.seoTitle || pageTitle || undefined}
         description={seoOptions?.metaDescription || pageDescription || undefined}
-        url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/contact`}
+        url={pageUrl}
+        pageType="ContactPage"
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/contact` },
+          { name: pageTitle || 'تواصل معنا', item: pageUrl },
         ]}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(culturalOrgSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(placeSchema) }}
       />
 
       {/* Page Header */}

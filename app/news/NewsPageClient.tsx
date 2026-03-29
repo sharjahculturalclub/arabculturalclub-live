@@ -126,55 +126,13 @@ export function NewsPageClient({
         },
     };
 
-    const breadcrumbSchema = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "الرئيسية",
-                "item": `${SITE_ORIGIN}/`
-            },
-            ...(pageTitle ? [{
-                "@type": "ListItem",
-                "position": 2,
-                "name": pageTitle,
-                "item": pageUrl
-            }] : [])
-        ]
-    };
-
-    const webPageSchema = {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        ...(pageTitle && { "name": pageTitle }),
-        ...(pageDescription && { "description": pageDescription }),
-        "url": pageUrl,
-        "publisher": {
-            "@id": "https://shjarabclub.ae/#organization"
-        }
-    };
-
     return (
         <div className="pt-25 pb-25">
-            {/* JSON-LD */}
+            {/* CollectionPage JSON-LD — WebPage + BreadcrumbList rendered by <SEO> in parent */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify(collectionSchema),
-                }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify(breadcrumbSchema),
-                }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify(webPageSchema),
                 }}
             />
 

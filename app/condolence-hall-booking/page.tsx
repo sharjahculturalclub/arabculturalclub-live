@@ -67,7 +67,7 @@ export default async function CondolenceHallBookingPage() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/condolence-hall-booking`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/condolence-hall-booking` },
+          { name: pageTitle || 'حجز قاعة العزاء', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/condolence-hall-booking` },
         ]}
       />
 

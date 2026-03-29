@@ -20,15 +20,18 @@ const socialIconMap: Record<string, LucideIcon> = {
 export async function generateMetadata(): Promise<Metadata> {
   const images = await getMetadataImages();
 
+  const title = 'أقلام النادي';
+  const description = 'نخبة من المثقفين والأدباء الذين يساهمون بأفكارهم وإبداعاتهم في إثراء منصتنا الثقافية.';
+
   return {
-    title: undefined,
-    description: undefined,
+    title,
+    description,
     alternates: {
       canonical: `${SITE_ORIGIN}/authors`,
     },
     openGraph: {
-      title: undefined,
-      description: undefined,
+      title,
+      description,
       url: `${SITE_ORIGIN}/authors`,
       siteName: 'النادي الثقافي العربي',
       type: 'website',
@@ -36,8 +39,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: undefined,
-      description: undefined,
+      title,
+      description,
       images: images.map(img => img.url),
     },
   };
@@ -51,12 +54,12 @@ export default async function AuthorsPage() {
   return (
     <div className="pt-25 pb-25">
       <SEO
-        title={undefined}
-        description={undefined}
+        title="أقلام النادي"
+        description="نخبة من المثقفين والأدباء الذين يساهمون بأفكارهم وإبداعاتهم في إثراء منصتنا الثقافية."
         url={`${SITE_ORIGIN}/authors`}
         breadcrumbs={[
           { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
-          { name: "كتابنا ومبدعونا", item: `${SITE_ORIGIN}/authors` }
+          { name: "أقلام النادي", item: `${SITE_ORIGIN}/authors` },
         ]}
       />
 

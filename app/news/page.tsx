@@ -62,7 +62,7 @@ export default async function NewsPage() {
                 url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/news`}
                 breadcrumbs={[
                     { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-                    { name: pageOptions?.pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/news` },
+                    { name: pageOptions?.pageTitle || 'الأخبار', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/news` },
                 ]}
             />
             <NewsPageClient

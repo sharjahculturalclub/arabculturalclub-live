@@ -56,7 +56,7 @@ export default async function MembershipBenefits() {
         url={`${SITE_ORIGIN}/membership-benefits`}
         breadcrumbs={[
           { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
-          { name: data.pageOptions?.pageTitle || undefined, item: `${SITE_ORIGIN}/membership-benefits` }
+          { name: data.pageOptions?.pageTitle || 'مزايا العضوية', item: `${SITE_ORIGIN}/membership-benefits` }
         ]}
       />
       <MembershipBenefitsClient data={data} />

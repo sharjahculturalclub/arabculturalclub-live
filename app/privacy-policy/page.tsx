@@ -65,7 +65,7 @@ export default async function PrivacyPolicy() {
         url={data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/privacy-policy`}
         breadcrumbs={[
           { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
-          { name: data.pageOptions?.pageTitle || undefined, item: data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/privacy-policy` }
+          { name: data.pageOptions?.pageTitle || 'سياسة الخصوصية', item: data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/privacy-policy` }
         ]}
       />
       <PrivacyPolicyClient data={data} />

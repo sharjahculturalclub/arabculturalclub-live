@@ -57,7 +57,7 @@ export default async function GalleryPage() {
         url={seoOptions?.canonicalUrl || `${SITE_ORIGIN}/gallery`}
         breadcrumbs={[
           { name: 'الرئيسية', item: `${SITE_ORIGIN}/` },
-          { name: pageOptions?.pageTitle || undefined, item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/gallery` },
+          { name: pageOptions?.pageTitle || 'معرض الصور', item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/gallery` },
         ]}
       />
       <GalleryPageClient

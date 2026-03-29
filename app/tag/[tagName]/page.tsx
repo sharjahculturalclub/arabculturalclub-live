@@ -5,6 +5,7 @@ import { Tag, ArrowRight, ChevronLeft } from "lucide-react";
 
 import { fetchTagWithPosts } from "@/lib/actions/site/tagAction";
 import { NewsCard } from "@/components/Cards";
+import { SEO } from "@/components/SEO";
 
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
 import { normalizeImageUrl } from "@/lib/utils/url";
@@ -70,26 +71,7 @@ export default async function TagPage({ params }: PageProps) {
 
   const articles = tagData.posts.nodes;
 
-  const canonicalUrl = `${SITE_ORIGIN}/tag/${tagName}`;
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "الرئيسية",
-        "item": `${SITE_ORIGIN}/`
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": tagData.name,
-        "item": canonicalUrl
-      }
-    ]
-  };
+  const canonicalUrl = tagData.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/tag/${tagName}`;
 
   const collectionSchema = {
     "@context": "https://schema.org",
@@ -109,30 +91,20 @@ export default async function TagPage({ params }: PageProps) {
     "inLanguage": "ar",
   };
 
-  const webPageSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": `وسم: ${tagData.name}`,
-    "description": tagData.description || `تصفح جميع المقالات والفعاليات المتعلقة بـ ${tagData.name}.`,
-    "url": canonicalUrl,
-    "publisher": {
-      "@id": `${SITE_ORIGIN}/#organization`
-    }
-  };
-
   return (
     <div className="pt-25 pb-25 min-h-screen relative z-0">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      <SEO
+        title={tagData.seoOptions?.seoTitle || (tagData.name ? `وسم: ${tagData.name}` : undefined)}
+        description={tagData.seoOptions?.metaDescription || tagData.description || undefined}
+        url={canonicalUrl}
+        breadcrumbs={[
+          { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
+          { name: tagData.name ? `وسم: ${tagData.name}` : undefined, item: canonicalUrl },
+        ]}
       />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
       />
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
 

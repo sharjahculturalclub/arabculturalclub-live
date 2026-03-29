@@ -8,16 +8,17 @@ interface SEOProps {
   type?: string;
   image?: string;
   url?: string;
+  /** Schema.org @type for the page (default: "WebPage") */
+  pageType?: string;
   breadcrumbs?: { name?: string; item: string }[];
 }
 
 export const SEO: React.FC<SEOProps> = ({
   title,
   description,
-  type = 'website',
-  image = 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200',
   url,
-  breadcrumbs
+  pageType = 'WebPage',
+  breadcrumbs,
 }) => {
   const fullTitle = title || undefined;
 
@@ -36,58 +37,45 @@ export const SEO: React.FC<SEOProps> = ({
     }
   }, [fullTitle, description]);
 
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "النادي الثقافي العربي",
-    "url": "https://shjarabclub.ae",
-    "logo": "https://shjarabclub.ae/logo.png",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+971-6-567-2222",
-      "contactType": "customer service",
-      "areaServed": "AE",
-      "availableLanguage": "Arabic"
-    }
-  };
-
   const webPageSchema = url ? {
     "@context": "https://schema.org",
-    "@type": "WebPage",
+    "@type": pageType,
+    "@id": `${url}#webpage`,
     ...(fullTitle && { "name": fullTitle }),
     ...(description && { "description": description }),
     "url": url,
-    "publisher": {
-      "@id": "https://shjarabclub.ae/#organization"
-    }
+    "inLanguage": "ar",
+    "isPartOf": { "@id": "https://shjarabclub.ae/#website" },
+    "about": { "@id": "https://shjarabclub.ae/#organization" },
+    "breadcrumb": { "@id": `${url}#breadcrumb` },
   } : null;
 
   const validCrumbs = breadcrumbs?.filter(c => c.name) ?? [];
-  const breadcrumbSchema = validCrumbs.length > 0 ? {
+  const breadcrumbSchema = validCrumbs.length > 0 && url ? {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": `${url}#breadcrumb`,
     "itemListElement": validCrumbs.map((crumb, idx) => ({
       "@type": "ListItem",
       "position": idx + 1,
       "name": crumb.name,
-      "item": crumb.item
-    }))
+      "item": crumb.item,
+    })),
   } : null;
 
   return (
     <>
-      <script type="application/ld+json">
-        {JSON.stringify(organizationSchema)}
-      </script>
       {webPageSchema && (
-        <script type="application/ld+json">
-          {JSON.stringify(webPageSchema)}
-        </script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+        />
       )}
       {breadcrumbSchema && (
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema)}
-        </script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
       )}
     </>
   );

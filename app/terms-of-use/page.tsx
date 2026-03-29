@@ -65,7 +65,7 @@ export default async function TermsOfUse() {
         url={data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/terms-of-use`}
         breadcrumbs={[
           { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
-          { name: data.pageOptions?.pageTitle || undefined, item: data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/terms-of-use` }
+          { name: data.pageOptions?.pageTitle || 'شروط الاستخدام', item: data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/terms-of-use` }
         ]}
       />
       <PrivacyPolicyClient data={data} />

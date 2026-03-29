@@ -65,7 +65,7 @@ export default async function About() {
         url={data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/about`}
         breadcrumbs={[
           { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
-          { name: data.pageOptions?.pageTitle || undefined, item: data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/about` }
+          { name: data.pageOptions?.pageTitle || 'عن النادي', item: data?.seoOptions?.canonicalUrl || `${SITE_ORIGIN}/about` }
         ]}
       />
       <AboutClient data={data} />
