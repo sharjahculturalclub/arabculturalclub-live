@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import {
   fetchFacilityBookingPageData,
 } from '@/lib/actions/site/facilityBookingPageAction';
+
+export const revalidate = 86400;
 import { SEO } from '@/components/SEO';
 import FacilityBookingForm from './FacilityBookingForm';
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';

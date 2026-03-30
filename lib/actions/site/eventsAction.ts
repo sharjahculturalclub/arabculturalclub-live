@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_EVENTS, GET_EVENT_BY_ID, GET_EVENTS_PAGE_OPTIONS } from "@/lib/queries/site/eventsQueries";
 
@@ -35,7 +36,7 @@ export interface EventsData {
     endCursor: string | null;
 }
 
-export async function fetchEvents(first: number = 9, after?: string): Promise<EventsData> {
+export const fetchEvents = cache(async (first: number = 9, after?: string): Promise<EventsData> => {
     try {
         const { data } = await client.query<{
             events: {
@@ -57,9 +58,9 @@ export async function fetchEvents(first: number = 9, after?: string): Promise<Ev
         console.error("[fetchEvents] Error fetching events:", error);
         return { nodes: [], hasNextPage: false, endCursor: null };
     }
-}
+});
 
-export async function fetchEventById(id: string): Promise<EventNode | null> {
+export const fetchEventById = cache(async (id: string): Promise<EventNode | null> => {
     try {
         const { data } = await client.query<{
             event: EventNode;
@@ -74,7 +75,7 @@ export async function fetchEventById(id: string): Promise<EventNode | null> {
         console.error("[fetchEventById] Error fetching event:", error);
         return null;
     }
-}
+});
 
 export interface SeoOptions {
     seoTitle: string | null;
@@ -97,9 +98,9 @@ export interface EventsPageData {
  * Fetch the Events page title & description from WordPress ACF pageOptions.
  * @param uri - The WordPress page URI (e.g. "events")
  */
-export async function fetchEventsPageOptions(
+export const fetchEventsPageOptions = cache(async (
     uri: string
-): Promise<EventsPageData | null> {
+): Promise<EventsPageData | null> => {
     try {
         const { data } = await client.query<{
             pageBy: {
@@ -121,4 +122,4 @@ export async function fetchEventsPageOptions(
         console.error("[fetchEventsPageOptions] Error fetching page options:", error);
         return null;
     }
-}
+});

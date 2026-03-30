@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_HOME_PAGE } from "@/lib/queries/site/homePageQueries";
 
@@ -141,11 +142,11 @@ export function findSection<T extends HomePageSection>(
  * - §4: Single centralized Apollo instance
  * - §8: Server Components by default
  */
-export async function fetchHomePageData(): Promise<{
+export const fetchHomePageData = cache(async (): Promise<{
     sections: HomePageSection[];
     posts: PostNode[];
     seoOptions?: SEOOptions | null;
-} | null> {
+} | null> => {
     try {
         const result = await client.query<HomePageDataType>({
             query: GET_HOME_PAGE,
@@ -167,4 +168,4 @@ export async function fetchHomePageData(): Promise<{
         console.error("Error fetching homepage data:", error);
         return null;
     }
-}
+});

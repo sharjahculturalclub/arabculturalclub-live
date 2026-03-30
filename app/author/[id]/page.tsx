@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+
+export const revalidate = 3600;
 import { notFound } from 'next/navigation';
 import { fetchAuthorDetail, getAuthorImageUrl, getAuthorBio } from '@/lib/actions/site/authorsPageAction';
 import { SEO } from '@/components/SEO';

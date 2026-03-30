@@ -4,6 +4,8 @@ import {
     fetchNewsCategories,
     fetchNewsPageOptions,
 } from "@/lib/actions/site/newsAction";
+
+export const revalidate = 3600;
 import { NewsPageClient } from "./NewsPageClient";
 import { SEO } from "@/components/SEO";
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { fetchEvents, fetchEventsPageOptions } from "@/lib/actions/site/eventsAction";
+
+export const revalidate = 3600;
 import { EventsPageClient } from "./EventsPageClient";
 import { SEO } from "@/components/SEO";
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";

@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_AUTHORS_LIST, GET_AUTHOR_DETAIL } from "@/lib/queries/site/authorsPageQueries";
 
@@ -91,7 +92,7 @@ export function getAuthorBio(author: { description?: string | null; userProfileI
 /**
  * Fetch all authors for the listing page
  */
-export async function fetchAuthorsList(): Promise<AuthorListItem[] | null> {
+export const fetchAuthorsList = cache(async (): Promise<AuthorListItem[] | null> => {
     try {
         const result = await client.query<{ users: { nodes: AuthorListItem[] } }>({
             query: GET_AUTHORS_LIST,
@@ -108,12 +109,12 @@ export async function fetchAuthorsList(): Promise<AuthorListItem[] | null> {
         console.error("Error fetching authors list:", error);
         return null;
     }
-}
+});
 
 /**
  * Fetch single author detail by database ID
  */
-export async function fetchAuthorDetail(id: string): Promise<AuthorDetail | null> {
+export const fetchAuthorDetail = cache(async (id: string): Promise<AuthorDetail | null> => {
     try {
         const result = await client.query<{ user: AuthorDetail }>({
             query: GET_AUTHOR_DETAIL,
@@ -131,4 +132,4 @@ export async function fetchAuthorDetail(id: string): Promise<AuthorDetail | null
         console.error("Error fetching author detail:", error);
         return null;
     }
-}
+});

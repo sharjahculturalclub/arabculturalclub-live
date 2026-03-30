@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_SHARE_OPINIONS_PAGE } from "@/lib/queries/site/shareOpinionsPageQueries";
 import { SEOOptions } from "@/lib/actions/site/homePageAction";
@@ -47,7 +48,7 @@ export interface ShareOpinionsPageData {
 
 // ── Server-side fetch ─────────────────────────────────────────────
 
-export async function fetchShareOpinionsPageData(): Promise<ShareOpinionsPageData | null> {
+export const fetchShareOpinionsPageData = cache(async (): Promise<ShareOpinionsPageData | null> => {
     try {
         const result = await client.query<ShareOpinionsPageDataType>({
             query: GET_SHARE_OPINIONS_PAGE,
@@ -85,4 +86,4 @@ export async function fetchShareOpinionsPageData(): Promise<ShareOpinionsPageDat
         console.error("Error fetching share opinions page data:", error);
         return null;
     }
-}
+});

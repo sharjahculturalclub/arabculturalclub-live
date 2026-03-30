@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { fetchMembershipRegistrationPageData } from '@/lib/actions/site/membershipRegistrationPageAction';
+
+export const revalidate = 86400;
 import { SEO } from '@/components/SEO';
 import MembershipForm from './MembershipForm';
 import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';

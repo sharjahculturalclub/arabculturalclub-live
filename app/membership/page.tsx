@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { fetchJoinUsPageData } from '@/lib/actions/site/joinUsPageAction';
+
+export const revalidate = 86400;
 import JoinUsClient from './JoinUsClient';
 import { SEO } from '@/components/SEO';
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';

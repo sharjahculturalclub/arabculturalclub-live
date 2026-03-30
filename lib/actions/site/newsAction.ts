@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import {
     GET_NEWS_POSTS,
@@ -45,11 +46,11 @@ export interface NewsPostsData {
  * Fetch posts for the news listing page.
  * Pass categoryName to filter by category, or omit for all posts.
  */
-export async function fetchNewsPosts(
+export const fetchNewsPosts = cache(async (
     first: number = 12,
     after?: string,
     categoryName?: string
-): Promise<NewsPostsData> {
+): Promise<NewsPostsData> => {
     try {
         const { data } = await client.query<{
             posts: {
@@ -75,9 +76,9 @@ export async function fetchNewsPosts(
         console.error("[fetchNewsPosts] Error fetching news:", error);
         return { posts: [], hasNextPage: false, endCursor: null };
     }
-}
+});
 
-export async function fetchSearchResults(searchString: string): Promise<NewsPost[]> {
+export const fetchSearchResults = cache(async (searchString: string): Promise<NewsPost[]> => {
     try {
         if (!searchString) return [];
 
@@ -98,12 +99,12 @@ export async function fetchSearchResults(searchString: string): Promise<NewsPost
         console.error("[fetchSearchResults] Error fetching search results:", error);
         return [];
     }
-}
+});
 
 /**
  * Fetch all non-empty categories for the news category filter.
  */
-export async function fetchNewsCategories(): Promise<NewsCategory[]> {
+export const fetchNewsCategories = cache(async (): Promise<NewsCategory[]> => {
     try {
         const { data } = await client.query<{
             categories: { nodes: NewsCategory[] };
@@ -117,7 +118,7 @@ export async function fetchNewsCategories(): Promise<NewsCategory[]> {
         console.error("[fetchNewsCategories] Error fetching categories:", error);
         return [];
     }
-}
+});
 
 /* ─── Page Options (Title & Description) ─────────────────── */
 
@@ -142,9 +143,9 @@ export interface NewsPageData {
  * Fetch the News page title & description from WordPress ACF pageOptions.
  * @param uri - The WordPress page URI (e.g. "news" or the Arabic slug)
  */
-export async function fetchNewsPageOptions(
+export const fetchNewsPageOptions = cache(async (
     uri: string
-): Promise<NewsPageData | null> {
+): Promise<NewsPageData | null> => {
     try {
         const { data } = await client.query<{
             pageBy: {
@@ -166,4 +167,4 @@ export async function fetchNewsPageOptions(
         console.error("[fetchNewsPageOptions] Error fetching page options:", error);
         return null;
     }
-}
+});

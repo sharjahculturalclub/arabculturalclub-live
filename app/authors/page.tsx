@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+
+export const revalidate = 86400;
 import { fetchAuthorsList, getAuthorImageUrl, getAuthorBio } from '@/lib/actions/site/authorsPageAction';
 import { SEO } from '@/components/SEO';
 import { BookOpen, ArrowLeft, Facebook, Twitter, Instagram, Youtube, Linkedin, Link2, type LucideIcon } from 'lucide-react';

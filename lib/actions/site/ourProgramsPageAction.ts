@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_OUR_PROGRAMS_PAGE } from "@/lib/queries/site/ourProgramsPageQueries";
 
@@ -38,7 +39,7 @@ export interface OurProgramsPageData {
     sections: OurProgramsPageSection[];
 }
 
-export async function fetchOurProgramsPageData(): Promise<OurProgramsPageData | null> {
+export const fetchOurProgramsPageData = cache(async (): Promise<OurProgramsPageData | null> => {
     try {
         const result = await client.query<{ pageBy: any }>({
             query: GET_OUR_PROGRAMS_PAGE,
@@ -60,4 +61,4 @@ export async function fetchOurProgramsPageData(): Promise<OurProgramsPageData | 
         console.error("Error fetching our programs page data:", error);
         return null;
     }
-}
+});

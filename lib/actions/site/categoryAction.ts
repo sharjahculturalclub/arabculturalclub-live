@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_POSTS_BY_CATEGORY_SLUG } from "@/lib/queries/site/categoryQueries";
 import { RelatedPost } from "./postAction";
@@ -20,11 +21,11 @@ export interface CategoryData {
     };
 }
 
-export async function fetchCategoryWithPosts(
+export const fetchCategoryWithPosts = cache(async (
     slug: string,
     first: number = 12,
     after?: string
-): Promise<CategoryData | null> {
+): Promise<CategoryData | null> => {
     try {
         const { data } = await client.query<{ category: CategoryData | null }>({
             query: GET_POSTS_BY_CATEGORY_SLUG,
@@ -36,4 +37,4 @@ export async function fetchCategoryWithPosts(
     } catch (error) {
         return null;
     }
-}
+});

@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { fetchShareOpinionsPageData } from '@/lib/actions/site/shareOpinionsPageAction';
+
+export const revalidate = 86400;
 import { SEO } from '@/components/SEO';
 import ShareOpinionsForm from './ShareOpinionsForm';
 import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';

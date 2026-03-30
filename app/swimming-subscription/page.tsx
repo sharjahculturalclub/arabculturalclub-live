@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { fetchSwimmingSubscriptionPageData } from '@/lib/actions/site/swimmingSubscriptionPageAction';
+
+export const revalidate = 86400;
 import { SEO } from '@/components/SEO';
 import SwimmingSubscriptionForm from './SwimmingSubscriptionForm';
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';

@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_GALLERIES, GET_GALLERY_PAGE_OPTIONS } from "@/lib/queries/site/galleryQueries";
 
@@ -44,7 +45,7 @@ export interface GalleryPageData {
     seoOptions: SeoOptions | null;
 }
 
-export async function fetchGalleries(): Promise<GalleryNode[]> {
+export const fetchGalleries = cache(async (): Promise<GalleryNode[]> => {
     try {
         const { data } = await client.query<{
             allGallery: {
@@ -60,9 +61,9 @@ export async function fetchGalleries(): Promise<GalleryNode[]> {
         console.error("[fetchGalleries] Error fetching galleries:", error);
         return [];
     }
-}
+});
 
-export async function fetchGalleryPageOptions(uri: string): Promise<GalleryPageData | null> {
+export const fetchGalleryPageOptions = cache(async (uri: string): Promise<GalleryPageData | null> => {
     try {
         const { data } = await client.query<{
             page: {
@@ -85,4 +86,4 @@ export async function fetchGalleryPageOptions(uri: string): Promise<GalleryPageD
         console.error("[fetchGalleryPageOptions] Error fetching page options:", error);
         return null;
     }
-}
+});

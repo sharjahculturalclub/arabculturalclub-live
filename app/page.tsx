@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 
+export const revalidate = 3600;
+
 import { ArrowLeft, Sparkles, Play } from "lucide-react";
 import { SectionTitle } from "@/components/SectionTitle";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";

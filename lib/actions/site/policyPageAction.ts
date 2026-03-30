@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_POLICY_PAGE } from "@/lib/queries/site/policyPageQueries";
 
@@ -33,7 +34,7 @@ export interface PolicyPageData {
     sections: PolicyPageSection[];
 }
 
-export async function fetchPolicyPageData(pageId: number): Promise<PolicyPageData | null> {
+export const fetchPolicyPageData = cache(async (pageId: number): Promise<PolicyPageData | null> => {
     try {
         const result = await client.query<{ pageBy: any }>({
             query: GET_POLICY_PAGE,
@@ -57,4 +58,4 @@ export async function fetchPolicyPageData(pageId: number): Promise<PolicyPageDat
         console.error("Error fetching policy page data:", error);
         return null;
     }
-}
+});

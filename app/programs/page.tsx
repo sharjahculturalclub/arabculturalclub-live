@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { fetchOurProgramsPageData } from '@/lib/actions/site/ourProgramsPageAction';
+
+export const revalidate = 86400;
 import OurProgramsClient from './OurProgramsClient';
 import { SEO } from '@/components/SEO';
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';

@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_CONDOLENCE_HALL_BOOKING_PAGE } from "@/lib/queries/site/condolenceHallBookingPageQueries";
 import { SEOOptions } from "@/lib/actions/site/homePageAction";
@@ -24,7 +25,7 @@ export interface CondolenceHallBookingPageData {
     featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
 }
 
-export async function fetchCondolenceHallBookingPageData(): Promise<CondolenceHallBookingPageData | null> {
+export const fetchCondolenceHallBookingPageData = cache(async (): Promise<CondolenceHallBookingPageData | null> => {
     try {
         const result = await client.query<{
             pageBy: {
@@ -76,4 +77,4 @@ export async function fetchCondolenceHallBookingPageData(): Promise<CondolenceHa
         console.error("Error fetching condolence hall booking page data:", error);
         return null;
     }
-}
+});
