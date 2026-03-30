@@ -18,11 +18,12 @@ export const GET_EVENTS = gql`
           }
         }
         eventOptions {
-          eventDate
+          eventStartDateAndTime
+          eventEndDateAndTime
           eventLocation
+          eventAttendanceMode
           eventRegistrationBlockDescription
           eventRegistrationBlockHeading
-          eventTime
           registerButtonLink
         }
         categories {
@@ -48,11 +49,12 @@ export const GET_EVENT_BY_ID = gql`
         }
       }
       eventOptions {
-        eventDate
+        eventStartDateAndTime
+        eventEndDateAndTime
         eventLocation
+        eventAttendanceMode
         eventRegistrationBlockDescription
         eventRegistrationBlockHeading
-        eventTime
         registerButtonLink
       }
       categories {

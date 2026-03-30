@@ -68,8 +68,45 @@ export default async function EventPage({ params }: EventPageProps) {
   const description = stripHtml(event.content) || undefined;
   const canonicalUrl = `${SITE_ORIGIN}/events/${id}`;
 
+  const attendanceModes = event.eventOptions.eventAttendanceMode ?? [];
+  const hasOnline = attendanceModes.includes('Online');
+  const hasOffline = attendanceModes.includes('Offline');
+  const attendanceModeUrl = hasOnline && hasOffline
+    ? 'https://schema.org/MixedEventAttendanceMode'
+    : hasOnline
+    ? 'https://schema.org/OnlineEventAttendanceMode'
+    : 'https://schema.org/OfflineEventAttendanceMode';
+
+  const eventSchema: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    ...(event.title && { name: event.title }),
+    ...(description && { description }),
+    ...(event.featuredImage?.node?.sourceUrl && {
+      image: (() => {
+        const url = normalizeImageUrl(event.featuredImage!.node.sourceUrl);
+        return url.startsWith('/') ? `https://shjarabclub.ae${url}` : url;
+      })(),
+    }),
+    ...(event.eventOptions.eventStartDateAndTime && { startDate: event.eventOptions.eventStartDateAndTime }),
+    ...(event.eventOptions.eventEndDateAndTime && { endDate: event.eventOptions.eventEndDateAndTime }),
+    eventAttendanceMode: attendanceModeUrl,
+    eventStatus: "https://schema.org/EventScheduled",
+    url: canonicalUrl,
+    ...(event.eventOptions.eventLocation && {
+      location: {
+        "@type": "Place",
+        name: event.eventOptions.eventLocation,
+      },
+    }),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
+      />
       <SEO
         title={event.title || undefined}
         description={description}

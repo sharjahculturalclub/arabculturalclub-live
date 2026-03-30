@@ -8,6 +8,24 @@ import { Calendar, MapPin, Clock, User, Mail, Phone, Users, ArrowLeft } from 'lu
 import { EventNode } from '@/lib/actions/site/eventsAction';
 import { submitJoinEventAction } from '@/lib/actions/site/submitJoinEventAction';
 
+const ARABIC_MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+function formatDate(iso: string | null): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return `${d.getUTCDate()} ${ARABIC_MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
+function formatTime(iso: string | null): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    const h = d.getUTCHours().toString().padStart(2, '0');
+    const m = d.getUTCMinutes().toString().padStart(2, '0');
+    return `${h}:${m}`;
+}
+
 const FORM_ID = '434';
 
 interface JoinEventPageClientProps {
@@ -37,12 +55,17 @@ export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [submitMessage, setSubmitMessage] = useState('');
 
+    const startDate = formatDate(event.eventOptions.eventStartDateAndTime);
+    const endDate = formatDate(event.eventOptions.eventEndDateAndTime);
+    const startTime = formatTime(event.eventOptions.eventStartDateAndTime);
+    const endTime = formatTime(event.eventOptions.eventEndDateAndTime);
+
     const mappedEvent = {
         id: event.eventId,
         title: event.title,
-        date: event.eventOptions.eventDate,
-        time: event.eventOptions.eventTime,
-        location: event.eventOptions.eventLocation,
+        date: startDate && endDate && startDate !== endDate ? `${startDate} – ${endDate}` : startDate,
+        time: startTime && endTime && startTime !== endTime ? `${startTime} – ${endTime}` : startTime,
+        location: event.eventOptions.eventLocation || '',
         description: (event.content ?? '').replace(/<[^>]*>/g, '').substring(0, 160),
     };
 
@@ -108,8 +131,8 @@ export function JoinEventPageClient({ event }: JoinEventPageClientProps) {
             formDataToSend.append('attendees', formData.attendees);
             formDataToSend.append('info', formData.info);
             formDataToSend.append('event_name', mappedEvent.title);
-            formDataToSend.append('event_date', mappedEvent.date || '');
-            formDataToSend.append('event_time', mappedEvent.time || '');
+            formDataToSend.append('event_start_date_and_time', event.eventOptions.eventStartDateAndTime || '');
+            formDataToSend.append('event_end_date_and_time', event.eventOptions.eventEndDateAndTime || '');
             formDataToSend.append('event_location', mappedEvent.location || '');
             formDataToSend.append('formId', FORM_ID);
 

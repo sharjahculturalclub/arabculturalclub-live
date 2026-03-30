@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { SEO } from '@/components/SEO';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { Book, Award, Globe, Music } from 'lucide-react';
-import cultureBanner from '@/assets/acc-banner-3.jpg';
+const cultureBanner = '/assets/acc-background-banner.svg';
 import { getMetadataImages, SITE_ORIGIN } from '@/lib/utils/seo';
 
 export async function generateMetadata(): Promise<Metadata> {

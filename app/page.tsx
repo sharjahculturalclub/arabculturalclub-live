@@ -266,7 +266,14 @@ function EventsBlock({ data }: { data: EventsSection }) {
                     id: event.eventId,
                     title: event.title,
                     image: normalizeImageUrl(event.featuredImage?.node?.sourceUrl || ""),
-                    date: event.eventOptions?.eventDate || "",
+                    date: (() => {
+                      const iso = event.eventOptions?.eventStartDateAndTime;
+                      if (!iso) return "";
+                      const d = new Date(iso);
+                      if (isNaN(d.getTime())) return "";
+                      const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+                      return `${d.getUTCDate()} ${months[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+                    })(),
                     location: event.eventOptions?.eventLocation || "",
                     category: event.categories?.nodes?.[0]?.name || "",
                   }}
