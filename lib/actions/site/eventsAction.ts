@@ -14,12 +14,13 @@ export interface EventNode {
         };
     } | null;
     eventOptions: {
-        eventDate: string;
-        eventLocation: string;
-        eventRegistrationBlockDescription: string;
-        eventRegistrationBlockHeading: string;
-        eventTime: string;
-        registerButtonLink: string;
+        eventStartDateAndTime: string | null;
+        eventEndDateAndTime: string | null;
+        eventLocation: string | null;
+        eventAttendanceMode: string[] | null;
+        eventRegistrationBlockDescription: string | null;
+        eventRegistrationBlockHeading: string | null;
+        registerButtonLink: string | null;
     };
     categories: {
         nodes: {

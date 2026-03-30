@@ -5,9 +5,27 @@ import Link from 'next/link';
 
 import { motion } from 'motion/react';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
-import { Calendar, MapPin, Tag, ArrowLeft, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, MapPin, Tag, ArrowLeft, Clock, ChevronLeft, ChevronRight, Wifi, WifiOff } from 'lucide-react';
 import { EventNode } from '@/lib/actions/site/eventsAction';
 import { normalizeImageUrl } from '@/lib/utils/url';
+
+const ARABIC_MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+function formatDate(iso: string | null): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return `${d.getUTCDate()} ${ARABIC_MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
+function formatTime(iso: string | null): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    const h = d.getUTCHours().toString().padStart(2, '0');
+    const m = d.getUTCMinutes().toString().padStart(2, '0');
+    return `${h}:${m}`;
+}
 
 interface EventDetailPageClientProps {
     event: EventNode;
@@ -17,19 +35,39 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
     const [currentIndex, setCurrentIndex] = React.useState(0);
 
     // Map WordPress data to the structure needed by the component
+    const startDate = formatDate(event.eventOptions.eventStartDateAndTime);
+    const endDate = formatDate(event.eventOptions.eventEndDateAndTime);
+    const startTime = formatTime(event.eventOptions.eventStartDateAndTime);
+    const endTime = formatTime(event.eventOptions.eventEndDateAndTime);
+
+    const dateLabel = startDate && endDate && startDate !== endDate
+        ? `${startDate} – ${endDate}`
+        : startDate;
+    const timeLabel = startTime && endTime && startTime !== endTime
+        ? `${startTime} – ${endTime}`
+        : startTime;
+
+    const isOnline = event.eventOptions.eventAttendanceMode?.includes('Online');
+    const isOffline = event.eventOptions.eventAttendanceMode?.includes('Offline');
+    const attendanceModeLabel = isOnline && isOffline ? 'حضوري وأونلاين' : isOnline ? 'أونلاين' : isOffline ? 'حضوري' : null;
+
     const mappedEvent = {
         id: event.eventId,
         title: event.title,
-        date: event.eventOptions.eventDate,
-        time: event.eventOptions.eventTime,
+        dateLabel,
+        timeLabel,
         location: event.eventOptions.eventLocation,
+        attendanceModeLabel,
+        isOnline,
         category: event.categories?.nodes[0]?.name || 'عام',
         image: normalizeImageUrl(event.featuredImage?.node.sourceUrl || ''),
         description: event.content,
         registrationHeading: event.eventOptions.eventRegistrationBlockHeading,
         registrationDescription: event.eventOptions.eventRegistrationBlockDescription,
         registrationText: 'سجل الآن',
-        registrationLink: `/events/${event.eventId}/join`
+        registrationLink: event.eventOptions.registerButtonLink?.startsWith('http')
+            ? event.eventOptions.registerButtonLink
+            : `/events/${event.eventId}/join`,
     };
 
     // For now, WP only has one featured image. If they add more, it would be here.
@@ -61,20 +99,30 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
                         {mappedEvent.title}
                     </h1>
                     <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                            <Calendar size={16} className="text-club-purple" />
-                            <span>{mappedEvent.date}</span>
-                        </div>
-                        {mappedEvent.time && (
+                        {mappedEvent.dateLabel && (
                             <div className="flex items-center gap-2">
-                                <Clock size={16} className="text-club-purple" />
-                                <span>{mappedEvent.time}</span>
+                                <Calendar size={16} className="text-club-purple" />
+                                <span>{mappedEvent.dateLabel}</span>
                             </div>
                         )}
-                        <div className="flex items-center gap-2">
-                            <MapPin size={16} className="text-club-purple" />
-                            <span>{mappedEvent.location}</span>
-                        </div>
+                        {mappedEvent.timeLabel && (
+                            <div className="flex items-center gap-2">
+                                <Clock size={16} className="text-club-purple" />
+                                <span>{mappedEvent.timeLabel}</span>
+                            </div>
+                        )}
+                        {mappedEvent.location && (
+                            <div className="flex items-center gap-2">
+                                <MapPin size={16} className="text-club-purple" />
+                                <span>{mappedEvent.location}</span>
+                            </div>
+                        )}
+                        {mappedEvent.attendanceModeLabel && (
+                            <div className="flex items-center gap-2">
+                                {mappedEvent.isOnline ? <Wifi size={16} className="text-club-purple" /> : <WifiOff size={16} className="text-club-purple" />}
+                                <span>{mappedEvent.attendanceModeLabel}</span>
+                            </div>
+                        )}
                         <div className="flex items-center gap-2">
                             <Tag size={16} className="text-club-purple" />
                             <span>{mappedEvent.category}</span>

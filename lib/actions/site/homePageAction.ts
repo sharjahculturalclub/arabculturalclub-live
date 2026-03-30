@@ -51,7 +51,7 @@ export interface EventNode {
     title: string;
     featuredImage: ACFImage | null;
     eventOptions: {
-        eventDate: string | null;
+        eventStartDateAndTime: string | null;
         eventLocation: string | null;
     } | null;
     categories: {

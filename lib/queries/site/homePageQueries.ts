@@ -79,7 +79,7 @@ export const GET_HOME_PAGE = gql`
                     }
                   }
                   eventOptions {
-                    eventDate
+                    eventStartDateAndTime
                     eventLocation
                   }
                   categories {

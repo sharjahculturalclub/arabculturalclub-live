@@ -8,6 +8,24 @@ import { fetchEvents, EventNode } from '@/lib/actions/site/eventsAction';
 import { normalizeImageUrl } from '@/lib/utils/url';
 import { SITE_ORIGIN } from '@/lib/utils/site-origin';
 
+const ARABIC_MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+function formatDate(iso: string | null): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return `${d.getUTCDate()} ${ARABIC_MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
+function formatTime(iso: string | null): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    const h = d.getUTCHours().toString().padStart(2, '0');
+    const m = d.getUTCMinutes().toString().padStart(2, '0');
+    return `${h}:${m}`;
+}
+
 interface EventsPageClientProps {
     initialNodes: EventNode[];
     initialHasNextPage: boolean;
@@ -37,16 +55,22 @@ export function EventsPageClient({
         event.categories?.nodes.map(cat => cat.name) || []
     )))];
 
-    const mappedEvents = events.map(event => ({
-        id: event.eventId,
-        title: event.title,
-        date: event.eventOptions.eventDate,
-        time: event.eventOptions.eventTime,
-        location: event.eventOptions.eventLocation,
-        category: event.categories?.nodes[0]?.name || 'عام',
-        image: normalizeImageUrl(event.featuredImage?.node.sourceUrl || ''),
-        description: event.content,
-    }));
+    const mappedEvents = events.map(event => {
+        const startDate = formatDate(event.eventOptions.eventStartDateAndTime);
+        const endDate = formatDate(event.eventOptions.eventEndDateAndTime);
+        const startTime = formatTime(event.eventOptions.eventStartDateAndTime);
+        const endTime = formatTime(event.eventOptions.eventEndDateAndTime);
+        return {
+            id: event.eventId,
+            title: event.title,
+            date: startDate && endDate && startDate !== endDate ? `${startDate} – ${endDate}` : startDate,
+            time: startTime && endTime && startTime !== endTime ? `${startTime} – ${endTime}` : startTime,
+            location: event.eventOptions.eventLocation || '',
+            category: event.categories?.nodes[0]?.name || 'عام',
+            image: normalizeImageUrl(event.featuredImage?.node.sourceUrl || ''),
+            description: event.content,
+        };
+    });
 
     const filteredEvents = mappedEvents.filter(event => {
         const matchesCategory = activeCategory === 'الكل' || event.category === activeCategory;
