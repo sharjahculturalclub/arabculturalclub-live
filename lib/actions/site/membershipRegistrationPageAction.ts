@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_MEMBERSHIP_REGISTRATION_PAGE } from "@/lib/queries/site/membershipRegistrationPageQueries";
 import { SEOOptions } from "@/lib/actions/site/homePageAction";
@@ -35,7 +36,7 @@ export interface MembershipRegistrationPageData {
  * Fetch membership registration page data in a single query.
  * Called from server components only.
  */
-export async function fetchMembershipRegistrationPageData(): Promise<MembershipRegistrationPageData | null> {
+export const fetchMembershipRegistrationPageData = cache(async (): Promise<MembershipRegistrationPageData | null> => {
     try {
         const result = await client.query<MembershipRegistrationPageDataType>({
             query: GET_MEMBERSHIP_REGISTRATION_PAGE,
@@ -61,4 +62,4 @@ export async function fetchMembershipRegistrationPageData(): Promise<MembershipR
         console.error("Error fetching membership registration page data:", error);
         return null;
     }
-}
+});

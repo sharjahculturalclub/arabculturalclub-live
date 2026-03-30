@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_POST_BY_ID, GET_RELATED_POSTS } from "@/lib/queries/site/postQueries";
 
@@ -77,7 +78,7 @@ export interface RelatedPost {
 
 /* ─── Fetch Functions ─────────────────────────────────────── */
 
-export async function fetchPostById(id: string): Promise<PostDetail | null> {
+export const fetchPostById = cache(async (id: string): Promise<PostDetail | null> => {
     try {
         const { data } = await client.query<{ post: PostDetail | null }>({
             query: GET_POST_BY_ID,
@@ -90,12 +91,12 @@ export async function fetchPostById(id: string): Promise<PostDetail | null> {
         console.error("[fetchPostById] Error fetching post:", error);
         return null;
     }
-}
+});
 
-export async function fetchRelatedPosts(
+export const fetchRelatedPosts = cache(async (
     categoryIds: number[],
     excludePostId: number
-): Promise<RelatedPost[]> {
+): Promise<RelatedPost[]> => {
     try {
         if (categoryIds.length === 0) return [];
 
@@ -114,5 +115,5 @@ export async function fetchRelatedPosts(
         console.error("[fetchRelatedPosts] Error fetching related posts:", error);
         return [];
     }
-}
+});
 

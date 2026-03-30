@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { fetchMembershipBenefitsPageData } from '@/lib/actions/site/membershipBenefitsPageAction';
+
+export const revalidate = 86400;
 import MembershipBenefitsClient from './MembershipBenefitsClient';
 import { SEO } from '@/components/SEO';
 import { getMetadataImages, SITE_ORIGIN} from '@/lib/utils/seo';

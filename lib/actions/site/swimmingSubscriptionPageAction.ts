@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_SWIMMING_SUBSCRIPTION_PAGE } from "@/lib/queries/site/swimmingSubscriptionPageQueries";
 import { SEOOptions } from "@/lib/actions/site/homePageAction";
@@ -24,7 +25,7 @@ export interface SwimmingSubscriptionPageData {
     featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
 }
 
-export async function fetchSwimmingSubscriptionPageData(): Promise<SwimmingSubscriptionPageData | null> {
+export const fetchSwimmingSubscriptionPageData = cache(async (): Promise<SwimmingSubscriptionPageData | null> => {
     try {
         const result = await client.query<{
             pageBy: {
@@ -76,4 +77,4 @@ export async function fetchSwimmingSubscriptionPageData(): Promise<SwimmingSubsc
         console.error("Error fetching swimming subscription page data:", error);
         return null;
     }
-}
+});

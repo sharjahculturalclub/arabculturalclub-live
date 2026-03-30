@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { SITE_ORIGIN, stripHtml } from "@/lib/utils/seo";
+
+export const revalidate = 3600;
 import { fetchEventById } from "@/lib/actions/site/eventsAction";
 import { JoinEventPageClient } from "./JoinEventPageClient";
 import Link from 'next/link';

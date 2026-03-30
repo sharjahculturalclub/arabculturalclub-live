@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { MapPin, Phone, Mail } from 'lucide-react';
+
+export const revalidate = 86400;
 import {
   fetchContactPageData,
   findContactSection,

@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_LECTURE_HALL_BOOKING_PAGE } from "@/lib/queries/site/lectureHallBookingPageQueries";
 import { SEOOptions } from "@/lib/actions/site/homePageAction";
@@ -24,7 +25,7 @@ export interface LectureHallBookingPageData {
     featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
 }
 
-export async function fetchLectureHallBookingPageData(): Promise<LectureHallBookingPageData | null> {
+export const fetchLectureHallBookingPageData = cache(async (): Promise<LectureHallBookingPageData | null> => {
     try {
         const result = await client.query<{
             pageBy: {
@@ -76,4 +77,4 @@ export async function fetchLectureHallBookingPageData(): Promise<LectureHallBook
         console.error("Error fetching lecture hall booking page data:", error);
         return null;
     }
-}
+});

@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+
+export const revalidate = 86400;
 import { SEO } from '@/components/SEO';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { Book, Award, Globe, Music } from 'lucide-react';

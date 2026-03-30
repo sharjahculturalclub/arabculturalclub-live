@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_CONTACT_PAGE } from "@/lib/queries/site/contactPageQueries";
 import { SEOOptions } from "@/lib/actions/site/homePageAction";
@@ -59,13 +60,13 @@ export function findContactSection<T extends ContactPageSection>(
  * Fetch contact page ACF sections in a single query.
  * Called from server components only.
  */
-export async function fetchContactPageData(): Promise<{
+export const fetchContactPageData = cache(async (): Promise<{
     pageTitle: string | null;
     pageDescription: string | null;
     sections: ContactPageSection[];
     seoOptions?: SEOOptions | null;
     featuredImage?: { node: { altText: string; sourceUrl: string } | null } | null;
-} | null> {
+} | null> => {
     try {
         const result = await client.query<ContactPageDataType>({
             query: GET_CONTACT_PAGE,
@@ -89,4 +90,4 @@ export async function fetchContactPageData(): Promise<{
         console.error("Error fetching contact page data:", error);
         return null;
     }
-}
+});

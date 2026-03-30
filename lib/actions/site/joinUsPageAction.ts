@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_JOIN_US_PAGE } from "@/lib/queries/site/joinUsPageQueries";
 
@@ -33,7 +34,7 @@ export interface JoinUsPageData {
     sections: JoinUsPageSection[];
 }
 
-export async function fetchJoinUsPageData(): Promise<JoinUsPageData | null> {
+export const fetchJoinUsPageData = cache(async (): Promise<JoinUsPageData | null> => {
     try {
         const result = await client.query<{ pageBy: any }>({
             query: GET_JOIN_US_PAGE,
@@ -55,4 +56,4 @@ export async function fetchJoinUsPageData(): Promise<JoinUsPageData | null> {
         console.error("Error fetching join us page data:", error);
         return null;
     }
-}
+});

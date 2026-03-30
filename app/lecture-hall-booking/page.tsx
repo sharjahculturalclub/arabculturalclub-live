@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { fetchLectureHallBookingPageData } from '@/lib/actions/site/lectureHallBookingPageAction';
+
+export const revalidate = 86400;
 import { SEO } from '@/components/SEO';
 import LectureHallBookingForm from './LectureHallBookingForm';
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';

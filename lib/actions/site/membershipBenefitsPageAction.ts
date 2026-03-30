@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_MEMBERSHIP_BENEFITS_PAGE } from "@/lib/queries/site/membershipBenefitsPageQueries";
 
@@ -34,7 +35,7 @@ export interface MembershipPageData {
     sections: MembershipPageSection[];
 }
 
-export async function fetchMembershipBenefitsPageData(): Promise<MembershipPageData | null> {
+export const fetchMembershipBenefitsPageData = cache(async (): Promise<MembershipPageData | null> => {
     try {
         const result = await client.query<{ pageBy: any }>({
             query: GET_MEMBERSHIP_BENEFITS_PAGE,
@@ -55,4 +56,4 @@ export async function fetchMembershipBenefitsPageData(): Promise<MembershipPageD
         console.error("Error fetching membership benefits page data:", error);
         return null;
     }
-}
+});

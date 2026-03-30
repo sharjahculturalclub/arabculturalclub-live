@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { fetchGalleries, fetchGalleryPageOptions } from "@/lib/actions/site/galleryAction";
+
+export const revalidate = 86400;
 import { GalleryPageClient } from "./GalleryPageClient";
 import { SEO } from "@/components/SEO";
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";

@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_FAQ_PAGE } from "@/lib/queries/site/faqPageQueries";
 import { SEOOptions } from "@/lib/actions/site/homePageAction";
@@ -56,7 +57,7 @@ export interface FaqPageData {
 
 // ── Server-side fetch ─────────────────────────────────────────────
 
-export async function fetchFaqPageData(): Promise<FaqPageData | null> {
+export const fetchFaqPageData = cache(async (): Promise<FaqPageData | null> => {
     try {
         const result = await client.query<FaqPageDataType>({
             query: GET_FAQ_PAGE,
@@ -96,4 +97,4 @@ export async function fetchFaqPageData(): Promise<FaqPageData | null> {
         console.error("Error fetching FAQ page data:", error);
         return null;
     }
-}
+});

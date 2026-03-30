@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+
+export const revalidate = 86400;
 import { fetchFaqPageData } from '@/lib/actions/site/faqPageAction';
 import { SEO } from '@/components/SEO';
 import FaqCategoriesList from './FaqCategoriesList';

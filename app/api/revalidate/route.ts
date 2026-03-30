@@ -72,6 +72,13 @@ export async function POST(req: NextRequest) {
                 // Revalidate tags
                 revalidatePath('/tags', 'page');
                 console.log('✅ Revalidated tags page');
+
+                // Revalidate individual post pages by ID
+                if (post_id) {
+                    revalidatePath(`/news/${post_id}`, 'page');
+                    revalidatePath(`/articles/${post_id}`, 'page');
+                    console.log(`✅ Revalidated individual post pages for post_id: ${post_id}`);
+                }
             }
 
             if (post_type === 'page') {
@@ -87,6 +94,12 @@ export async function POST(req: NextRequest) {
             if (post_type === 'event') {
                 revalidatePath('/events', 'page');
                 console.log('✅ Revalidated events pages');
+
+                // Revalidate individual event page by ID
+                if (post_id) {
+                    revalidatePath(`/events/${post_id}`, 'page');
+                    console.log(`✅ Revalidated individual event page for post_id: ${post_id}`);
+                }
             }
         }
         else if (action === 'delete' || action === 'unpublish') {

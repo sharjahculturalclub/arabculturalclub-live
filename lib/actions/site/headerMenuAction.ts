@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_HEADER_MENU } from "@/lib/queries/site/headerMenuQueries";
 
@@ -58,7 +59,7 @@ function transformMenuItem(item: MenuItem): NavLink {
  * - §4: Single centralized Apollo instance
  * - §4: Backend-agnostic transform (CMS fields → NavLink)
  */
-export async function fetchHeaderMenu(): Promise<NavLink[]> {
+export const fetchHeaderMenu = cache(async (): Promise<NavLink[]> => {
     try {
         const result = await client.query<HeaderMenuDataType>({
             query: GET_HEADER_MENU,
@@ -76,4 +77,4 @@ export async function fetchHeaderMenu(): Promise<NavLink[]> {
         console.error("Error fetching header menu:", error);
         return [];
     }
-}
+});

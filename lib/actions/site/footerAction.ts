@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_FOOTER_SETTINGS } from "@/lib/queries/site/footerQueries";
 
@@ -70,7 +71,7 @@ export interface FooterSettingsData {
  * - §4: Separate fetch logic from components
  * - §4: Single centralized Apollo instance
  */
-export async function fetchFooterSettings(): Promise<FooterSettingsData['footerSettings'] | null> {
+export const fetchFooterSettings = cache(async (): Promise<FooterSettingsData['footerSettings'] | null> => {
     try {
         const result = await client.query<FooterSettingsData>({
             query: GET_FOOTER_SETTINGS,
@@ -87,4 +88,4 @@ export async function fetchFooterSettings(): Promise<FooterSettingsData['footerS
         console.error("Error fetching footer settings:", error);
         return null;
     }
-}
+});

@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { fetchCondolenceHallBookingPageData } from '@/lib/actions/site/condolenceHallBookingPageAction';
+
+export const revalidate = 86400;
 import { SEO } from '@/components/SEO';
 import CondolenceHallBookingForm from './CondolenceHallBookingForm';
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';

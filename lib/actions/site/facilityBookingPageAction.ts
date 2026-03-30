@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_FACILITY_BOOKING_PAGE } from "@/lib/queries/site/facilityBookingPageQueries";
 import { SEOOptions } from "@/lib/actions/site/homePageAction";
@@ -51,7 +52,7 @@ export interface FacilityBookingPageData {
  * Fetch facility booking page data in a single query.
  * Called from server components only.
  */
-export async function fetchFacilityBookingPageData(): Promise<FacilityBookingPageData | null> {
+export const fetchFacilityBookingPageData = cache(async (): Promise<FacilityBookingPageData | null> => {
     try {
         const result = await client.query<FacilityBookingPageDataType>({
             query: GET_FACILITY_BOOKING_PAGE,
@@ -91,4 +92,4 @@ export async function fetchFacilityBookingPageData(): Promise<FacilityBookingPag
         console.error("Error fetching facility booking page data:", error);
         return null;
     }
-}
+});

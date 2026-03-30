@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { fetchPolicyPageData } from '@/lib/actions/site/policyPageAction';
 import PrivacyPolicyClient from './PrivacyPolicyClient';
+
+export const revalidate = 86400;
 import { SEO } from '@/components/SEO';
 import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';

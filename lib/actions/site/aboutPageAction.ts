@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_ABOUT_PAGE } from "@/lib/queries/site/aboutPageQueries";
 import { ACFImage } from "./homePageAction";
@@ -75,7 +76,7 @@ export interface AboutPageData {
     sections: AboutPageSection[];
 }
 
-export async function fetchAboutPageData(): Promise<AboutPageData | null> {
+export const fetchAboutPageData = cache(async (): Promise<AboutPageData | null> => {
     try {
         const result = await client.query<{ pageBy: any }>({
             query: GET_ABOUT_PAGE,
@@ -98,4 +99,4 @@ export async function fetchAboutPageData(): Promise<AboutPageData | null> {
         console.error("Error fetching about page data:", error);
         return null;
     }
-}
+});

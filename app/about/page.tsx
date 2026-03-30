@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { fetchAboutPageData } from '@/lib/actions/site/aboutPageAction';
+
+export const revalidate = 86400;
 import AboutClient from './AboutClient';
 import { SEO } from '@/components/SEO';
 import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';

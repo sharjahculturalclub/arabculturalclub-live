@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from 'react';
 import client from "@/lib/client/ApolloClient";
 import { GET_POSTS_BY_TAG_SLUG } from "@/lib/queries/site/tagQueries";
 import { RelatedPost } from "./postAction";
@@ -20,11 +21,11 @@ export interface TagData {
     };
 }
 
-export async function fetchTagWithPosts(
+export const fetchTagWithPosts = cache(async (
     slug: string,
     first: number = 12,
     after?: string
-): Promise<TagData | null> {
+): Promise<TagData | null> => {
     try {
         const { data } = await client.query<{ tag: TagData | null }>({
             query: GET_POSTS_BY_TAG_SLUG,
@@ -36,4 +37,4 @@ export async function fetchTagWithPosts(
     } catch (error) {
         return null;
     }
-}
+});

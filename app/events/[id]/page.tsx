@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { fetchEventById } from "@/lib/actions/site/eventsAction";
+
+export const revalidate = 3600;
 import { EventDetailPageClient } from "./EventDetailPageClient";
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
