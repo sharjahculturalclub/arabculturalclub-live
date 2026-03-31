@@ -112,26 +112,32 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
         })
         : "";
     const seo = post.seoOptions;
-    const canonicalUrl = seo?.canonicalUrl || `${SITE_ORIGIN}/${category}/${id}`;
+    // Always use the real post URL for schemas — canonicalUrl from Yoast may contain focus keywords
+    const postUrl = `${SITE_ORIGIN}/${category}/${id}`;
 
     const breadcrumbs: { name?: string; item: string }[] = [
         { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
         { name: "أخبار النادي", item: `${SITE_ORIGIN}/news` },
         ...(post.categories?.nodes?.[0] ? [
             { name: post.categories.nodes[0].name, item: `${SITE_ORIGIN}/category/${post.categories.nodes[0].slug}` },
-            { name: post.title || undefined, item: canonicalUrl },
+            { name: post.title || undefined, item: postUrl },
         ] : [
-            { name: post.title || undefined, item: canonicalUrl },
+            { name: post.title || undefined, item: postUrl },
         ]),
     ];
+
+    const rawImageUrl = normalizeImageUrl(post.featuredImage?.node?.sourceUrl || "");
+    const absoluteImageUrl = rawImageUrl
+        ? (rawImageUrl.startsWith('/') ? `https://shjarabclub.ae${rawImageUrl}` : rawImageUrl)
+        : undefined;
 
     return (
         <div className="pb-30 pt-30 z-0 relative">
             <SEO
                 title={seo?.seoTitle || post.title || undefined}
                 description={seo?.metaDescription || undefined}
-                url={canonicalUrl}
-                pageType="Article"
+                url={postUrl}
+                pageType="WebPage"
                 breadcrumbs={breadcrumbs}
             />
             <div className="container max-w-7xl mx-auto px-4 md:px-6 pt-12">
@@ -388,6 +394,8 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "NewsArticle",
+                        "@id": `${postUrl}#article`,
+                        "url": postUrl,
                         headline: seo?.seoTitle || post.title,
                         datePublished: post.date,
                         dateModified: post.modified,
@@ -400,11 +408,11 @@ export default async function PostDetail({ params, searchParams }: PageProps) {
                         publisher: {
                             "@id": "https://shjarabclub.ae/#organization",
                         },
-                        image: normalizeImageUrl(post.featuredImage?.node?.sourceUrl || "") || undefined,
+                        image: absoluteImageUrl,
                         description: seo?.metaDescription || undefined,
                         mainEntityOfPage: {
                             "@type": "WebPage",
-                            "@id": canonicalUrl,
+                            "@id": `${postUrl}#webpage`,
                         },
                     }),
                 }}
