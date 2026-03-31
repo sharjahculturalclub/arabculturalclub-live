@@ -48,7 +48,7 @@ export async function submitNewsletterAction(
         cf7FormData.append('_wpcf7_container_post', '0');
 
         // Newsletter form fields
-        cf7FormData.append('subscriber-email', email);
+        cf7FormData.append('your-email', email);
 
         const response = await fetch(endpoint, {
             method: 'POST',
