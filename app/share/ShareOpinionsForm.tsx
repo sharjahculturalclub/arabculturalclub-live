@@ -325,7 +325,7 @@ export default function ShareOpinionsForm({ formId }: ShareOpinionsFormProps) {
                         value={formData.message}
                         onChange={handleChange}
                         rows={6}
-                        placeholder="شاركنا آراءك، اقتراحاتك، أو أي ملاحظات..."
+                        placeholder="شاركنا المقالاتك، اقتراحاتك، أو أي ملاحظات..."
                         className={`${errors.message ? inputErrorClass : inputNormalClass} resize-none`}
                     />
                     {errors.message && (

@@ -32,10 +32,10 @@ function mapPost(post: OpinionPost) {
         categorySlug: "opinion",
         date: post.date
             ? new Date(post.date).toLocaleDateString("ar-AE", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-              })
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            })
             : "",
         excerpt: post.excerpt?.replace(/<[^>]*>/g, "").slice(0, 140) || "",
     };
@@ -104,7 +104,7 @@ export function OpinionsPageClient({
                             الرئيسية
                         </Link>
                         <ChevronLeft size={14} />
-                        <span className="text-primary/70">{pageTitle || "آراء"}</span>
+                        <span className="text-primary/70">{pageTitle || "المقالات"}</span>
                     </nav>
 
                     <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-black">
@@ -138,7 +138,7 @@ export function OpinionsPageClient({
                 ) : (
                     <div className="text-center py-20 bg-secondary/20 rounded-3xl border border-dashed border-border">
                         <Filter size={48} className="mx-auto mb-4 text-muted-foreground/30" />
-                        <p className="text-xl text-muted-foreground">لا توجد آراء متاحة حالياً.</p>
+                        <p className="text-xl text-muted-foreground">لا توجد المقالات متاحة حالياً.</p>
                     </div>
                 )}
 

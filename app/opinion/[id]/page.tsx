@@ -76,14 +76,14 @@ export default async function OpinionDetailPage({ params }: PageProps) {
 
     const seo = opinion.seoOptions;
     const opinionUrl = `${SITE_ORIGIN}/opinion/${id}`;
-    const listingTitle = pageData?.title || "آراء";
+    const listingTitle = pageData?.title || "المقالات";
 
     const formattedDate = opinion.date
         ? new Date(opinion.date).toLocaleDateString("ar-AE", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-          })
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        })
         : "";
 
     const rawImageUrl = normalizeImageUrl(opinion.featuredImage?.node?.sourceUrl || "");
@@ -129,7 +129,7 @@ export default async function OpinionDetailPage({ params }: PageProps) {
                         {/* Meta */}
                         <div className="flex flex-wrap items-center gap-4 mb-6">
                             <span className="bg-club-purple/10 text-club-purple px-4 py-1 rounded-full text-sm font-bold">
-                                آراء
+                                المقالات
                             </span>
                             {formattedDate && (
                                 <span className="text-muted-foreground text-sm flex items-center gap-2">
@@ -203,16 +203,16 @@ export default async function OpinionDetailPage({ params }: PageProps) {
                                 <div>
                                     <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                                         <div className="w-2 h-8 bg-club-blue rounded-full"></div>
-                                        آراء ذات صلة
+                                        المقالات ذات صلة
                                     </h3>
                                     <div className="space-y-6">
                                         {relatedOpinions.map((related) => {
                                             const relatedDate = related.date
                                                 ? new Date(related.date).toLocaleDateString("ar-AE", {
-                                                      year: "numeric",
-                                                      month: "long",
-                                                      day: "numeric",
-                                                  })
+                                                    year: "numeric",
+                                                    month: "long",
+                                                    day: "numeric",
+                                                })
                                                 : "";
                                             return (
                                                 <Link

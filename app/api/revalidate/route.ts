@@ -86,9 +86,22 @@ export async function POST(req: NextRequest) {
                     revalidatePath(`/${slug}`, 'page');
                     console.log(`✅ Revalidated page: /${slug}`);
                 }
+                // Opinions listing uses a page (ID 851) for its options
+                revalidatePath('/opinions', 'page');
+                console.log('✅ Revalidated opinions listing page');
                 // Pages might affect layout
                 revalidatePath('/', 'layout');
                 console.log('✅ Revalidated layout');
+            }
+
+            if (post_type === 'openion') {
+                revalidatePath('/opinions', 'page');
+                console.log('✅ Revalidated opinions listing');
+
+                if (post_id) {
+                    revalidatePath(`/opinion/${post_id}`, 'page');
+                    console.log(`✅ Revalidated opinion detail page for post_id: ${post_id}`);
+                }
             }
 
             if (post_type === 'event') {
@@ -120,6 +133,7 @@ export async function POST(req: NextRequest) {
             revalidatePath('/');
             revalidatePath('/news', 'page');
             revalidatePath('/events', 'page');
+            revalidatePath('/opinions', 'page');
             revalidatePath('/tags', 'page');
             console.log('✅ Revalidated listing pages (taxonomy update)');
         }

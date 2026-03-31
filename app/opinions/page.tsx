@@ -58,7 +58,7 @@ export default async function OpinionsPage() {
                 breadcrumbs={[
                     { name: "الرئيسية", item: `${SITE_ORIGIN}/` },
                     {
-                        name: pageData?.title || "آراء",
+                        name: pageData?.title || "المقالات",
                         item: seoOptions?.canonicalUrl || `${SITE_ORIGIN}/opinions`,
                     },
                 ]}

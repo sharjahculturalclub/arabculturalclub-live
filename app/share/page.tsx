@@ -4,7 +4,7 @@ import { fetchShareOpinionsPageData } from '@/lib/actions/site/shareOpinionsPage
 export const revalidate = 86400;
 import { SEO } from '@/components/SEO';
 import ShareOpinionsForm from './ShareOpinionsForm';
-import { getMetadataImages, stripHtml, SITE_ORIGIN} from '@/lib/utils/seo';
+import { getMetadataImages, stripHtml, SITE_ORIGIN } from '@/lib/utils/seo';
 import { normalizeImageUrl } from '@/lib/utils/url';
 
 // ── SEO Metadata ──────────────────────────────────────────────────
@@ -51,7 +51,7 @@ export default async function ShareOpinionsPage() {
   if (!data) {
     return (
       <div className="pt-25 pb-25 container max-w-7xl mx-auto px-4 md:px-6 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4">شارك آراءك</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4">شارك المقالاتك</h1>
         <p className="text-xl max-w-2xl mx-auto leading-relaxed text-primary/70">
           عذراً، لم نتمكن من تحميل بيانات الصفحة. يرجى المحاولة لاحقاً.
         </p>
