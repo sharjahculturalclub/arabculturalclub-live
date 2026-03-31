@@ -105,7 +105,7 @@ export default async function ContactPage() {
 
   const culturalOrgSchema = {
     "@context": "https://schema.org",
-    "@type": "CulturalOrganization",
+    "@type": "Organization",
     "@id": "https://shjarabclub.ae/#localbusiness",
     "name": "النادي الثقافي العربي - الشارقة",
     "alternateName": "Arab Cultural Club - Sharjah",
