@@ -66,9 +66,11 @@ export const NewsCard = ({ news }: { news: any }) => {
           alt={news.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        <div className="absolute bottom-0 right-0 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-tl-xl text-xs font-bold text-club-purple">
-          {news.category}
-        </div>
+        {news.category && (
+          <div className="absolute bottom-0 right-0 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-tl-xl text-xs font-bold text-club-purple">
+            {news.category}
+          </div>
+        )}
       </Link>
       <div className="p-6 flex flex-col grow">
         <div className="flex items-center gap-4 mb-4 text-xs text-muted-foreground">
