@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         cf7FormData.append('_wpcf7_locale', 'ar');
         cf7FormData.append('_wpcf7_unit_tag', `wpcf7-f${formId}-o1`);
         cf7FormData.append('_wpcf7_container_post', '0');
-        cf7FormData.append('subscriber-email', email);
+        cf7FormData.append('your-email', email);
 
         const response = await fetch(endpoint, { method: 'POST', body: cf7FormData });
         const result = await response.json();
