@@ -71,11 +71,11 @@ function HeroSectionBlock({ hero }: { hero: HeroSection }) {
       {/* Background decorations */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
-        style={hero.sectionBackgroundImage?.node?.sourceUrl ? {
-          backgroundImage: `url(${normalizeImageUrl(hero.sectionBackgroundImage.node.sourceUrl)})`,
+        style={{
+          backgroundImage: `url(${hero.sectionBackgroundImage?.node?.sourceUrl ? normalizeImageUrl(hero.sectionBackgroundImage.node.sourceUrl) : '/acc-background-banner.svg'})`,
           backgroundSize: 'contain',
           backgroundPosition: 'center',
-        } : undefined}
+        }}
       >
         <div className="absolute top-0 right-0 w-[60%] h-full bg-gradient-to-l from-accent-purple/10 to-transparent z-0" />
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-accent-blue/10 rounded-full blur-[120px] z-0" />
