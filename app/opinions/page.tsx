@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { fetchOpinionPosts, fetchOpinionPageOptions } from "@/lib/actions/site/opinionsAction";
+import {
+    fetchOpinionPosts,
+    fetchOpinionCategories,
+    fetchOpinionPageOptions,
+} from "@/lib/actions/site/opinionsAction";
 import { OpinionsPageClient } from "./OpinionsPageClient";
 import { SEO } from "@/components/SEO";
 import { getMetadataImages, stripHtml, SITE_ORIGIN } from "@/lib/utils/seo";
@@ -41,8 +45,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function OpinionsPage() {
-    const [opinionsData, pageData] = await Promise.all([
+    const [opinionsData, categories, pageData] = await Promise.all([
         fetchOpinionPosts(9),
+        fetchOpinionCategories(),
         fetchOpinionPageOptions(),
     ]);
 
@@ -67,6 +72,7 @@ export default async function OpinionsPage() {
                 initialPosts={opinionsData.posts}
                 initialHasNextPage={opinionsData.hasNextPage}
                 initialEndCursor={opinionsData.endCursor}
+                categories={categories}
                 pageTitle={pageOptions?.pageTitle || null}
                 pageDescription={pageOptions?.pageDescription || null}
                 canonicalUrl={seoOptions?.canonicalUrl || null}
