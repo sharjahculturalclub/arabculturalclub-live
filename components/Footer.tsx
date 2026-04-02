@@ -101,7 +101,7 @@ export const Footer = ({
   return (
     <footer className="bg-primary text-secondary pt-16 pb-8">
       <div className="container max-w-7xl mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* About / Brand Section */}
           {about && (
             <div className="flex flex-col gap-6">
@@ -172,28 +172,6 @@ export const Footer = ({
               </h3>
               <ul className="flex flex-col gap-4 text-secondary/70 text-sm">
                 {joinUs.links.map((link, i) => (
-                  <li key={i}>
-                    <Link
-                      href={link.url}
-                      target={link.target}
-                      className="hover:text-club-blue transition-colors"
-                    >
-                      {link.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Programs */}
-          {programs && programs.links.length > 0 && (
-            <div>
-              <h3 className="text-lg font-bold mb-6 border-r-4 border-club-purple pr-4">
-                {programs.title}
-              </h3>
-              <ul className="flex flex-col gap-4 text-secondary/70 text-sm">
-                {programs.links.map((link, i) => (
                   <li key={i}>
                     <Link
                       href={link.url}
