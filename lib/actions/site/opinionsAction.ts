@@ -4,11 +4,20 @@ import { cache } from "react";
 import client from "@/lib/client/ApolloClient";
 import {
     GET_OPINION_POSTS,
+    GET_OPINION_POSTS_BY_CATEGORY,
+    GET_ALL_OPINION_CATEGORIES,
+    GET_OPINION_CATEGORY_WITH_POSTS,
     GET_OPINION_PAGE_OPTIONS,
     GET_OPINION_BY_ID,
 } from "@/lib/queries/site/opinionsQueries";
 
 /* ─── Types ───────────────────────────────────────────────── */
+
+export interface OpinionCategory {
+    databaseId: number;
+    name: string;
+    slug: string;
+}
 
 export interface OpinionPost {
     databaseId: number;
@@ -20,6 +29,9 @@ export interface OpinionPost {
             altText: string | null;
             sourceUrl: string;
         };
+    } | null;
+    opinioncategories?: {
+        nodes: OpinionCategory[];
     } | null;
 }
 
@@ -81,15 +93,47 @@ export interface OpinionDetail {
     seoOptions?: OpinionSeoOptions | null;
 }
 
+export interface OpinionCategoryData {
+    databaseId: number;
+    name: string;
+    slug: string;
+    description: string | null;
+    seoOptions?: OpinionSeoOptions | null;
+    opinions: {
+        pageInfo: { hasNextPage: boolean; endCursor: string | null };
+        nodes: OpinionPost[];
+    };
+}
+
 /* ─── Fetch Functions ─────────────────────────────────────── */
 
 export const fetchOpinionPosts = cache(async (
     first: number = 9,
-    after?: string
+    after?: string,
+    categorySlug?: string
 ): Promise<OpinionPostsData> => {
     try {
+        if (categorySlug) {
+            const { data } = await client.query<{
+                opinions: {
+                    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+                    nodes: OpinionPost[];
+                };
+            }>({
+                query: GET_OPINION_POSTS_BY_CATEGORY,
+                variables: { first, after: after || undefined, categorySlug },
+                fetchPolicy: "network-only",
+            });
+
+            return {
+                posts: data?.opinions?.nodes ?? [],
+                hasNextPage: data?.opinions?.pageInfo?.hasNextPage ?? false,
+                endCursor: data?.opinions?.pageInfo?.endCursor ?? null,
+            };
+        }
+
         const { data } = await client.query<{
-            openions: {
+            opinions: {
                 pageInfo: { hasNextPage: boolean; endCursor: string | null };
                 nodes: OpinionPost[];
             };
@@ -100,13 +144,48 @@ export const fetchOpinionPosts = cache(async (
         });
 
         return {
-            posts: data?.openions?.nodes ?? [],
-            hasNextPage: data?.openions?.pageInfo?.hasNextPage ?? false,
-            endCursor: data?.openions?.pageInfo?.endCursor ?? null,
+            posts: data?.opinions?.nodes ?? [],
+            hasNextPage: data?.opinions?.pageInfo?.hasNextPage ?? false,
+            endCursor: data?.opinions?.pageInfo?.endCursor ?? null,
         };
     } catch (error) {
         console.error("[fetchOpinionPosts] Error:", error);
         return { posts: [], hasNextPage: false, endCursor: null };
+    }
+});
+
+export const fetchOpinionCategories = cache(async (): Promise<OpinionCategory[]> => {
+    try {
+        const { data } = await client.query<{
+            opinioncategories: { nodes: OpinionCategory[] };
+        }>({
+            query: GET_ALL_OPINION_CATEGORIES,
+            fetchPolicy: "network-only",
+        });
+
+        return data?.opinioncategories?.nodes ?? [];
+    } catch (error) {
+        console.error("[fetchOpinionCategories] Error:", error);
+        return [];
+    }
+});
+
+export const fetchOpinionCategoryWithPosts = cache(async (
+    slug: string,
+    first: number = 9,
+    after?: string
+): Promise<OpinionCategoryData | null> => {
+    try {
+        const { data } = await client.query<{ opinioncategory: OpinionCategoryData | null }>({
+            query: GET_OPINION_CATEGORY_WITH_POSTS,
+            variables: { slug, first, after },
+            fetchPolicy: "network-only",
+        });
+
+        return data?.opinioncategory ?? null;
+    } catch (error) {
+        console.error("[fetchOpinionCategoryWithPosts] Error:", error);
+        return null;
     }
 });
 
