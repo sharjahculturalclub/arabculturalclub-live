@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Circle,
   CircleOff,
+  WandSparkles,
 } from "lucide-react";
 import { EventNode } from "@/lib/actions/site/eventsAction";
 import { normalizeImageUrl } from "@/lib/utils/url";
@@ -57,7 +58,6 @@ interface EventDetailPageClientProps {
 export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
   const [currentIndex, setCurrentIndex] = React.useState(0);
 
-  // Map WordPress data to the structure needed by the component
   const startDate = formatDate(event.eventOptions.eventStartDateAndTime);
   const endDate = formatDate(event.eventOptions.eventEndDateAndTime);
   const startTime = formatTime(event.eventOptions.eventStartDateAndTime);
@@ -103,7 +103,6 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
       : `/events/${event.eventId}/join`,
   };
 
-  // For now, WP only has one featured image. If they add more, it would be here.
   const gallery = [mappedEvent.image];
   const hasSlider = gallery.length > 1;
 
@@ -116,60 +115,150 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
   };
 
   return (
-    <div className="pt-25 pb-25">
-      <div className="container max-w-5xl mx-auto px-4 md:px-6">
-        {/* Hero */}
-        <div className="mb-10 mt-20">
+    <div className="pt-25 pb-25 bg-gradient-to-b from-club-purple/[0.06] via-background to-background">
+      <div className="container max-w-6xl mx-auto px-4 md:px-6">
+        <motion.header
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="mt-16 md:mt-20 mb-8 md:mb-10"
+        >
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-club-purple mb-4"
+            className="group inline-flex items-center gap-2 rounded-full border border-border/80 bg-white/90 px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-sm backdrop-blur-sm transition-colors hover:border-club-purple/35 hover:text-club-purple"
           >
-            <ArrowLeft size={16} />
+            <ArrowLeft
+              size={16}
+              className="transition-transform group-hover:-translate-x-0.5"
+            />
             <span>العودة إلى الفعاليات</span>
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-3">
-            {mappedEvent.title}
-          </h1>
-        </div>
 
-        {/* Content + Gallery */}
-        <div className="bg-white rounded-[2rem] border border-border shadow-lg overflow-hidden mb-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[460px]">
-            {/* Gallery (TOP on mobile, RIGHT on desktop) */}
+          <div className="mt-6 md:mt-8 flex flex-col items-right text-right md:max-w-4xl md:mr-0 md:ml-auto">
+            <span className="inline-flex items-center gap-2 rounded-full bg-club-purple/12 px-3.5 py-1 text-xs font-bold text-club-purple ring-1 ring-club-purple/15">
+              <WandSparkles size={14} className="opacity-90" />
+              {mappedEvent.category}
+            </span>
+            <h1 className="mt-4 text-3xl font-bold leading-tight text-primary md:text-4xl lg:text-[2.5rem] md:leading-[1.15]">
+              {mappedEvent.title}
+            </h1>
+            <span
+              className="mt-4 h-1 w-16 rounded-full bg-club-purple md:mr-0 md:ml-auto"
+              aria-hidden
+            />
+          </div>
+        </motion.header>
+
+        {/* Main: content (wide) + gallery (narrow) */}
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.05 }}
+          className="mb-10 overflow-hidden rounded-[2rem] border border-border/80 bg-white shadow-xl shadow-black/[0.06] ring-1 ring-black/[0.03]"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[min(520px,85vh)]">
+            {/* Content — 8 cols on desktop, first in source for LTR content-left */}
+            <div className="flex flex-col justify-center border-border/60 p-6 text-right sm:p-8 md:p-10 lg:col-span-8 lg:border-e lg:p-12 lg:order-1">
+              <div
+                className="prose prose-p:text-muted-foreground prose-headings:text-primary max-w-none space-y-4 text-base leading-relaxed md:text-lg md:leading-relaxed mb-6"
+                dangerouslySetInnerHTML={{ __html: mappedEvent.description }}
+              />
+              <div className=" grid grid-cols-1 gap-3 sm:grid-cols-3">
+                {mappedEvent.dateLabel && (
+                  <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-purple/12 text-club-purple">
+                      <Calendar size={20} strokeWidth={1.75} />
+                    </span>
+                    <p className="mt-1 text-sm font-semibold leading-snug text-primary">
+                      {mappedEvent.dateLabel}
+                    </p>
+                  </div>
+                )}
+                {mappedEvent.timeLabel && (
+                  <div className="flex items-center gap-2 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-blue/12 text-club-blue">
+                      <Clock size={20} strokeWidth={1.75} />
+                    </span>
+                    <p className="text-sm font-semibold leading-snug text-primary">
+                      {mappedEvent.timeLabel}
+                    </p>
+                  </div>
+                )}
+                {mappedEvent.location && (
+                  <div className="flex items-center gap-2 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40 sm:col-span-2">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-purple/12 text-club-purple">
+                      <MapPin size={20} strokeWidth={1.75} />
+                    </span>
+                    <p className="text-sm font-semibold leading-snug text-primary">
+                      {mappedEvent.location}
+                    </p>
+                  </div>
+                )}
+                {mappedEvent.attendanceModeLabel && (
+                  <div className="flex items-center gap-2 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-purple/12 text-club-purple">
+                      {mappedEvent.isOnline ? (
+                        <Circle size={20} strokeWidth={1.75} />
+                      ) : (
+                        <CircleOff size={20} strokeWidth={1.75} />
+                      )}
+                    </span>
+                    <p className="mt-1 text-sm font-semibold leading-snug text-primary">
+                      {mappedEvent.attendanceModeLabel}
+                    </p>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40">
+                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-blue/12 text-club-blue">
+                    <Tag size={20} strokeWidth={1.75} />
+                  </span>
+                  <p className="mt-1 text-sm font-semibold leading-snug text-primary">
+                    {mappedEvent.category}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Gallery — 4 cols, compact column on desktop */}
             <div
-              className="relative bg-gray-100 flex items-center justify-center min-h-[280px] md:min-h-[360px] lg:min-h-0 lg:h-full lg:col-span-3 lg:order-2"
+              className="relative flex min-h-[260px] items-center justify-center bg-gradient-to-br from-secondary/50 via-club-purple/[0.07] to-club-blue/[0.06] p-6 sm:min-h-[320px] md:p-8 lg:col-span-4 lg:min-h-0 lg:p-8 lg:order-2"
               suppressHydrationWarning
             >
-              <ImageWithFallback
-                src={gallery[currentIndex]}
-                alt={mappedEvent.title}
-                className="max-w-full max-h-full object-contain"
-              />
+              <div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-none">
+                <div
+                  className="pointer-events-none absolute -inset-3 rounded-[1.75rem] bg-gradient-to-br from-club-purple/20 to-club-blue/15 blur-2xl opacity-70"
+                  aria-hidden
+                />
+                <div className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/90 shadow-2xl shadow-club-purple/10 ring-1 ring-black/5">
+                  <div className="aspect-[4/5] w-full">
+                    <ImageWithFallback
+                      src={gallery[currentIndex]}
+                      alt={mappedEvent.title}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
 
               {hasSlider && (
                 <>
-                  {/* Prev */}
                   <button
                     type="button"
                     onClick={goPrev}
-                    className="absolute top-1/2 -translate-y-1/2 right-4 md:right-6 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full shadow-lg transition"
+                    className="absolute top-1/2 right-4 z-10 -translate-y-1/2 rounded-full bg-white/90 p-2.5 text-primary shadow-lg backdrop-blur-sm transition hover:bg-white md:right-6"
                     aria-label="الصورة السابقة"
                   >
                     <ChevronRight size={20} />
                   </button>
-
-                  {/* Next */}
                   <button
                     type="button"
                     onClick={goNext}
-                    className="absolute top-1/2 -translate-y-1/2 left-4 md:left-6 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full shadow-lg transition"
+                    className="absolute top-1/2 left-4 z-10 -translate-y-1/2 rounded-full bg-white/90 p-2.5 text-primary shadow-lg backdrop-blur-sm transition hover:bg-white md:left-6"
                     aria-label="الصورة التالية"
                   >
                     <ChevronLeft size={20} />
                   </button>
-
-                  {/* Dots */}
-                  <div className="absolute bottom-4 inset-x-0 flex justify-center gap-2">
+                  <div className="absolute bottom-5 inset-x-0 flex justify-center gap-2">
                     {gallery.map((img: string, index: number) => (
                       <button
                         key={img + index}
@@ -177,8 +266,8 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
                         onClick={() => setCurrentIndex(index)}
                         className={`h-2.5 rounded-full transition-all ${
                           index === currentIndex
-                            ? "bg-white w-6"
-                            : "bg-white/50 w-2.5"
+                            ? "w-6 bg-white shadow-sm"
+                            : "w-2.5 bg-white/45"
                         }`}
                         aria-label={`صورة رقم ${index + 1}`}
                       />
@@ -187,115 +276,41 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
                 </>
               )}
             </div>
-
-            {/* Content (BOTTOM on mobile, LEFT on desktop) */}
-            <div className="p-8 md:p-10 flex flex-col justify-center text-right lg:h-full lg:col-span-9 lg:order-1">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                {mappedEvent.dateLabel && (
-                  <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3">
-                    <Calendar
-                      size={18}
-                      className="text-club-purple flex-shrink-0"
-                    />
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground">التاريخ</p>
-                      <p className="text-sm font-semibold text-primary">
-                        {mappedEvent.dateLabel}
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {mappedEvent.timeLabel && (
-                  <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3">
-                    <Clock
-                      size={18}
-                      className="text-club-purple flex-shrink-0"
-                    />
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground">الوقت</p>
-                      <p className="text-sm font-semibold text-primary">
-                        {mappedEvent.timeLabel}
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {mappedEvent.location && (
-                  <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3 sm:col-span-2">
-                    <MapPin
-                      size={18}
-                      className="text-club-purple flex-shrink-0"
-                    />
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground">الموقع</p>
-                      <p className="text-sm font-semibold text-primary">
-                        {mappedEvent.location}
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {mappedEvent.attendanceModeLabel && (
-                  <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3">
-                    {mappedEvent.isOnline ? (
-                      <Circle
-                        size={18}
-                        className="text-club-purple flex-shrink-0"
-                      />
-                    ) : (
-                      <CircleOff
-                        size={18}
-                        className="text-club-purple flex-shrink-0"
-                      />
-                    )}
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground">
-                        نمط الحضور
-                      </p>
-                      <p className="text-sm font-semibold text-primary">
-                        {mappedEvent.attendanceModeLabel}
-                      </p>
-                    </div>
-                  </div>
-                )}
-                <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3">
-                  <Tag size={18} className="text-club-purple flex-shrink-0" />
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground">التصنيف</p>
-                    <p className="text-sm font-semibold text-primary">
-                      {mappedEvent.category}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="text-lg text-muted-foreground leading-relaxed prose prose-club max-w-none space-y-4"
-                dangerouslySetInnerHTML={{ __html: mappedEvent.description }}
-              />
-            </div>
           </div>
-        </div>
+        </motion.section>
 
-        {/* Call to action */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-l from-club-purple/10 to-club-blue/10 rounded-[2rem] border border-club-purple/20 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6"
+          transition={{ duration: 0.4, delay: 0.12 }}
+          className="relative overflow-hidden rounded-[2rem] border border-club-purple/20 bg-gradient-to-l from-club-purple/[0.12] via-white to-club-blue/[0.08] p-8 shadow-lg md:p-10"
         >
-          <div className="text-right space-y-2">
-            <h2 className="text-2xl font-bold text-primary">
-              {mappedEvent.registrationHeading || "سجّل حضورك في الفعالية"}
-            </h2>
-            <p className="text-muted-foreground">
-              {mappedEvent.registrationDescription ||
-                "لحجز مقعدك أو الاستفسار عن تفاصيل إضافية، يمكنك التواصل مع فريق النادي عبر نموذج الاتصال."}
-            </p>
+          <div
+            className="pointer-events-none absolute -start-20 top-0 h-40 w-40 rounded-full bg-club-purple/20 blur-3xl"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute -end-16 bottom-0 h-32 w-32 rounded-full bg-club-blue/20 blur-3xl"
+            aria-hidden
+          />
+          <div className="relative flex flex-col items-stretch gap-8 md:flex-row md:items-center md:justify-between">
+            <div className="text-right md:max-w-xl md:flex-1">
+              <h2 className="text-2xl font-bold text-primary md:text-3xl">
+                {mappedEvent.registrationHeading || "سجّل حضورك في الفعالية"}
+              </h2>
+              <p className="mt-3 text-muted-foreground md:text-lg">
+                {mappedEvent.registrationDescription ||
+                  "لحجز مقعدك أو الاستفسار عن تفاصيل إضافية، يمكنك التواصل مع فريق النادي عبر نموذج الاتصال."}
+              </p>
+            </div>
+            <Link
+              href={mappedEvent.registrationLink}
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-club-purple px-8 py-4 text-base font-bold text-white shadow-lg shadow-club-purple/25 transition hover:bg-club-purple/90 hover:shadow-xl hover:shadow-club-purple/20"
+            >
+              <span>{mappedEvent.registrationText}</span>
+              <ArrowLeft size={20} />
+            </Link>
           </div>
-          <Link
-            href={mappedEvent.registrationLink}
-            className="inline-flex items-center gap-2 bg-club-purple hover:bg-opacity-90 text-white font-bold px-8 py-4 rounded-xl shadow-lg transition-all"
-          >
-            <span>{mappedEvent.registrationText}</span>
-            <ArrowLeft size={20} />
-          </Link>
         </motion.div>
       </div>
     </div>
