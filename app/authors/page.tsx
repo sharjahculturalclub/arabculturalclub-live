@@ -1,13 +1,27 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
+import { Metadata } from "next";
+import Link from "next/link";
 
 export const revalidate = 86400;
-import { fetchAuthorsList, getAuthorImageUrl, getAuthorBio } from '@/lib/actions/site/authorsPageAction';
-import { SEO } from '@/components/SEO';
-import { BookOpen, ArrowLeft, Facebook, Twitter, Instagram, Youtube, Linkedin, Link2, type LucideIcon } from 'lucide-react';
-import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
+import {
+  fetchAuthorsList,
+  getAuthorImageUrl,
+  getAuthorBio,
+} from "@/lib/actions/site/authorsPageAction";
+import { SEO } from "@/components/SEO";
+import {
+  BookOpen,
+  ArrowLeft,
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Link2,
+  type LucideIcon,
+} from "lucide-react";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
-import { getMetadataImages, SITE_ORIGIN } from '@/lib/utils/seo';
+import { getMetadataImages, SITE_ORIGIN } from "@/lib/utils/seo";
 
 // Map icon names from WordPress ACF to Lucide components
 const socialIconMap: Record<string, LucideIcon> = {
@@ -22,8 +36,9 @@ const socialIconMap: Record<string, LucideIcon> = {
 export async function generateMetadata(): Promise<Metadata> {
   const images = await getMetadataImages();
 
-  const title = 'أقلام النادي';
-  const description = 'نخبة من المثقفين والأدباء الذين يساهمون بأفكارهم وإبداعاتهم في إثراء منصتنا الثقافية.';
+  const title = "أقلام النادي";
+  const description =
+    "نخبة من المثقفين والأدباء الذين يساهمون بأفكارهم وإبداعاتهم في إثراء منصتنا الثقافية.";
 
   return {
     title,
@@ -35,19 +50,18 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url: `${SITE_ORIGIN}/authors`,
-      siteName: 'النادي الثقافي العربي',
-      type: 'website',
+      siteName: "النادي الثقافي العربي",
+      type: "website",
       images,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description,
-      images: images.map(img => img.url),
+      images: images.map((img) => img.url),
     },
   };
 }
-
 
 // ── Page Component ────────────────────────────────────────────────
 export default async function AuthorsPage() {
@@ -67,9 +81,12 @@ export default async function AuthorsPage() {
 
       <div className="py-10 mb-10 relative overflow-hidden text-center bg-secondary">
         <div className="container max-w-2xl mx-auto px-4 md:px-6 relative z-10">
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary">أقلام النادي</h1>
+          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-primary">
+            أقلام النادي
+          </h1>
           <p className="text-x2 leading-relaxed text-primary">
-            نخبة من المثقفين والأدباء الذين يساهمون بأفكارهم وإبداعاتهم في إثراء منصتنا الثقافية.
+            نخبة من المثقفين والأدباء الذين يساهمون بأفكارهم وإبداعاتهم في إثراء
+            منصتنا الثقافية.
           </p>
         </div>
       </div>
@@ -83,7 +100,10 @@ export default async function AuthorsPage() {
               const authorBio = getAuthorBio(author);
               const authorId = author.databaseId.toString();
               const designation = author.userProfileImage?.designation;
-              const socialProfiles = author.userProfileImage?.socialProfiles?.filter(s => s.iconName && s.link) || [];
+              const socialProfiles =
+                author.userProfileImage?.socialProfiles?.filter(
+                  (s) => s.iconName && s.link,
+                ) || [];
 
               return (
                 <div
@@ -96,14 +116,18 @@ export default async function AuthorsPage() {
                     <div className="absolute inset-0 bg-club-blue rounded-full rotate-6 group-hover:rotate-12 transition-transform"></div>
                     <ImageWithFallback
                       src={avatarUrl}
-                      alt={author.name || ''}
+                      alt={author.name || ""}
                       className="w-full h-full object-cover rounded-full relative z-10 border-4 border-white shadow-lg"
                     />
                   </div>
 
-                  <h2 className="text-2xl font-bold mb-2 group-hover:text-club-purple transition-colors">{author.name}</h2>
+                  <h2 className="text-2xl font-bold mb-2 group-hover:text-club-purple transition-colors">
+                    {author.name}
+                  </h2>
                   {designation && (
-                    <p className="text-club-blue font-bold text-sm mb-4">{designation}</p>
+                    <p className="text-club-blue font-bold text-sm mb-4">
+                      {designation}
+                    </p>
                   )}
                   {authorBio && (
                     <p className="text-muted-foreground text-sm leading-relaxed mb-8 line-clamp-3">
@@ -114,16 +138,27 @@ export default async function AuthorsPage() {
                   <div className="flex items-center justify-center gap-6 mb-8 text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <BookOpen size={16} />
-                      <span className="text-xs font-bold">{articlesCount} مقال</span>
+                      <span className="text-xs font-bold">
+                        {articlesCount} مقال
+                      </span>
                     </div>
                     {socialProfiles.length > 0 && (
                       <>
                         <div className="w-px h-4 bg-border"></div>
                         <div className="flex gap-3">
                           {socialProfiles.map((social, idx) => {
-                            const IconComponent = socialIconMap[social.iconName?.toLowerCase() || ''] || Link2;
+                            const IconComponent =
+                              socialIconMap[
+                                social.iconName?.toLowerCase() || ""
+                              ] || Link2;
                             return (
-                              <a key={idx} href={social.link!} target="_blank" rel="noopener noreferrer" className="hover:text-club-purple transition-colors">
+                              <a
+                                key={idx}
+                                href={social.link!}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:text-club-purple transition-colors"
+                              >
                                 <IconComponent size={18} />
                               </a>
                             );
@@ -138,7 +173,10 @@ export default async function AuthorsPage() {
                     className="inline-flex items-center gap-2 text-club-purple font-bold group/link"
                   >
                     <span>شاهد جميع المساهمات</span>
-                    <ArrowLeft size={18} className="transition-transform group-hover/link:-translate-x-1" />
+                    <ArrowLeft
+                      size={18}
+                      className="transition-transform group-hover/link:-translate-x-1"
+                    />
                   </Link>
                 </div>
               );
@@ -146,7 +184,9 @@ export default async function AuthorsPage() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-xl text-muted-foreground">لا يوجد كتّاب حالياً.</p>
+            <p className="text-xl text-muted-foreground">
+              لا يوجد كتّاب حالياً.
+            </p>
           </div>
         )}
       </div>
