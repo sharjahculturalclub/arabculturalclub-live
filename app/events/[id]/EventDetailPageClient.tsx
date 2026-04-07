@@ -1,206 +1,303 @@
 "use client";
 
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
-import { motion } from 'motion/react';
-import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
-import { Calendar, MapPin, Tag, ArrowLeft, Clock, ChevronLeft, ChevronRight, Wifi, WifiOff } from 'lucide-react';
-import { EventNode } from '@/lib/actions/site/eventsAction';
-import { normalizeImageUrl } from '@/lib/utils/url';
+import { motion } from "motion/react";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import {
+  Calendar,
+  MapPin,
+  Tag,
+  ArrowLeft,
+  Clock,
+  ChevronLeft,
+  ChevronRight,
+  Circle,
+  CircleOff,
+} from "lucide-react";
+import { EventNode } from "@/lib/actions/site/eventsAction";
+import { normalizeImageUrl } from "@/lib/utils/url";
 
-const ARABIC_MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const ARABIC_MONTHS = [
+  "يناير",
+  "فبراير",
+  "مارس",
+  "أبريل",
+  "مايو",
+  "يونيو",
+  "يوليو",
+  "أغسطس",
+  "سبتمبر",
+  "أكتوبر",
+  "نوفمبر",
+  "ديسمبر",
+];
 
 function formatDate(iso: string | null): string {
-    if (!iso) return '';
-    const d = new Date(iso);
-    if (isNaN(d.getTime())) return '';
-    return `${d.getUTCDate()} ${ARABIC_MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  return `${d.getUTCDate()} ${ARABIC_MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
 function formatTime(iso: string | null): string {
-    if (!iso) return '';
-    const d = new Date(iso);
-    if (isNaN(d.getTime())) return '';
-    const h = d.getUTCHours().toString().padStart(2, '0');
-    const m = d.getUTCMinutes().toString().padStart(2, '0');
-    return `${h}:${m}`;
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const h = d.getUTCHours().toString().padStart(2, "0");
+  const m = d.getUTCMinutes().toString().padStart(2, "0");
+  return `${h}:${m}`;
 }
 
 interface EventDetailPageClientProps {
-    event: EventNode;
+  event: EventNode;
 }
 
 export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
-    const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [currentIndex, setCurrentIndex] = React.useState(0);
 
-    // Map WordPress data to the structure needed by the component
-    const startDate = formatDate(event.eventOptions.eventStartDateAndTime);
-    const endDate = formatDate(event.eventOptions.eventEndDateAndTime);
-    const startTime = formatTime(event.eventOptions.eventStartDateAndTime);
-    const endTime = formatTime(event.eventOptions.eventEndDateAndTime);
+  // Map WordPress data to the structure needed by the component
+  const startDate = formatDate(event.eventOptions.eventStartDateAndTime);
+  const endDate = formatDate(event.eventOptions.eventEndDateAndTime);
+  const startTime = formatTime(event.eventOptions.eventStartDateAndTime);
+  const endTime = formatTime(event.eventOptions.eventEndDateAndTime);
 
-    const dateLabel = startDate && endDate && startDate !== endDate
-        ? `${startDate} – ${endDate}`
-        : startDate;
-    const timeLabel = startTime && endTime && startTime !== endTime
-        ? `${startTime} – ${endTime}`
-        : startTime;
+  const dateLabel =
+    startDate && endDate && startDate !== endDate
+      ? `${startDate} – ${endDate}`
+      : startDate;
+  const timeLabel =
+    startTime && endTime && startTime !== endTime
+      ? `${startTime} – ${endTime}`
+      : startTime;
 
-    const isOnline = event.eventOptions.eventAttendanceMode?.includes('Online');
-    const isOffline = event.eventOptions.eventAttendanceMode?.includes('Offline');
-    const attendanceModeLabel = isOnline && isOffline ? 'حضوري وأونلاين' : isOnline ? 'أونلاين' : isOffline ? 'حضوري' : null;
+  const isOnline = event.eventOptions.eventAttendanceMode?.includes("Online");
+  const isOffline = event.eventOptions.eventAttendanceMode?.includes("Offline");
+  const attendanceModeLabel =
+    isOnline && isOffline
+      ? "حضوري وأونلاين"
+      : isOnline
+        ? "أونلاين"
+        : isOffline
+          ? "حضوري"
+          : null;
 
-    const mappedEvent = {
-        id: event.eventId,
-        title: event.title,
-        dateLabel,
-        timeLabel,
-        location: event.eventOptions.eventLocation,
-        attendanceModeLabel,
-        isOnline,
-        category: event.categories?.nodes[0]?.name || 'عام',
-        image: normalizeImageUrl(event.featuredImage?.node.sourceUrl || ''),
-        description: event.content,
-        registrationHeading: event.eventOptions.eventRegistrationBlockHeading,
-        registrationDescription: event.eventOptions.eventRegistrationBlockDescription,
-        registrationText: 'سجل الآن',
-        registrationLink: event.eventOptions.registerButtonLink?.startsWith('http')
-            ? event.eventOptions.registerButtonLink
-            : `/events/${event.eventId}/join`,
-    };
+  const mappedEvent = {
+    id: event.eventId,
+    title: event.title,
+    dateLabel,
+    timeLabel,
+    location: event.eventOptions.eventLocation,
+    attendanceModeLabel,
+    isOnline,
+    category: event.categories?.nodes[0]?.name || "عام",
+    image: normalizeImageUrl(event.featuredImage?.node.sourceUrl || ""),
+    description: event.content,
+    registrationHeading: event.eventOptions.eventRegistrationBlockHeading,
+    registrationDescription:
+      event.eventOptions.eventRegistrationBlockDescription,
+    registrationText: "سجل الآن",
+    registrationLink: event.eventOptions.registerButtonLink?.startsWith("http")
+      ? event.eventOptions.registerButtonLink
+      : `/events/${event.eventId}/join`,
+  };
 
-    // For now, WP only has one featured image. If they add more, it would be here.
-    const gallery = [mappedEvent.image];
-    const hasSlider = gallery.length > 1;
+  // For now, WP only has one featured image. If they add more, it would be here.
+  const gallery = [mappedEvent.image];
+  const hasSlider = gallery.length > 1;
 
-    const goNext = () => {
-        setCurrentIndex((prev) => (prev + 1) % gallery.length);
-    };
+  const goNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % gallery.length);
+  };
 
-    const goPrev = () => {
-        setCurrentIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
-    };
+  const goPrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
+  };
 
-    return (
-        <div className="pt-25 pb-25">
-
-            <div className="container max-w-5xl mx-auto px-4 md:px-6">
-                {/* Hero */}
-                <div className="mb-10 mt-20">
-                    <Link
-                        href="/events"
-                        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-club-purple mb-4"
-                    >
-                        <ArrowLeft size={16} />
-                        <span>العودة إلى الفعاليات</span>
-                    </Link>
-                    <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-3">
-                        {mappedEvent.title}
-                    </h1>
-                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        {mappedEvent.dateLabel && (
-                            <div className="flex items-center gap-2">
-                                <Calendar size={16} className="text-club-purple" />
-                                <span>{mappedEvent.dateLabel}</span>
-                            </div>
-                        )}
-                        {mappedEvent.timeLabel && (
-                            <div className="flex items-center gap-2">
-                                <Clock size={16} className="text-club-purple" />
-                                <span>{mappedEvent.timeLabel}</span>
-                            </div>
-                        )}
-                        {mappedEvent.location && (
-                            <div className="flex items-center gap-2">
-                                <MapPin size={16} className="text-club-purple" />
-                                <span>{mappedEvent.location}</span>
-                            </div>
-                        )}
-                        {mappedEvent.attendanceModeLabel && (
-                            <div className="flex items-center gap-2">
-                                {mappedEvent.isOnline ? <Wifi size={16} className="text-club-purple" /> : <WifiOff size={16} className="text-club-purple" />}
-                                <span>{mappedEvent.attendanceModeLabel}</span>
-                            </div>
-                        )}
-                        <div className="flex items-center gap-2">
-                            <Tag size={16} className="text-club-purple" />
-                            <span>{mappedEvent.category}</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Content + Gallery */}
-                <div className="bg-white rounded-[2rem] border border-border shadow-lg overflow-hidden mb-10">
-                    <div className="relative h-74 md:h-120" suppressHydrationWarning>
-                        <ImageWithFallback
-                            src={gallery[currentIndex]}
-                            alt={mappedEvent.title}
-                            className="w-full h-full object-cover"
-                        />
-
-                        {hasSlider && (
-                            <>
-                                <button
-                                    type="button"
-                                    onClick={goPrev}
-                                    className="absolute top-1/2 -translate-y-1/2 right-4 md:right-6 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full shadow-lg transition-colors"
-                                    aria-label="الصورة السابقة"
-                                >
-                                    <ChevronRight size={20} />
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={goNext}
-                                    className="absolute top-1/2 -translate-y-1/2 left-4 md:left-6 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full shadow-lg transition-colors"
-                                    aria-label="الصورة التالية"
-                                >
-                                    <ChevronLeft size={20} />
-                                </button>
-                                <div className="absolute bottom-4 inset-x-0 flex justify-center gap-2">
-                                    {gallery.map((img: string, index: number) => (
-                                        <button
-                                            key={img + index}
-                                            type="button"
-                                            onClick={() => setCurrentIndex(index)}
-                                            className={`w-2.5 h-2.5 rounded-full transition-all ${index === currentIndex ? 'bg-white w-6' : 'bg-white/50'
-                                                }`}
-                                            aria-label={`صورة رقم ${index + 1}`}
-                                        />
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                    </div>
-                    <div className="p-8 md:p-10 text-right space-y-6">
-                        <div
-                            className="text-lg text-muted-foreground leading-relaxed prose prose-club max-w-none space-y-4"
-                            dangerouslySetInnerHTML={{ __html: mappedEvent.description }}
-                        />
-                    </div>
-                </div>
-
-                {/* Call to action */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-gradient-to-l from-club-purple/10 to-club-blue/10 rounded-[2rem] border border-club-purple/20 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6"
-                >
-                    <div className="text-right space-y-2">
-                        <h2 className="text-2xl font-bold text-primary">{mappedEvent.registrationHeading || 'سجّل حضورك في الفعالية'}</h2>
-                        <p className="text-muted-foreground">
-                            {mappedEvent.registrationDescription || 'لحجز مقعدك أو الاستفسار عن تفاصيل إضافية، يمكنك التواصل مع فريق النادي عبر نموذج الاتصال.'}
-                        </p>
-                    </div>
-                    <Link
-                        href={mappedEvent.registrationLink}
-                        className="inline-flex items-center gap-2 bg-club-purple hover:bg-opacity-90 text-white font-bold px-8 py-4 rounded-xl shadow-lg transition-all"
-                    >
-                        <span>{mappedEvent.registrationText}</span>
-                        <ArrowLeft size={20} />
-                    </Link>
-                </motion.div>
-            </div>
+  return (
+    <div className="pt-25 pb-25">
+      <div className="container max-w-5xl mx-auto px-4 md:px-6">
+        {/* Hero */}
+        <div className="mb-10 mt-20">
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-club-purple mb-4"
+          >
+            <ArrowLeft size={16} />
+            <span>العودة إلى الفعاليات</span>
+          </Link>
+          <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-3">
+            {mappedEvent.title}
+          </h1>
         </div>
-    );
+
+        {/* Content + Gallery */}
+        <div className="bg-white rounded-[2rem] border border-border shadow-lg overflow-hidden mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[460px]">
+            {/* Gallery (TOP on mobile, RIGHT on desktop) */}
+            <div
+              className="relative bg-gray-100 flex items-center justify-center min-h-[280px] md:min-h-[360px] lg:min-h-0 lg:h-full lg:col-span-3 lg:order-2"
+              suppressHydrationWarning
+            >
+              <ImageWithFallback
+                src={gallery[currentIndex]}
+                alt={mappedEvent.title}
+                className="max-w-full max-h-full object-contain"
+              />
+
+              {hasSlider && (
+                <>
+                  {/* Prev */}
+                  <button
+                    type="button"
+                    onClick={goPrev}
+                    className="absolute top-1/2 -translate-y-1/2 right-4 md:right-6 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full shadow-lg transition"
+                    aria-label="الصورة السابقة"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+
+                  {/* Next */}
+                  <button
+                    type="button"
+                    onClick={goNext}
+                    className="absolute top-1/2 -translate-y-1/2 left-4 md:left-6 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full shadow-lg transition"
+                    aria-label="الصورة التالية"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+
+                  {/* Dots */}
+                  <div className="absolute bottom-4 inset-x-0 flex justify-center gap-2">
+                    {gallery.map((img: string, index: number) => (
+                      <button
+                        key={img + index}
+                        type="button"
+                        onClick={() => setCurrentIndex(index)}
+                        className={`h-2.5 rounded-full transition-all ${
+                          index === currentIndex
+                            ? "bg-white w-6"
+                            : "bg-white/50 w-2.5"
+                        }`}
+                        aria-label={`صورة رقم ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Content (BOTTOM on mobile, LEFT on desktop) */}
+            <div className="p-8 md:p-10 flex flex-col justify-center text-right lg:h-full lg:col-span-9 lg:order-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                {mappedEvent.dateLabel && (
+                  <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3">
+                    <Calendar
+                      size={18}
+                      className="text-club-purple flex-shrink-0"
+                    />
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground">التاريخ</p>
+                      <p className="text-sm font-semibold text-primary">
+                        {mappedEvent.dateLabel}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {mappedEvent.timeLabel && (
+                  <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3">
+                    <Clock
+                      size={18}
+                      className="text-club-purple flex-shrink-0"
+                    />
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground">الوقت</p>
+                      <p className="text-sm font-semibold text-primary">
+                        {mappedEvent.timeLabel}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {mappedEvent.location && (
+                  <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3 sm:col-span-2">
+                    <MapPin
+                      size={18}
+                      className="text-club-purple flex-shrink-0"
+                    />
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground">الموقع</p>
+                      <p className="text-sm font-semibold text-primary">
+                        {mappedEvent.location}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {mappedEvent.attendanceModeLabel && (
+                  <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3">
+                    {mappedEvent.isOnline ? (
+                      <Circle
+                        size={18}
+                        className="text-club-purple flex-shrink-0"
+                      />
+                    ) : (
+                      <CircleOff
+                        size={18}
+                        className="text-club-purple flex-shrink-0"
+                      />
+                    )}
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground">
+                        نمط الحضور
+                      </p>
+                      <p className="text-sm font-semibold text-primary">
+                        {mappedEvent.attendanceModeLabel}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/30 px-4 py-3">
+                  <Tag size={18} className="text-club-purple flex-shrink-0" />
+                  <div className="text-right">
+                    <p className="text-xs text-muted-foreground">التصنيف</p>
+                    <p className="text-sm font-semibold text-primary">
+                      {mappedEvent.category}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="text-lg text-muted-foreground leading-relaxed prose prose-club max-w-none space-y-4"
+                dangerouslySetInnerHTML={{ __html: mappedEvent.description }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Call to action */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-l from-club-purple/10 to-club-blue/10 rounded-[2rem] border border-club-purple/20 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div className="text-right space-y-2">
+            <h2 className="text-2xl font-bold text-primary">
+              {mappedEvent.registrationHeading || "سجّل حضورك في الفعالية"}
+            </h2>
+            <p className="text-muted-foreground">
+              {mappedEvent.registrationDescription ||
+                "لحجز مقعدك أو الاستفسار عن تفاصيل إضافية، يمكنك التواصل مع فريق النادي عبر نموذج الاتصال."}
+            </p>
+          </div>
+          <Link
+            href={mappedEvent.registrationLink}
+            className="inline-flex items-center gap-2 bg-club-purple hover:bg-opacity-90 text-white font-bold px-8 py-4 rounded-xl shadow-lg transition-all"
+          >
+            <span>{mappedEvent.registrationText}</span>
+            <ArrowLeft size={20} />
+          </Link>
+        </motion.div>
+      </div>
+    </div>
+  );
 }

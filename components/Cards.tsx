@@ -1,11 +1,11 @@
 "use client";
 
-import React from 'react';
-import { Calendar, MapPin, ArrowLeft, Clock, Tag } from 'lucide-react';
-import { motion } from 'motion/react';
-import Link from 'next/link';
+import React from "react";
+import { Calendar, MapPin, ArrowLeft, Clock, Tag } from "lucide-react";
+import { motion } from "motion/react";
+import Link from "next/link";
 
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 export const EventCard = ({ event }: { event: any }) => (
   <motion.div
@@ -16,7 +16,7 @@ export const EventCard = ({ event }: { event: any }) => (
       <ImageWithFallback
         src={event.image}
         alt={event.title}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        className="w-full h-full object-contain bg-black transition-transform duration-500 group-hover:scale-110"
       />
       <div className="absolute top-4 right-4 bg-club-purple text-white px-3 py-1 rounded-lg text-sm font-bold shadow-lg">
         {event.category}
@@ -53,7 +53,7 @@ export const EventCard = ({ event }: { event: any }) => (
 
 export const NewsCard = ({ news }: { news: any }) => {
   // Build URL: /{categorySlug}/{id}
-  const postUrl = `/${news.categorySlug || 'uncategorized'}/${news.id}`;
+  const postUrl = `/${news.categorySlug || "uncategorized"}/${news.id}`;
 
   return (
     <motion.div
@@ -95,8 +95,13 @@ export const NewsCard = ({ news }: { news: any }) => {
             href={postUrl}
             className="inline-flex items-center gap-2 text-sm font-bold text-club-purple group/btn"
           >
-            <span className="border-b-2 border-transparent group-hover/btn:border-club-purple transition-all pb-1">اقرأ المزيد</span>
-            <ArrowLeft size={16} className="transition-transform group-hover/btn:-translate-x-1" />
+            <span className="border-b-2 border-transparent group-hover/btn:border-club-purple transition-all pb-1">
+              اقرأ المزيد
+            </span>
+            <ArrowLeft
+              size={16}
+              className="transition-transform group-hover/btn:-translate-x-1"
+            />
           </Link>
         </div>
       </div>
