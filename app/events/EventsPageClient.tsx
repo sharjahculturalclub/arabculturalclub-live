@@ -1,200 +1,251 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { EventCard } from '@/components/Cards';
-import { Search, Filter } from 'lucide-react';
-import { fetchEvents, EventNode } from '@/lib/actions/site/eventsAction';
-import { normalizeImageUrl } from '@/lib/utils/url';
-import { SITE_ORIGIN } from '@/lib/utils/site-origin';
+import React, { useState } from "react";
+import { motion } from "motion/react";
+import { EventCard } from "@/components/Cards";
+import { Search, Filter } from "lucide-react";
+import { fetchEvents, EventNode } from "@/lib/actions/site/eventsAction";
+import { normalizeImageUrl } from "@/lib/utils/url";
+import { SITE_ORIGIN } from "@/lib/utils/site-origin";
 
-const ARABIC_MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const ARABIC_MONTHS = [
+  "يناير",
+  "فبراير",
+  "مارس",
+  "أبريل",
+  "مايو",
+  "يونيو",
+  "يوليو",
+  "أغسطس",
+  "سبتمبر",
+  "أكتوبر",
+  "نوفمبر",
+  "ديسمبر",
+];
 
 function formatDate(iso: string | null): string {
-    if (!iso) return '';
-    const d = new Date(iso);
-    if (isNaN(d.getTime())) return '';
-    return `${d.getUTCDate()} ${ARABIC_MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  return `${d.getUTCDate()} ${ARABIC_MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
 function formatTime(iso: string | null): string {
-    if (!iso) return '';
-    const d = new Date(iso);
-    if (isNaN(d.getTime())) return '';
-    const h = d.getUTCHours().toString().padStart(2, '0');
-    const m = d.getUTCMinutes().toString().padStart(2, '0');
-    return `${h}:${m}`;
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const h = d.getUTCHours().toString().padStart(2, "0");
+  const m = d.getUTCMinutes().toString().padStart(2, "0");
+  return `${h}:${m}`;
 }
 
 interface EventsPageClientProps {
-    initialNodes: EventNode[];
-    initialHasNextPage: boolean;
-    initialEndCursor: string | null;
-    pageTitle: string | null;
-    pageDescription: string | null;
-    canonicalUrl?: string | null;
+  initialNodes: EventNode[];
+  initialHasNextPage: boolean;
+  initialEndCursor: string | null;
+  pageTitle: string | null;
+  pageDescription: string | null;
+  canonicalUrl?: string | null;
 }
 
 export function EventsPageClient({
-    initialNodes,
-    initialHasNextPage,
-    initialEndCursor,
-    pageTitle,
-    pageDescription,
-    canonicalUrl,
+  initialNodes,
+  initialHasNextPage,
+  initialEndCursor,
+  pageTitle,
+  pageDescription,
+  canonicalUrl,
 }: EventsPageClientProps) {
-    const [events, setEvents] = useState<EventNode[]>(initialNodes);
-    const [hasNextPage, setHasNextPage] = useState(initialHasNextPage);
-    const [endCursor, setEndCursor] = useState(initialEndCursor);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [activeCategory, setActiveCategory] = useState('الكل');
-    const [searchQuery, setSearchQuery] = useState('');
+  const [events, setEvents] = useState<EventNode[]>(initialNodes);
+  const [hasNextPage, setHasNextPage] = useState(initialHasNextPage);
+  const [endCursor, setEndCursor] = useState(initialEndCursor);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("الكل");
+  const [searchQuery, setSearchQuery] = useState("");
 
-    // Extract categories dynamically from *all* loaded events
-    const categories = ['الكل', ...Array.from(new Set(events.flatMap(event =>
-        event.categories?.nodes.map(cat => cat.name) || []
-    )))];
+  // Extract categories dynamically from *all* loaded events
+  const categories = [
+    "الكل",
+    ...Array.from(
+      new Set(
+        events.flatMap(
+          (event) => event.categories?.nodes.map((cat) => cat.name) || [],
+        ),
+      ),
+    ),
+  ];
 
-    const mappedEvents = events.map(event => {
-        const startDate = formatDate(event.eventOptions.eventStartDateAndTime);
-        const endDate = formatDate(event.eventOptions.eventEndDateAndTime);
-        const startTime = formatTime(event.eventOptions.eventStartDateAndTime);
-        const endTime = formatTime(event.eventOptions.eventEndDateAndTime);
-        return {
-            id: event.eventId,
-            title: event.title,
-            date: startDate && endDate && startDate !== endDate ? `${startDate} – ${endDate}` : startDate,
-            time: startTime && endTime && startTime !== endTime ? `${startTime} – ${endTime}` : startTime,
-            location: event.eventOptions.eventLocation || '',
-            category: event.categories?.nodes[0]?.name || 'عام',
-            image: normalizeImageUrl(event.featuredImage?.node.sourceUrl || ''),
-            description: event.content,
-        };
-    });
-
-    const filteredEvents = mappedEvents.filter(event => {
-        const matchesCategory = activeCategory === 'الكل' || event.category === activeCategory;
-        const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
-    });
-
-    const handleLoadMore = async () => {
-        if (!hasNextPage || !endCursor || loadingMore) return;
-
-        setLoadingMore(true);
-        try {
-            const data = await fetchEvents(9, endCursor);
-            setEvents(prev => [...prev, ...data.nodes]);
-            setHasNextPage(data.hasNextPage);
-            setEndCursor(data.endCursor);
-        } catch (error) {
-            console.error("Error loading more events:", error);
-        } finally {
-            setLoadingMore(false);
-        }
+  const mappedEvents = events.map((event) => {
+    const startDate = formatDate(event.eventOptions.eventStartDateAndTime);
+    const endDate = formatDate(event.eventOptions.eventEndDateAndTime);
+    const startTime = formatTime(event.eventOptions.eventStartDateAndTime);
+    const endTime = formatTime(event.eventOptions.eventEndDateAndTime);
+    return {
+      id: event.eventId,
+      title: event.title,
+      date:
+        startDate && endDate && startDate !== endDate
+          ? `${startDate} – ${endDate}`
+          : startDate,
+      time:
+        startTime && endTime && startTime !== endTime
+          ? `${startTime} – ${endTime}`
+          : startTime,
+      location: event.eventOptions.eventLocation || "",
+      category: event.categories?.nodes[0]?.name || "عام",
+      image: normalizeImageUrl(event.featuredImage?.node.sourceUrl || ""),
+      description: event.content,
     };
+  });
 
-    const pageUrl = canonicalUrl || `${SITE_ORIGIN}/events`;
+  const filteredEvents = mappedEvents.filter((event) => {
+    const matchesCategory =
+      activeCategory === "الكل" || event.category === activeCategory;
+    const matchesSearch = event.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
-    const collectionSchema = {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        ...(pageTitle && { name: pageTitle }),
-        ...(pageDescription && { description: pageDescription }),
-        url: pageUrl,
-        inLanguage: "ar",
-        mainEntity: {
-            "@type": "ItemList",
-            itemListElement: filteredEvents.map((event, index) => ({
-                "@type": "ListItem",
-                position: index + 1,
-                url: `${SITE_ORIGIN}/events/${event.id}`,
-                name: event.title,
-            })),
-        },
-    };
+  const handleLoadMore = async () => {
+    if (!hasNextPage || !endCursor || loadingMore) return;
 
-    return (
-        <div className="pt-25 pb-25">
-            {/* CollectionPage JSON-LD — WebPage + BreadcrumbList rendered by <SEO> in parent */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify(collectionSchema),
-                }}
-            />
+    setLoadingMore(true);
+    try {
+      const data = await fetchEvents(9, endCursor);
+      setEvents((prev) => [...prev, ...data.nodes]);
+      setHasNextPage(data.hasNextPage);
+      setEndCursor(data.endCursor);
+    } catch (error) {
+      console.error("Error loading more events:", error);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
-            <div className="container max-w-7xl mx-auto px-4 md:px-6 mb-16">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-border py-10 mb-10">
-                    <div>
-                        {pageTitle && <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4">{pageTitle}</h1>}
-                        {pageDescription && <p className="text-muted-foreground text-lg space-y-4">{pageDescription}</p>}
-                    </div>
+  const pageUrl = canonicalUrl || `${SITE_ORIGIN}/events`;
 
-                    <div className="w-full md:w-auto flex flex-col sm:flex-row gap-4">
-                        <div className="relative group">
-                            <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-club-purple" size={18} />
-                            <input
-                                type="text"
-                                placeholder="ابحث عن فعالية..."
-                                className="pr-10 pl-4 py-2 bg-white border border-border rounded-xl focus:outline-none focus:border-club-purple w-full sm:w-64"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                </div>
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    ...(pageTitle && { name: pageTitle }),
+    ...(pageDescription && { description: pageDescription }),
+    url: pageUrl,
+    inLanguage: "ar",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: filteredEvents.map((event, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${SITE_ORIGIN}/events/${event.id}`,
+        name: event.title,
+      })),
+    },
+  };
 
-                {/* Categories */}
-                <div className="flex overflow-x-auto pb-6 mb-10 no-scrollbar gap-3">
-                    {categories.map((cat) => (
-                        <button
-                            key={cat}
-                            onClick={() => setActiveCategory(cat)}
-                            className={`whitespace-nowrap px-6 py-2 rounded-full font-bold transition-all ${activeCategory === cat
-                                ? 'bg-club-purple text-white shadow-lg'
-                                : 'bg-white text-muted-foreground border border-border hover:border-club-purple'
-                                }`}
-                        >
-                            {cat}
-                        </button>
-                    ))}
-                </div>
+  return (
+    <div className="pt-25 pb-25">
+      {/* CollectionPage JSON-LD — WebPage + BreadcrumbList rendered by <SEO> in parent */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionSchema),
+        }}
+      />
 
-                {/* Results */}
-                {filteredEvents.length > 0 ? (
-                    <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {filteredEvents.map(event => (
-                                <EventCard key={event.id} event={event} />
-                            ))}
-                        </div>
+      <div className="container max-w-7xl mx-auto px-4 md:px-6 mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-border py-10 mb-10">
+          <div>
+            {pageTitle && (
+              <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight mb-4">
+                {pageTitle}
+              </h1>
+            )}
+            {pageDescription && (
+              <p className="text-muted-foreground text-lg space-y-4">
+                {pageDescription}
+              </p>
+            )}
+          </div>
 
-                        {hasNextPage && (
-                            <div className="mt-16 text-center">
-                                <button
-                                    onClick={handleLoadMore}
-                                    disabled={loadingMore}
-                                    className="inline-flex items-center gap-2 bg-white border-2 border-club-purple text-club-purple hover:bg-club-purple hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold px-10 py-4 rounded-xl shadow-lg"
-                                >
-                                    {loadingMore ? 'جاري التحميل...' : 'تحميل المزيد من الفعاليات'}
-                                </button>
-                            </div>
-                        )}
-                    </>
-                ) : (
-                    <div className="text-center py-20 bg-secondary/20 rounded-3xl border border-dashed border-border">
-                        <Filter size={48} className="mx-auto mb-4 text-muted-foreground/30" />
-                        <p className="text-xl text-muted-foreground">عذراً، لم نجد نتائج تطابق بحثك.</p>
-                        <button
-                            onClick={() => { setActiveCategory('الكل'); setSearchQuery(''); }}
-                            className="mt-4 text-club-purple font-bold hover:underline"
-                        >
-                            إعادة تعيين المرشحات
-                        </button>
-                    </div>
-                )}
+          <div className="w-full md:w-auto flex flex-col sm:flex-row gap-4">
+            <div className="relative group">
+              <Search
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-club-purple"
+                size={18}
+              />
+              <input
+                type="text"
+                placeholder="ابحث عن فعالية..."
+                className="pr-10 pl-4 py-2 bg-white border border-border rounded-xl focus:outline-none focus:border-club-purple w-full sm:w-64"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
+          </div>
         </div>
-    );
+
+        {/* Categories */}
+        <div className="flex overflow-x-auto pb-6 mb-10 no-scrollbar gap-3">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`whitespace-nowrap px-6 py-2 rounded-full font-bold transition-all ${
+                activeCategory === cat
+                  ? "bg-club-purple text-white shadow-lg"
+                  : "bg-white text-muted-foreground border border-border hover:border-club-purple"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Results */}
+        {filteredEvents.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+
+            {hasNextPage && (
+              <div className="mt-16 text-center">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="inline-flex items-center gap-2 bg-white border-2 border-club-purple text-club-purple hover:bg-club-purple hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold px-10 py-4 rounded-xl shadow-lg"
+                >
+                  {loadingMore
+                    ? "جاري التحميل..."
+                    : "تحميل المزيد من الفعاليات"}
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-20 bg-secondary/20 rounded-3xl border border-dashed border-border">
+            <Filter
+              size={48}
+              className="mx-auto mb-4 text-muted-foreground/30"
+            />
+            <p className="text-xl text-muted-foreground">
+              عذراً، لم نجد نتائج تطابق بحثك.
+            </p>
+            <button
+              onClick={() => {
+                setActiveCategory("الكل");
+                setSearchQuery("");
+              }}
+              className="mt-4 text-club-purple font-bold hover:underline"
+            >
+              إعادة تعيين المرشحات
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
