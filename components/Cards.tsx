@@ -12,12 +12,17 @@ export const EventCard = ({ event }: { event: any }) => (
     whileHover={{ y: -5 }}
     className="bg-card rounded-2xl overflow-hidden border border-border group flex flex-col h-full shadow-sm hover:shadow-md transition-all"
   >
-    <div className="relative h-56 overflow-hidden">
-      <ImageWithFallback
-        src={event.image}
-        alt={event.title}
-        className="w-full h-full object-contain bg-black transition-transform duration-500 group-hover:scale-110"
-      />
+    <div className="relative h-56 overflow-hidden p-2">
+      <Link
+        href={`/events/${event.id}`}
+        className="block h-full w-full overflow-hidden rounded-2xl"
+      >
+        <ImageWithFallback
+          src={event.image}
+          alt={event.title}
+          className="w-full h-full object-contain bg-black transition-transform duration-500 group-hover:scale-110"
+        />
+      </Link>
       <div className="absolute top-4 right-4 bg-club-purple text-white px-3 py-1 rounded-lg text-sm font-bold shadow-lg">
         {event.category}
       </div>
