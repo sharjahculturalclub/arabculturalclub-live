@@ -134,7 +134,7 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
             <span>العودة إلى الفعاليات</span>
           </Link>
 
-          <div className="mt-6 md:mt-8 flex flex-col items-right text-right md:max-w-4xl md:mr-0 md:ml-auto">
+          <div className="mt-6 md:mt-8 flex flex-col items-start w-fit ml-auto text-right md:max-w-4xl ">
             <span className="inline-flex items-center gap-2 rounded-full bg-club-purple/12 px-3.5 py-1 text-xs font-bold text-club-purple ring-1 ring-club-purple/15">
               <WandSparkles size={14} className="opacity-90" />
               {mappedEvent.category}
@@ -156,17 +156,17 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
           transition={{ duration: 0.4, delay: 0.05 }}
           className="mb-10 overflow-hidden rounded-[2rem] border border-border/80 bg-white shadow-xl shadow-black/[0.06] ring-1 ring-black/[0.03]"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[min(520px,85vh)]">
-            {/* Content — 8 cols on desktop, first in source for LTR content-left */}
-            <div className="flex flex-col justify-center border-border/60 p-6 text-right sm:p-8 md:p-10 lg:col-span-8 lg:border-e lg:p-12 lg:order-1">
+          <div className="flex flex-col md:flex-row min-h-[520px]">
+            {/* Content — 66% width */}
+            <div className="flex flex-col justify-center border-border/60 p-6 text-right sm:p-8 md:border-e md:p-10 lg:p-12 md:w-[66%]">
               <div
                 className="prose prose-p:text-muted-foreground prose-headings:text-primary max-w-none space-y-4 text-base leading-relaxed md:text-lg md:leading-relaxed mb-6"
                 dangerouslySetInnerHTML={{ __html: mappedEvent.description }}
               />
-              <div className=" grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {mappedEvent.dateLabel && (
-                  <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40">
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-purple/12 text-club-purple">
+                  <div className="flex items-center gap-3 rounded-2xl border border-border/70 p-1 transition-colors ">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl  text-club-purple">
                       <Calendar size={20} strokeWidth={1.75} />
                     </span>
                     <p className="mt-1 text-sm font-semibold leading-snug text-primary">
@@ -175,8 +175,8 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
                   </div>
                 )}
                 {mappedEvent.timeLabel && (
-                  <div className="flex items-center gap-2 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40">
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-blue/12 text-club-blue">
+                  <div className="flex items-center gap-2 rounded-2xl border border-border/70 p-1 transition-colors ">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl  text-club-blue">
                       <Clock size={20} strokeWidth={1.75} />
                     </span>
                     <p className="text-sm font-semibold leading-snug text-primary">
@@ -185,8 +185,8 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
                   </div>
                 )}
                 {mappedEvent.location && (
-                  <div className="flex items-center gap-2 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40 sm:col-span-2">
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-purple/12 text-club-purple">
+                  <div className="flex items-center gap-2 rounded-2xl border border-border/70 p-1 transition-colors sm:col-span-2">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl  text-club-purple">
                       <MapPin size={20} strokeWidth={1.75} />
                     </span>
                     <p className="text-sm font-semibold leading-snug text-primary">
@@ -195,8 +195,8 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
                   </div>
                 )}
                 {mappedEvent.attendanceModeLabel && (
-                  <div className="flex items-center gap-2 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40">
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-purple/12 text-club-purple">
+                  <div className="flex items-center gap-2 rounded-2xl border border-border/70 p-1 transition-colors ">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl  text-club-purple">
                       {mappedEvent.isOnline ? (
                         <Circle size={20} strokeWidth={1.75} />
                       ) : (
@@ -208,8 +208,8 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
                     </p>
                   </div>
                 )}
-                <div className="flex items-center gap-2 rounded-2xl border border-border/70 bg-secondary/25 p-2 transition-colors hover:bg-secondary/40">
-                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-club-blue/12 text-club-blue">
+                <div className="flex items-center gap-2 rounded-2xl border border-border/70 p-1 transition-colors ">
+                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl  text-club-blue">
                     <Tag size={20} strokeWidth={1.75} />
                   </span>
                   <p className="mt-1 text-sm font-semibold leading-snug text-primary">
@@ -219,12 +219,9 @@ export function EventDetailPageClient({ event }: EventDetailPageClientProps) {
               </div>
             </div>
 
-            {/* Gallery — 4 cols, compact column on desktop */}
-            <div
-              className="relative flex min-h-[260px] items-center justify-center bg-gradient-to-br from-secondary/50 via-club-purple/[0.07] to-club-blue/[0.06] p-6 sm:min-h-[320px] md:p-8 lg:col-span-4 lg:min-h-0 lg:p-8 lg:order-2"
-              suppressHydrationWarning
-            >
-              <div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-none">
+            {/* Gallery — 33% width */}
+            <div className="relative flex items-center justify-center bg-gradient-to-br from-secondary/50 via-club-purple/[0.07] to-club-blue/[0.06] p-6 min-h-[320px] md:p-8 md:w-[34%] md:min-h-0">
+              <div className="relative w-full max-w-[280px] md:max-w-none">
                 <div
                   className="pointer-events-none absolute -inset-3 rounded-[1.75rem] bg-gradient-to-br from-club-purple/20 to-club-blue/15 blur-2xl opacity-70"
                   aria-hidden
