@@ -107,6 +107,7 @@ export async function GET() {
             { path: '/terms-of-use', priority: '0.5', changefreq: 'yearly' },
             { path: '/privacy-policy', priority: '0.5', changefreq: 'yearly' },
             { path: '/share', priority: '0.7', changefreq: 'monthly' },
+            { path: '/service-fees', priority: '0.7', changefreq: 'monthly' },
             { path: '/search', priority: '0.4', changefreq: 'daily' },
         ];
 
