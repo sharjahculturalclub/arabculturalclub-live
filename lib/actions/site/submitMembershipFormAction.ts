@@ -36,9 +36,8 @@ export async function submitMembershipFormAction(
         cf7FormData.append('_wpcf7_unit_tag', `wpcf7-f${formId}-o1`);
         cf7FormData.append('_wpcf7_container_post', '0');
 
-        // Forward all fields to CF7. 
         // CF7 checkboxes must be appended with [] in keys.
-        const checkboxFields = ['swimming_membership', 'consent_rules_acknowledged'];
+        const checkboxFields = ['swimming_membership', 'consent_rules_acknowledged', 'membership_type'];
 
         for (const [key, value] of formData.entries()) {
             if (key !== 'formId') {

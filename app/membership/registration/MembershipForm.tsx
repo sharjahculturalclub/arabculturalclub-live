@@ -297,6 +297,19 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                 req(`dependent_${pos}_name`, 'اسم المنتسب', 2);
                 req(`dependent_${pos}_gender`, 'الجنس');
                 req(`dependent_${pos}_dob`, 'تاريخ الميلاد');
+
+                // Dependent Files
+                const depPassport = data.get(`dependent_${pos}_passport_copy`) as File;
+                if (!depPassport || depPassport.size === 0)
+                    errs[`dependent_${pos}_passport_copy`] = 'يرجى رفع صورة جواز السفر للمنتسب';
+
+                const depPhoto = data.get(`dependent_${pos}_personal_photo`) as File;
+                if (!depPhoto || depPhoto.size === 0)
+                    errs[`dependent_${pos}_personal_photo`] = 'يرجى رفع الصورة الشخصية للمنتسب';
+
+                const depId = data.get(`dependent_${pos}_emirates_id`) as File;
+                if (!depId || depId.size === 0)
+                    errs[`dependent_${pos}_emirates_id`] = 'يرجى رفع صورة الهوية للمنتسب';
             });
         }
 
@@ -321,6 +334,10 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
         const photoFile = data.get('personal_photo') as File;
         if (!photoFile || photoFile.size === 0)
             errs['personal_photo'] = 'يرجى رفع الصورة الشخصية';
+
+        const emiratesIdFile = data.get('emirates_id') as File;
+        if (!emiratesIdFile || emiratesIdFile.size === 0)
+            errs['emirates_id'] = 'يرجى رفع صورة الهوية الإماراتية';
 
         // Consent
         if (!data.get('consent_rules_acknowledged'))
@@ -417,6 +434,16 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                             <DateInput label="تاريخ الميلاد" name="date_of_birth" required error={fieldErrors['date_of_birth']} />
                             <TextInput label="رقم الجواز" name="passport_number" required minLength={4} maxLength={30} placeholder="مثال: A12345678" error={fieldErrors['passport_number']} />
                             <TextInput label="المهنة" name="occupation" maxLength={120} placeholder="المهنة الحالية" error={fieldErrors['occupation']} />
+                            <SelectInput label="مكان الإقامة" name="place-of-residence" required error={fieldErrors['place-of-residence']}>
+                                <option value="">اختر مكان الإقامة...</option>
+                                <option value="أبوظبي">أبوظبي</option>
+                                <option value="دبي">دبي</option>
+                                <option value="الشارقة">الشارقة</option>
+                                <option value="عجمان">عجمان</option>
+                                <option value="أم القيوين">أم القيوين</option>
+                                <option value="رأس الخيمة">رأس الخيمة</option>
+                                <option value="الفجيرة">الفجيرة</option>
+                            </SelectInput>
                         </div>
                     </div>
 
@@ -559,7 +586,34 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                                                         <option value="أنثى">أنثى</option>
                                                     </SelectInput>
                                                     <DateInput label="تاريخ الميلاد" name={`dependent_${idx + 1}_dob`} error={fieldErrors[`dependent_${idx + 1}_dob`]} />
-                                                    <AutoTextarea label="ملاحظات" name={`dependent_${idx + 1}_notes`} maxLength={250} placeholder="أية ملاحظات إضافية (اختياري)" error={fieldErrors[`dependent_${idx + 1}_notes`]} />
+                                                    <TextInput label="ملاحظات" name={`dependent_${idx + 1}_notes`} maxLength={250} placeholder="أية ملاحظات إضافية (اختياري)" error={fieldErrors[`dependent_${idx + 1}_notes`]} />
+                                                    
+                                                    <FileUpload
+                                                        label="صورة جواز السفر"
+                                                        name={`dependent_${idx + 1}_passport_copy`}
+                                                        required
+                                                        accept=".pdf,.jpg,.jpeg,.png,.webp"
+                                                        hint="PDF, JPG, PNG, WEBP · الحد الأقصى 5 MB"
+                                                        error={fieldErrors[`dependent_${idx + 1}_passport_copy`]}
+                                                    />
+                                                    <FileUpload
+                                                        label="صورة شخصية"
+                                                        name={`dependent_${idx + 1}_personal_photo`}
+                                                        required
+                                                        accept=".jpg,.jpeg,.png,.webp"
+                                                        hint="JPG, PNG, WEBP · الحد الأقصى 5 MB"
+                                                        error={fieldErrors[`dependent_${idx + 1}_personal_photo`]}
+                                                    />
+                                                    <div className="sm:col-span-2">
+                                                        <FileUpload
+                                                            label="تحميل بطاقة الهوية الإماراتية"
+                                                            name={`dependent_${idx + 1}_emirates_id`}
+                                                            required
+                                                            accept=".jpg,.jpeg,.png,.webp"
+                                                            hint="JPG, PNG, WEBP · الحد الأقصى 5 MB"
+                                                            error={fieldErrors[`dependent_${idx + 1}_emirates_id`]}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))}
@@ -591,6 +645,16 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                                 hint="JPG, PNG, WEBP · خلفية بيضاء · الحجم الأقصى 5 MB"
                                 error={fieldErrors['personal_photo']}
                             />
+                            <div className="sm:col-span-2">
+                                <FileUpload
+                                    label="تحميل بطاقة الهوية الإماراتية"
+                                    name="emirates_id"
+                                    required
+                                    accept=".jpg,.jpeg,.png,.webp"
+                                    hint="JPG, PNG, WEBP · الحجم الأقصى 5 MB"
+                                    error={fieldErrors['emirates_id']}
+                                />
+                            </div>
                         </div>
                     </div>
 
