@@ -522,55 +522,7 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                             </div>
                         </Field>
 
-                        <Divider />
-
-                        <SectionHeader icon={CheckCircle2} title="عضوية نادي السباحة" color="blue" />
-                        <label className="flex items-center gap-4 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 has-checked:border-blue-500 has-checked:bg-blue-50 transition-all group">
-                            <div className="relative w-5 h-5 shrink-0">
-                                <input type="checkbox" name="swimming_membership" value="نعم" className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded focus:outline-none checked:border-blue-600 checked:bg-blue-600 transition-all" />
-                                <CheckCircle2 size={14} strokeWidth={3} className="absolute inset-0 m-auto text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
-                            </div>
-                            <div className="flex-1">
-                                <p className="text-sm font-bold text-gray-800 group-hover:text-blue-700">الاشتراك في نادي السباحة</p>
-                            </div>
-                        </label>
-
-                        <Divider />
-
-                        <Field label="نوع الطلب" required error={fieldErrors['membership_status']}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
-                                {[
-                                    { value: 'جديد', desc: 'عضوية جديدة' },
-                                    { value: 'تجديد', desc: 'تجديد عضوية قائمة' },
-                                ].map(({ value, desc }) => (
-                                    <label key={value} className="flex items-center gap-3 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-purple-400 hover:bg-purple-50/40 has-checked:border-purple-500 has-checked:bg-purple-50 transition-all">
-                                        <div className="relative w-5 h-5 shrink-0">
-                                            <input type="radio" name="membership_status" value={value} className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full focus:outline-none checked:border-purple-600 transition-all" />
-                                            <div className="w-2.5 h-2.5 bg-purple-600 rounded-full absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 scale-0 peer-checked:scale-100 transition-all" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-gray-800">{value}</p>
-                                            <p className="text-xs text-gray-400 mt-0.5">{desc}</p>
-                                        </div>
-                                    </label>
-                                ))}
-                            </div>
-                        </Field>
-
-                        <Divider />
-
-                        {membershipStatus === 'تجديد' && (
-                            <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                <TextInput
-                                    label="رقم العضوية السابقة"
-                                    name="previous_membership_number"
-                                    required
-                                    maxLength={50}
-                                    placeholder="A-0000"
-                                    error={fieldErrors['previous_membership_number']}
-                                />
-                            </div>
-                        )}
+                       
                     </div>
 
                    
@@ -661,6 +613,56 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                         </>
                     )}
 
+                <Divider />
+   <div className="p-5 sm:p-8 space-y-6"> 
+                        <SectionHeader icon={CheckCircle2} title="عضوية نادي السباحة" color="blue" />
+                        <label className="flex items-center gap-4 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 has-checked:border-blue-500 has-checked:bg-blue-50 transition-all group">
+                            <div className="relative w-5 h-5 shrink-0">
+                                <input type="checkbox" name="swimming_membership" value="نعم" className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded focus:outline-none checked:border-blue-600 checked:bg-blue-600 transition-all" />
+                                <CheckCircle2 size={14} strokeWidth={3} className="absolute inset-0 m-auto text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
+                            </div>
+                            <div className="flex-1">
+                                <p className="text-sm font-bold text-gray-800 group-hover:text-blue-700">الاشتراك في نادي السباحة</p>
+                            </div>
+                        </label>
+
+                        <Divider />
+
+                        <Field label="نوع الطلب" required error={fieldErrors['membership_status']}>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
+                                {[
+                                    { value: 'جديد', desc: 'عضوية جديدة' },
+                                    { value: 'تجديد', desc: 'تجديد عضوية قائمة' },
+                                ].map(({ value, desc }) => (
+                                    <label key={value} className="flex items-center gap-3 p-4 border border-gray-200 rounded-2xl bg-gray-50/70 cursor-pointer hover:border-purple-400 hover:bg-purple-50/40 has-checked:border-purple-500 has-checked:bg-purple-50 transition-all">
+                                        <div className="relative w-5 h-5 shrink-0">
+                                            <input type="radio" name="membership_status" value={value} className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full focus:outline-none checked:border-purple-600 transition-all" />
+                                            <div className="w-2.5 h-2.5 bg-purple-600 rounded-full absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 scale-0 peer-checked:scale-100 transition-all" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-gray-800">{value}</p>
+                                            <p className="text-xs text-gray-400 mt-0.5">{desc}</p>
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
+                        </Field>
+
+                        <Divider />
+
+                        {membershipStatus === 'تجديد' && (
+                            <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                                <TextInput
+                                    label="رقم العضوية السابقة"
+                                    name="previous_membership_number"
+                                    required
+                                    maxLength={50}
+                                    placeholder="A-0000"
+                                    error={fieldErrors['previous_membership_number']}
+                                />
+                            </div>
+                        )}
+                </div>
 
                     <div className="h-px bg-gray-100 mx-8" />
 
