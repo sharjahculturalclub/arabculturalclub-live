@@ -461,6 +461,43 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
 
                     <div className="h-px bg-gray-100 mx-8" />
 
+                    {/* ══ 5. Attachments ════════════════════════════════════════ */}
+                    <div className="p-5 sm:p-8">
+                        <SectionHeader icon={FileUp} title="المرفقات المطلوبة" color="blue" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <FileUpload
+                                label="صورة جواز السفر"
+                                name="passport_copy"
+                                required
+                                accept=".pdf,.jpg,.jpeg,.png,.webp"
+                                hint="PDF, JPG, PNG, WEBP · الحجم الأقصى 5 MB"
+                                error={fieldErrors['passport_copy']}
+                            />
+                            <FileUpload
+                                label="صورة شخصية حديثة"
+                                name="personal_photo"
+                                required
+                                accept=".jpg,.jpeg,.png,.webp"
+                                hint="JPG, PNG, WEBP · خلفية بيضاء · الحجم الأقصى 5 MB"
+                                error={fieldErrors['personal_photo']}
+                            />
+                            <div className="sm:col-span-2">
+                                <FileUpload
+                                    label="تحميل بطاقة الهوية الإماراتية"
+                                    name="emirates_id"
+                                    required
+                                    accept=".jpg,.jpeg,.png,.webp"
+                                    hint="JPG, PNG, WEBP · الحجم الأقصى 5 MB"
+                                    error={fieldErrors['emirates_id']}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                     <div className="h-px bg-gray-100 mx-8" />
+
+                    
+
                     {/* ══ 3. Membership Type ════════════════════════════════════ */}
                     <div className="p-5 sm:p-8 space-y-6">
                         <SectionHeader icon={Briefcase} title="نوع وحالة العضوية" color="purple" />
@@ -536,9 +573,8 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                         )}
                     </div>
 
-                    <div className="h-px bg-gray-100 mx-8" />
-
-                    {/* ══ 4. Dependents ════════════════════════════════════════ */}
+                   
+                   {/* ══ 4. Dependents ════════════════════════════════════════ */}
                     {membershipType === 'عائلية' && (
                         <>
                             <div className="p-5 sm:p-8 animate-in fade-in slide-in-from-top-2 duration-300">
@@ -625,38 +661,6 @@ export default function MembershipForm({ formId }: MembershipFormProps) {
                         </>
                     )}
 
-                    {/* ══ 5. Attachments ════════════════════════════════════════ */}
-                    <div className="p-5 sm:p-8">
-                        <SectionHeader icon={FileUp} title="المرفقات المطلوبة" color="blue" />
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <FileUpload
-                                label="صورة جواز السفر"
-                                name="passport_copy"
-                                required
-                                accept=".pdf,.jpg,.jpeg,.png,.webp"
-                                hint="PDF, JPG, PNG, WEBP · الحجم الأقصى 5 MB"
-                                error={fieldErrors['passport_copy']}
-                            />
-                            <FileUpload
-                                label="صورة شخصية حديثة"
-                                name="personal_photo"
-                                required
-                                accept=".jpg,.jpeg,.png,.webp"
-                                hint="JPG, PNG, WEBP · خلفية بيضاء · الحجم الأقصى 5 MB"
-                                error={fieldErrors['personal_photo']}
-                            />
-                            <div className="sm:col-span-2">
-                                <FileUpload
-                                    label="تحميل بطاقة الهوية الإماراتية"
-                                    name="emirates_id"
-                                    required
-                                    accept=".jpg,.jpeg,.png,.webp"
-                                    hint="JPG, PNG, WEBP · الحجم الأقصى 5 MB"
-                                    error={fieldErrors['emirates_id']}
-                                />
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="h-px bg-gray-100 mx-8" />
 
