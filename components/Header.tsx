@@ -111,14 +111,14 @@ export const Header = ({ logoUrl, siteName, navLinks }: HeaderProps) => {
               </Link>
             </div>
             <div className="flex items-center gap-4 md:gap-8">
-              <nav className="flex items-center space-x-reverse space-x-1 gap-x-2">
+              <nav className="flex items-center space-x-reverse space-x-1 gap-x-1">
                 {navLinks && navLinks.map((link) => {
                   const active = isLinkActive(link.path);
                   return (
                     <Link
                       key={link.path}
                       href={link.path}
-                      className={`px-4 py-2 font-tajawal text-lg font-medium transition-all relative group overflow-hidden rounded-lg ${active ? 'text-club-purple bg-club-purple/10' : 'text-primary/70 hover:text-club-purple hover:bg-white/50'}`}
+                      className={`px-4 py-2 font-tajawal font-medium transition-all relative group overflow-hidden rounded-lg ${active ? 'text-club-purple bg-club-purple/10' : 'text-primary/70 hover:text-club-purple hover:bg-white/50'}`}
                     >
                       {link.title}
                     </Link>
